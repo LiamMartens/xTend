@@ -1,0 +1,9 @@
+<?php
+	Ood::Host("localhost");
+	Ood::Engine("mysql");
+	Ood::Database("Posts");
+	Ood::Username("root");
+	Ood::Password("");
+	Ood::Charset("utf8");
+	Ood::Collation("utf8_unicode_ci");
+?>
