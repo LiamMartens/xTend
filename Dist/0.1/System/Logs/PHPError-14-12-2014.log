@@ -1,0 +1,126 @@
+15:18:41    :    Undefined variable: a
+15:18:41    :    Undefined variable: a
+15:32:04    (/):    require(Libs/Pixie\AliasFacade.php): failed to open stream: No such file or directory
+15:32:04    (/favicon.ico):    require(Libs/Pixie\AliasFacade.php): failed to open stream: No such file or directory
+15:35:31    (/):    require(Libs/ScssPhp\scss.inc.php): failed to open stream: No such file or directory
+15:35:31    (/favicon.ico):    require(Libs/ScssPhp\scss.inc.php): failed to open stream: No such file or directory
+15:36:06    (/):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:36:06    (/favicon.ico):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:36:25    (/):    require(../System/Libs\ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:36:25    (/favicon.ico):    require(../System/Libs\ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:36:35    (/):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:36:35    (/favicon.ico):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:37:01    (/):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:37:01    (/favicon.ico):    require(../System/Libs/ScssPhp\scss/inc.php): failed to open stream: No such file or directory
+15:52:36    (/):    array_search() expects parameter 2 to be array, string given
+15:52:36    (/):    array_search() expects parameter 2 to be array, string given
+15:52:36    (/favicon.ico):    array_search() expects parameter 2 to be array, string given
+15:52:36    (/favicon.ico):    array_search() expects parameter 2 to be array, string given
+15:55:22    (/):    trim() expects parameter 1 to be string, array given
+15:55:22    (/):    array_search() expects parameter 2 to be array, null given
+15:55:22    (/):    trim() expects parameter 1 to be string, array given
+15:55:22    (/):    array_search() expects parameter 2 to be array, null given
+15:55:22    (/favicon.ico):    trim() expects parameter 1 to be string, array given
+15:55:22    (/favicon.ico):    array_search() expects parameter 2 to be array, null given
+15:55:22    (/favicon.ico):    trim() expects parameter 1 to be string, array given
+15:55:22    (/favicon.ico):    array_search() expects parameter 2 to be array, null given
+16:00:23    (/):    Undefined variable: Directory
+16:00:23    (/favicon.ico):    Undefined variable: Directory
+16:00:35    (/):    Undefined variable: Directory
+16:00:35    (/favicon.ico):    Undefined variable: Directory
+16:00:48    (/):    Undefined variable: Directory
+16:00:48    (/favicon.ico):    Undefined variable: Directory
+16:01:01    (/):    Undefined variable: Directory
+16:01:01    (/):    Invalid argument supplied for foreach()
+16:01:01    (/favicon.ico):    Undefined variable: Directory
+16:01:01    (/favicon.ico):    Invalid argument supplied for foreach()
+16:01:48    (/):    Undefined variable: Directory
+16:01:48    (/):    Invalid argument supplied for foreach()
+16:01:48    (/favicon.ico):    Undefined variable: Directory
+16:01:48    (/favicon.ico):    Invalid argument supplied for foreach()
+16:02:31    (/):    Undefined variable: Directory
+16:02:31    (/):    Invalid argument supplied for foreach()
+16:02:31    (/favicon.ico):    Undefined variable: Directory
+16:02:31    (/favicon.ico):    Invalid argument supplied for foreach()
+16:11:21    (/):    Undefined variable: Directory
+16:11:21    (/):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/favicon.ico):    Undefined variable: Directory
+16:11:21    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:11:21    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/):    Undefined variable: Directory
+16:13:15    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/favicon.ico):    Undefined variable: Directory
+16:13:15    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:15    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    Undefined variable: Directory
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    Undefined variable: Directory
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:13:52    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    Undefined variable: Directory
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    Undefined variable: Directory
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:02    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/):    Undefined variable: Directory
+16:14:12    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/favicon.ico):    Undefined variable: Directory
+16:14:12    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:12    (/favicon.ico):    in_array() expects parameter 2 to be array, boolean given
+16:14:16    (/):    Undefined variable: Directory
+16:14:16    (/):    Invalid argument supplied for foreach()
+16:14:16    (/favicon.ico):    Undefined variable: Directory
+16:14:16    (/favicon.ico):    Invalid argument supplied for foreach()
