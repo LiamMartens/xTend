@@ -82,13 +82,13 @@
 						if((preg_match("/$ExcludedLibraries/i", $Directory)!=1)||($ExcludedLibraries=="")) {
 							//Get ignore file -> which files should not be included
 							$Ignore = explode("\n",str_replace("\r\n","\n",File::Read("$Directory/.ignore")));
-							$Order = explode("\n",str_replace("\r\n","\n",File::Read("$Directory/.fileorder")));
+							$Order = explode("\n",str_replace("\r\n","\n",File::Read("$Directory/.order")));
 							//Fetch dir files -> not recursive!
 							$Files = Dir::Files($Directory);
-							//Unset .ignore, .exclude and .fileorder files
+							//Unset .ignore, .exclude and .order files
 							if(array_search(".ignore", $Files)!==false) { unset($Files[array_search(".ignore", $Files)]); };
 							if(array_search(".exclude", $Files)!==false) { unset($Files[array_search(".exclude", $Files)]); };
-							if(array_search(".fileorder", $Files)!==false) { unset($Files[array_search(".fileorder", $Files)]); };
+							if(array_search(".order", $Files)!==false) { unset($Files[array_search(".order", $Files)]); };
 							//Include necessary files
 							//First loop through Order
 							foreach($Order as $File) {
@@ -158,6 +158,8 @@
 			}
 			//Initialize
 			public static function Initialize() {
+				//Set charset
+				header('Content-Type:text/html;charset=utf-8');
 				//Set default timezone
 				date_default_timezone_set("UTC");
 				//Set error handlers
