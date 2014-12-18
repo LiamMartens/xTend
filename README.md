@@ -45,3 +45,38 @@ If you do not intend to use this feature then you can just remove the directory 
 ####All set up!
 
 ##Your first routes
+To define your Routes you can use the Routes file located at `/System/Config/Routes.php` but you can also do this in a different file inside `/System/Config`.
+
+####Route options
+You can pass several types of route options.
+1. Just a string
+  * For example `Router::Home("This is my homepage")`. Now when going to the homepage you will see `This is my homepage`
+2. An array of options
+  * The array can contain at most 4 keys with their respective values:
+    * Model : The Model to load up (without .php extension)
+    * Controller : The Controller to load up (without .php extension)
+    * View : The View to load up (without .php or .wow.php extension)
+    * Data :  Any data as array to pass to the Controller or the View when there is no controller present
+3. A function
+
+####URL
+examples:
+* URL `hello` will match `http://domain.com/hello`
+* URL `hello/person` will match `http://domain.com/hello/person`
+* URL `hello/{name}` will match `http://domain.com/hello/anything` and there will be a variable called name available which will contain the respective value
+* URL `hello/person/*` will match `http://domain.com/hello/person/anything`, but in this case there won't be any variable available to return the 3rd url path variable
+
+####Home
+First you will probably want to create a route for Home and this is very easy. Just define following route `Router::Home($RouteOptions)`
+
+####Any
+This will match any request (POST or GET). The Any routes will be checked first so these are prioritized.
+e.g. `Router::Any($URL, $RouteOptions)`
+
+####Get
+This will match only `GET` requests
+e.g. `Router::Get($URL, $RouteOptions)`
+
+####Post
+This will match only `POST` requests
+e.g. `Router::Post($URL, $RouteOptions)`
