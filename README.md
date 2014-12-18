@@ -80,3 +80,8 @@ e.g. `Router::Get($URL, $RouteOptions)`
 ####Post
 This will match only `POST` requests
 e.g. `Router::Post($URL, $RouteOptions)`
+
+####Error
+For when an App error is thrown for
+e.g. `Router::Error($ErrorType, $RouteOptions)`
+The Error types can be found inside `/System/Core/App.php` an example is the `Error::NotFound` error which will be thrown when there is no route available for a given URL.
