@@ -1,9 +1,9 @@
 #Introducing xTend
 
-####*What is xTend?*
+###*What is xTend?*
 xTend is a simple and easy to use yet powerful and very extendable PHP MVC framework
 
-####*Why should I use it?*
+###*Why should I use it?*
 I can only give you a couple of reasons but be free to see for yourself
 * Clean and powerful URL's
 * Easy to understand structure (Model-View-Controller)
@@ -11,9 +11,9 @@ I can only give you a couple of reasons but be free to see for yourself
 * Easy to configure
 * Easy to extend
 
-####*Installation*
+##*Installation*
 
-#####Step 1:
+####Step 1:
 After you have downloaded the files you will have to put them on your webspace. Keep in mind the `/www` directory will be publicly accesible (here you will store your css, javascript, images) while the `/System` directory should not be publicly visilbe.
 
 ######How to direct to the `/www` directory by default?
