@@ -38,4 +38,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
 ```
 
+####Step 3:
+To make the Wow View Compiler work you need to allow writing on the `/System/ViewOutput` directory.
+If you do not intend to use this feature then you can just remove the directory or leave it unwritable.
+
 ####All set up!
+
+##Your first routes
