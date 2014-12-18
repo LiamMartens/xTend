@@ -63,7 +63,7 @@ You can pass several types of route options.
 examples:
 * URL `hello` will match `http://domain.com/hello`
 * URL `hello/person` will match `http://domain.com/hello/person`
-* URL `hello/{name}` will match `http://domain.com/hello/anything` and there will be a variable called name available which will contain the respective value
+* URL `hello/{name}` will match `http://domain.com/hello/anything` and there will be a variable called name available which will contain the respective value (You can retrieve these variables as an array by calling `App::Data()`)
 * URL `hello/person/*` will match `http://domain.com/hello/person/anything`, but in this case there won't be any variable available to return the 3rd url path variable
 
 ####Home
