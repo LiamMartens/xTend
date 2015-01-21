@@ -1,0 +1,84 @@
+span {
+	font-weight:inherit;
+	font-size:inherit;
+	font-family:inherit;
+}
+h1,h2,h3,h4,h5 {
+	margin:0;
+}
+h1,h2,h3,.h1,.h2,.h3 {
+	font-weight:$font-weight-bold;
+}
+h4,h5,.h4,.h5 {
+	font-weight:$font-weight-medium;
+}
+.super {
+	font-size:$font-size-super;
+	@media all and (max-width:$breakpoint-w-2) {
+		font-size:calc(#{$font-size-super} * 0.9);
+	}
+	@media all and (max-width:$breakpoint-w-3) {
+		font-size:calc(#{$font-size-super} * 0.7);
+	}
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:calc(#{$font-size-super} * 0.5);
+	}
+}
+.xsuper {
+	font-size:$font-size-xsuper;
+	@media all and (max-width:$breakpoint-w-2) {
+		font-size:calc(#{$font-size-xsuper} * 0.9);
+	}
+	@media all and (max-width:$breakpoint-w-3) {
+		font-size:calc(#{$font-size-xsuper} * 0.7);
+	}
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:calc(#{$font-size-xsuper} * 0.5);
+	}
+}
+.h1 {
+	font-size:$font-size-title;
+	@media all and (max-width:$breakpoint-w-2) {
+		font-size:calc(#{$font-size-title} * 0.9);
+	}
+	@media all and (max-width:$breakpoint-w-3) {
+		font-size:calc(#{$font-size-title} * 0.7);
+	}
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:calc(#{$font-size-title} * 0.5);
+	}
+}
+.h2 {
+	font-size:$font-size-subtitle;
+	@media all and (max-width:$breakpoint-w-2) {
+		font-size:calc(#{$font-size-subtitle} * 0.9);
+	}
+	@media all and (max-width:$breakpoint-w-3) {
+		font-size:calc(#{$font-size-subtitle} * 0.7);
+	}
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:calc(#{$font-size-subtitle} * 0.5);
+	}
+}
+.h3 {
+	font-size:$font-size-note;
+	@media all and (max-width:$breakpoint-w-2) {
+		font-size:calc(#{$font-size-note} * 0.9);
+	}
+	@media all and (max-width:$breakpoint-w-3) {
+		font-size:calc(#{$font-size-note} * 0.7);
+	}
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:calc(#{$font-size-note} * 0.5);
+	}
+}
+.h4 {
+	font-size:$font-size-attention;
+	@media all and (max-width:$breakpoint-w-4) {
+		font-size:$font-size-normal;
+	}
+}
+h1 { @extend .h1; }
+h2 { @extend .h2; }
+h3 { @extend .h3; }
+h4 { @extend .h4; }
