@@ -10,6 +10,7 @@ The installation is divided in several steps
 
 ###STEP 1:
 After you have downloaded the files you have to put them on your hosting. Keep in mind the `/www` directory will be publicly accessible (here you will store css, javascript and images) while the `/System` directory should not be publicly visible. Another sidenote, you can rename the `/www` directory to any other name you like.  
+  
 **Can I use this on a normal hosting?**  
 Yes you can. You just have to put the `/System` directory in the parent directory of your default public directory and copy the files from `/www` to your public directory. (could already be `/www` but can also be `/public_html` or...)
 
@@ -23,7 +24,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
 ```
-  
+
 **I don't know this, what does it do?**  
 The above piece of code makes sure any URL request, excluding directories and files, will point to the `index.php` file inside your public directory.
 
