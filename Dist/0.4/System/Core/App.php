@@ -159,25 +159,27 @@
 			}
 			//Backup
 			public static function Backup() {
-				$interval = strtotime(Config::Backup)-time();
-				$BackupNeeded = false;
-				$Backups = Dir::Files(Dir::System("Backups"));
-				if((count($Backups)>0)&&($Backups!==false)) {
-					$LastBackup = $Backups[count($Backups)-1];
-					//remove extension
-					$LastBackupName = substr($LastBackup,0,strrpos($LastBackup,"."));
-					//remove end date
-					$LastBackupTime = substr($LastBackupName,0,strrpos($LastBackupName,"-"));
-					if($LastBackupTime+$interval<=time()) {
+				if(Config::Backup!==false) {
+					$interval = strtotime(Config::Backup)-time();
+					$BackupNeeded = false;
+					$Backups = Dir::Files(Dir::System("Backups"));
+					if((count($Backups)>0)&&($Backups!==false)) {
+						$LastBackup = $Backups[count($Backups)-1];
+						//remove extension
+						$LastBackupName = substr($LastBackup,0,strrpos($LastBackup,"."));
+						//remove end date
+						$LastBackupTime = substr($LastBackupName,0,strrpos($LastBackupName,"-"));
+						if($LastBackupTime+$interval<=time()) {
+							$BackupNeeded = true;
+						}
+					} else {
 						$BackupNeeded = true;
 					}
-				} else {
-					$BackupNeeded = true;
-				}
-				if($BackupNeeded) {
-					$bak = new Archive(File::System("Backups.".time()."-".date('Y_m_d_H_i_s').".zip"));
-					$bak->AddFolder("../");
-					$bak->Save();
+					if($BackupNeeded) {
+						$bak = new Archive(File::System("Backups.".time()."-".date('Y_m_d_H_i_s').".zip"));
+						$bak->AddFolder("../");
+						$bak->Save();
+					}
 				}
 			}
 			//Initialize
