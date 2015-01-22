@@ -78,20 +78,8 @@
 			"<title>$2</title>"
 		);
 		Wow::RegisterExpression(
-			Wow::RegEx("(@favicon:)([a-zA-Z0-9\\\/\-\_]+)(:)([\#0-9]+)","i"),
-			'
-				<link rel="shortcut icon" type="image/x-icon" href="<?php echo \xTend\File::Web("$2.ico"); ?>">
-				<link rel="apple-touch-icon-precomposed" href="<?php echo \xTend\File::Web("$2-152.png"); ?>">
-				<meta name="msapplication-TileColor" content="$4">
-				<meta name="msapplication-TileImage" content="<?php echo \xTend\File::Web("$2-144.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?php echo \xTend\File::Web("$2-152.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo \xTend\File::Web("$2-144.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" sizes="120x120" href="<?php echo \xTend\File::Web("$2-120.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo \xTend\File::Web("$2-114.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo \xTend\File::Web("favicon-72.png"); ?>">
-				<link rel="apple-touch-icon-precomposed" href="<?php echo \xTend\File::Web("$2-57.png"); ?>">
-				<link rel="icon" href="<?php echo \xTend\File::Web("$2-32.png"); ?>" sizes="32x32">
-			'
+			Wow::RegEx("(@controller:)(.*)","i"),
+			"<?php echo \xTend\App::Controller()->$2(); ?>"
 		);
 	}
 ?>
