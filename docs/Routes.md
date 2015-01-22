@@ -30,3 +30,10 @@ Router::Restrict(function() {
 })
 ```
 The `hack` route will now  only exist when IP `127.0.0.1` is visiting.
+
+##Using AppError
+You can set an AppError route as follows:
+```
+Router::AppError(Error::{ErrorType}, Route);
+```
+You can find the error types inside `/System/Core/Error.php`, but you can also defined new ones.
