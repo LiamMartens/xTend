@@ -11,6 +11,9 @@ I can only give you a couple of reasons but be free to see for yourself
 * Easy to configure
 * Easy to extend
 
+##*Documentation*
+[Read The Docs](http://xtend.readthedocs.org/en/latest/)
+
 ##*Installation*
 
 ####Step 1:
@@ -54,7 +57,7 @@ If you do not intend to use this feature then you can just remove the directory 
 ####Step 6 (SASS COMPILER):
 To make the sass compiler work ([Third-Party SASS compiler](http://leafo.net/scssphp/)) you also need to allow writing on the `/www/css` directory. Again if you don't need a SASS compiler you can remove the `scss.php` file from the `/System/Libs` directory, but don't forget to remove the `sass.php` file from the `/System/Config` directory as well.
 
-####All set up!
+##All set up!
 
 ##The structure
 * `www`  
