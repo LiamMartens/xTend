@@ -23,6 +23,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L]
 ```
+  
 **I don't know this, what does it do?**  
 The above piece of code makes sure any URL request, excluding directories and files, will point to the `index.php` file inside your public directory.
 
