@@ -70,21 +70,21 @@ If you have configuration files, save them in here, you will already find severa
 Store your controllers here
   * `Core`  
 These are the files which are required in order to make the system work. You should only change the `Config.php` file.
-  * `Dynamic`
+  * `Dynamic`  
 If you want to load classes only when they are needed put them in here. For example if you call `$a = new Person();` and `Person` is not a known class, it will look for a `Person.php` file inside this directory.
-  * `Layouts`
+  * `Layouts`  
 Here you can put layouts for your views to extend upon.
-  * `Libs`
+  * `Libs`  
 Have some third-party libraries? Put them here.
-  * `Logs`
+  * `Logs`  
 Log files will be stored here.
-  * `Meta`
+  * `Meta`  
 Meta files will be stored here (info about files).
-  * `Models`
+  * `Models`  
 Your models should be stored in here.
-  * `Objects`
+  * `Objects`  
 Got some custom objects? Put them in here.
-  * `ViewOutput`
+  * `ViewOutput`  
 If you use the Wow compiler, compiled views will show up here. You can remove it's contents to force a re-compile.
-  * `Views`
+  * `Views`  
 These are your views either wow or just php.
