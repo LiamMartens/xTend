@@ -2,11 +2,11 @@
 The installation is divided in several steps
 
 [STEP 1: Uploading the files](#step-1)  
-[STEP 2: Clean URL's](#step-1)  
-[STEP 3: Logs](#step-1)  
-[STEP 4: Backups](#step-1)  
-[STEP 5: Wow templating engine](#step-1)  
-[STEP 6: SASS/SCSS compiler](#step-1)  
+[STEP 2: Clean URL's](#step-2)  
+[STEP 3: Logs](#step-3)  
+[STEP 4: Backups](#step-4)  
+[STEP 5: Wow templating engine](#step-5)  
+[STEP 6: SASS/SCSS compiler](#step-6)  
 
 ###STEP 1:
 After you have downloaded the files you have to put them on your hosting. Keep in mind the `/www` directory will be publicly accessible (here you will store css, javascript and images) while the `/System` directory should not be publicly visible. Another sidenote, you can rename the `/www` directory to any other name you like.
