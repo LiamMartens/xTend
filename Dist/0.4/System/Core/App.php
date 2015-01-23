@@ -184,10 +184,10 @@
 			}
 			//Initialize
 			public static function Initialize() {
-				//commmence session -> secur
+				//commmence session
 				session_start();
 				//Set charset
-				header('Content-Type:text/html;charset=utf-8');
+				header('Content-Type:text/html;charset='.Config::Charset);
 				//Set default timezone
 				date_default_timezone_set("UTC");
 				//Set error handlers
