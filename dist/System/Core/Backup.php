@@ -17,6 +17,8 @@
 					$Files = Dir::Files(Dir::System("Backups"));
 					$BackupName = $Files[count($Files)-1];
 				}
+				//check file existance
+				if(!File::Exists(File::System("Backups.$BackupName"))) { return false; }
 				//open archive and extract backup
 				$bak = new Archive(File::System("Backups.$BackupName"), true);
 				$bak->Extract(Dir::System("Backups.Temp"));
