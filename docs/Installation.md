@@ -32,7 +32,7 @@ RewriteRule ^ index.php [L,QSA]
 ```
 
 **I don't know this, what does it do?**  
-The above piece of code makes sure any URL request, excluding directories and files, will point to the `index.php` file inside your public directory.
+The above piece of code makes sure any URL request, excluding files, will point to the `index.php` file inside your public directory.
 
 ##STEP 3:
 xTend logs PHP errors, PHP exceptions and also it's own errors. To make this work you will have to allow writing on the `/System/Logs` directory.
