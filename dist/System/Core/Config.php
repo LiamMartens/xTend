@@ -4,6 +4,7 @@
 		class Config
 		{
 			const xTendVersion = "0.4";
+			const xTendBuild = 1;
 			const Url = "http://104.236.51.149";
 			const Development = false;
 			const Company = "";
