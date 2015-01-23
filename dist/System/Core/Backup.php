@@ -23,7 +23,7 @@
 				//restore all files --> loop
 				$TempFiles = Dir::RecursiveFiles(Dir::System("Backups.Temp"));
 				foreach($TempFiles as $File) {
-					$FileContent = File::Read(Dir::System("Backups.Temp").$File);
+					$FileContent = File::Read(Dir::System("Backups.Temp")."/".$File);
 					file_put_contents("../".$File, $FileContent);
 				}
 				//remove temp directory
