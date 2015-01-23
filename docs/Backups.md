@@ -15,4 +15,4 @@ You can also specify which back up you want to load by setting it's name like th
 ```
 xTend\Backup::Restore("1422018853-2015_01_23_13_14_13");
 ```
-In this example this is backup with filename `1422018853-2015_01_23_13_14_13.zip`, created on 23 january 2015 on 13:14:13 UTC.
+In this example the is backup with filename `1422018853-2015_01_23_13_14_13.zip`, created on 23 january 2015 on 13:14:13 UTC is restored.
