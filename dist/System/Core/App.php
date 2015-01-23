@@ -12,6 +12,7 @@
 		require_once("../System/Core/Controllers.php");
 		require_once("../System/Core/Views.php");
 		require_once("../System/Core/Router.php");
+		require_once("../System/Core/Backup.php");
 		//xTend Application class
 		class App
 		{
@@ -176,9 +177,7 @@
 						$BackupNeeded = true;
 					}
 					if($BackupNeeded) {
-						$bak = new Archive(File::System("Backups.".time()."-".date('Y_m_d_H_i_s').".zip"));
-						$bak->AddFolder("../");
-						$bak->Save();
+						Backup::Save();
 					}
 				}
 			}
