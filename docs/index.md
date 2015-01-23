@@ -5,4 +5,4 @@
 [Routes](http://xtend.readthedocs.org/en/latest/Routes/)  
 [Libs](http://xtend.readthedocs.org/en/latest/Libs/)  
 [Configure](http://xtend.readthedocs.org/en/latest/Configure/)  
-[SASS Compiler]()
+[SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)
