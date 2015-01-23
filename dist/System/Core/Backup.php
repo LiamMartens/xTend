@@ -28,8 +28,6 @@
 				}
 				//remove temp directory
 				Dir::Remove(Dir::System("Backups.Temp"));
-				//Remove backup zip file
-				File::Remove(File::System("Backups.".$BackupName));
 			}
 		}
 	}
