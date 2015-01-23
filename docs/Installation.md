@@ -21,10 +21,14 @@ To get everything working correctly you will need to edit your Apache configurat
 Either way, you will need following piece of code:
 ```
 RewriteEngine On
-RewriteRule ^(.*)/$ /$1 [L,R=301]
-RewriteCond %{REQUEST_FILENAME} !-d
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ index.php [L,QSA]
+
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L,QSA]
 ```
 
 **I don't know this, what does it do?**  
