@@ -11,6 +11,7 @@
 		require_once("../System/Core/Models.php");
 		require_once("../System/Core/Controllers.php");
 		require_once("../System/Core/Views.php");
+		require_once("../System/Core/URL.php");
 		require_once("../System/Core/Router.php");
 		require_once("../System/Core/Backup.php");
 		//xTend Application class

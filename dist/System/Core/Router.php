@@ -8,11 +8,6 @@
 			private static $_Get = array();
 			private static $_Any = array();
 			private static $_Error = array();
-			private static $_Vars = array();
-			//Return Vars
-			public static function Vars() {
-				return self::$_Vars;
-			}
 			//Post route
 			public static function Post($Url,$Route) {
 				self::$_Post[trim(strtolower($Url),"/")] = $Route;
@@ -51,8 +46,6 @@
 			}
 			//Is Match
 			private static function IsMatch($RequestUri, $SavedUri) {
-				//Reset Url variables
-				self::$_Vars = array();
 				//Explode both urls
 				$RequestPath = explode("/",trim(strtolower($RequestUri),"/"));
 				$SavedPath = explode("/", $SavedUri);
@@ -75,9 +68,11 @@
 						return false;
 					} else if(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $SavedPath[$i])) {
 						//Url Variable
-						self::$_Vars[substr($SavedPath[$i],1,count($SavedPath[$i])-2)] = $RequestPath[$i];
+						URL::SetParameter(substr($SavedPath[$i],1,count($SavedPath[$i])-2), $RequestPath[$i]);
 					}
 				}
+				//set saved URI
+				URL::SetRoute($SavedUri);
 				return true;
 			}
 			//Execute request
@@ -126,6 +121,7 @@
 			//Post configuration
 			public static function PostConfiguration() {
 				$Request = $_SERVER['REQUEST_URI'];
+				URL::SetRequest($Request);
 				//Step one check home
 				if(self::IsMatch($Request,'')) {
 					self::ExecuteRoute(self::$_Home);
@@ -147,9 +143,11 @@
 				) {
 					//POST 
 					$SavedRequests = self::$_Post;
+					URL::SetMethod("POST");
 				} else {
 					//GET
 					$SavedRequests = self::$_Get;
+					URL::SetMethod("GET");
 				}
 				//Execute $SavedRequests
 				foreach($SavedRequests as $Uri => $Route) {
