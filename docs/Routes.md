@@ -11,7 +11,7 @@ Read more about setting up routes.
 
 ##URLs
 * Normal URL. For example `hello` will catch `example.com/hello` and `hello/liam` will catch `example.com/hello/liam`
-* URL variables. For example `hello/{name}` will catch `example.com/hello/{anything-can-be-here}` and there will be a variable available with the key from the url. You can retrieve URL variables as an array like this : `xTend\Router::Vars();`.
+* URL variables. For example `hello/{name}` will catch `example.com/hello/{anything-can-be-here}` and there will be a variable available with the key from the url. You can retrieve URL variables by using the URL helper class [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
 * The `*` character will catch anything. Can be used like `hello/*` but this will not make a variable available.
 
 ##Routes - What to do when a route is matched?
