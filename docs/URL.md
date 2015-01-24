@@ -6,4 +6,4 @@ Static method `URL::Request()` will return the originally requested url (excludi
 ##Method
 Static method `URL::Method()` will return the request method. The method can return 3 values: `ANY`, `GET` and `POST`. These return values are self explanatory.
 ##URL variables
-To retrieve URL variables you can call `URL::GetParameter({name-of-parameter})`. You can also call a static function with it's name, like this `URL::{name-of-parameter}()`. (Read about URL variables here [Routes Docs](http://xtend.readthedocs.org/en/latest/Routes/))
+To retrieve URL variables you can call `URL::GetParameter({name-of-parameter})`. You can also call a static function with it's name, like this `URL::{name-of-parameter}()`. (Read about URL variables [here](http://xtend.readthedocs.org/en/latest/Routes/))
