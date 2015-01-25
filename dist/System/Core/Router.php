@@ -46,32 +46,43 @@
 			}
 			//Is Match
 			private static function IsMatch($RequestUri, $SavedUri) {
-				//Explode both urls
-				$RequestPath = explode("/",trim(strtolower($RequestUri),"/"));
-				$SavedPath = explode("/", $SavedUri);
-				json_encode($RequestPath);
-				json_encode($SavedPath);
-				//Check whether they have equal parts
-				if(count($RequestPath)!=count($SavedPath)) {
-					return false;
-				}
-				//Check each part
-				for($i=0;$i<count($RequestPath);$i++) {
-					if(
-						!preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $SavedPath[$i]) &&
-						!preg_match('/(\*+)/', $SavedPath[$i]) &&
-						($SavedPath[$i]!=$RequestPath[$i])
-					) {
-						//No match
-						//No Url variable
-						//No any char
+				//Explode both URLs
+				$Request = explode("/", trim(strtolower($RequestUri),"/"));
+				$Saved = explode("/", $SavedUri);
+				//check whether they have equal parts
+				if(count($Request)!=count($Saved)) { return false; };
+				//check each part
+				$rx_matches = array();
+				for($i=0;$i<count($Request);$i++) {
+					$part_valid = false;
+					//is url variable
+					if(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/([a-zA-Z0-9_]+)/', $Request[$i])) {
+						URL::SetParameter($rx_matches[2], $Request[$i]);
+						$part_valid = true;
+					}
+					//is regex
+					if(preg_match('/(rx)(\{)(.*)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
+						$part_valid = true;
+					}
+					//is regexed variable
+					if(preg_match('/(rx)(\{)(.*)(\})(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
+						URL::SetParameter($rx_matches[6], $Request[$i]);
+						$part_valid = true;
+					}
+					//is *
+					if(preg_match('/(\*+)/', $Saved[$i])) {
+						$part_valid = true;
+					}
+					//is plain text
+					if($Saved[$i]==$Request[$i]) {
+						$part_valid = true;
+					}
+					//if a part of the url is not ok -> return false
+					if(!$part_valid) {
 						return false;
-					} else if(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $SavedPath[$i])) {
-						//Url Variable
-						URL::SetParameter(substr($SavedPath[$i],1,count($SavedPath[$i])-2), $RequestPath[$i]);
 					}
 				}
-				//set saved URI
+				//set saved url
 				URL::SetRoute($SavedUri);
 				return true;
 			}
