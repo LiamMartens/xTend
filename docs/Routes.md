@@ -12,6 +12,8 @@ Read more about setting up routes.
 ##URLs
 * Normal URL. For example `hello` will catch `example.com/hello` and `hello/liam` will catch `example.com/hello/liam`
 * URL variables. For example `hello/{name}` will catch `example.com/hello/{anything-can-be-here}` and there will be a variable available with the key from the url. You can retrieve URL variables by using the [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
+* Regex urls. For example `hello/rx{^([a-zA-Z])$}` will catch `example.com/hello/{any-text-containing-letters-both-upper-and-lowercase}`. 
+* Regex URL variables. For example `hello/rx{^([a-z])$}{name}` will catch `example.com/hello/{any-text-containing-lowercase-letters}` and there will be a variable available with the key from the url, in this case `name`. ou can retrieve URL variables by using the [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
 * The `*` character will catch anything. Can be used like `hello/*` but this will not make a variable available.
 
 ##Routes - What to do when a route is matched?
