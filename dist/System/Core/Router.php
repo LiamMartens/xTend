@@ -65,8 +65,8 @@
 						$part_valid = true;
 					}
 					//is regexed variable
-					if(preg_match('/(rx)(\{)(.*)(\})(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
-						URL::SetParameter($rx_matches[6], $Request[$i]);
+					if(preg_match('/(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[6].'/', $Request[$i])) {
+						URL::SetParameter($rx_matches[3], $Request[$i]);
 						$part_valid = true;
 					}
 					//is *
