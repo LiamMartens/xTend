@@ -8,6 +8,10 @@
 			private static $_Method = "ANY";
 			private static $_Data = array();
 
+			public static function To($url) {
+				header("Location: " . Config::Url . "/$url");
+			}
+
 			public static function Route() {
 				return self::$_Route;
 			}

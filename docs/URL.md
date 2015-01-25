@@ -1,4 +1,6 @@
 #URL Helper class
+##To
+You can use this static method to redirect to a url. For example `URL::To("contact")` will redirect the user to `http://example.com/contact`.
 ##Route
 Static method `URL::Route()` will return the key of the matched route currently displayed. For example if you have a route `person/{name}` defined and you navigate to `person/peter` the function will return `person/{name}`.
 ##Request
