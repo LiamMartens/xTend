@@ -30,7 +30,7 @@
 			"while($2) {"
 		);
 		Wow::RegisterExpression(
-			Wow::RegEx("$(@end)^","i"),
+			Wow::RegEx("(@end)","i"),
 			"<?php } ?>"
 		);
 		Wow::RegisterExpression(
