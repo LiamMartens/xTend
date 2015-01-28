@@ -92,7 +92,9 @@
 					//Save Section
 					$SectionContent = array();
 					preg_match_all($RegEx, $View, $SectionContent);
-					$CompiledSections[$Sections[4][$i]] = self::Compile($SectionContent[2][0]);
+					if(count($SectionContent[2])>0) {
+						$CompiledSections[$Sections[4][$i]] = self::Compile($SectionContent[2][0]);
+					}
 				}
 				foreach ($CompiledSections as $Section => $Content) {
 					$Layout = preg_replace(self::RegEx("(@)(section)(:)($Section)"), $Content, $Layout);
