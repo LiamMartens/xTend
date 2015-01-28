@@ -182,6 +182,24 @@
 					}
 				}
 			}
+			//Installation
+			public static function Install() {
+				try {
+					Dir::Create(Dir::System("Backups"));
+					Dir::Create(Dir::System("Logs"));
+					Dir::Create(Dir::System("Meta"));
+					Dir::Create(Dir::System("ViewOutput"));
+					Dir::Create(Dir::System("Models"));
+					Dir::Create(Dir::System("Layouts"));
+					Dir::Create(Dir::System("Dynamic"));
+					Dir::Create(Dir::System("Controllers"));
+					Dir::Create(Dir::System("Views"));
+					File::Write("index.php", '<?php require_once("../System/Core/App.php"); xTend\\App::Initialize(); ?>');
+				} catch(Exception $ex) {
+					var_dump($ex);
+					die();
+				}
+			}
 			//Initialize
 			public static function Initialize() {
 				//commmence session
@@ -218,7 +236,5 @@
 				App::IncludeFile("Dynamic.".$ClassParts[count($ClassParts)-1].".php");
 			}
 		});
-		//Call App Init
-		App::Initialize();
 	}
 ?>
