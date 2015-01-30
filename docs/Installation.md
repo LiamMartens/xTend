@@ -39,6 +39,16 @@ If the `/System` directory and the `/www/index.php` are writable by the framewor
 ```
 <?php require_once("../System/Core/App.php"); xTend\App::Initialize(); ?>
 ```
+The directories which need to be created are
+* `/System/Backups`
+* `/System/Logs`
+* `/System/Meta`
+* `/System/ViewOutput`
+* `/System/Models`
+* `/System/Layouts`
+* `/System/Dynamic`
+* `/System/Controllers`
+* `/System/Views`
 
 ##STEP 3:
 xTend logs PHP errors, PHP exceptions and also it's own errors. To make this work you will have to allow writing on the `/System/Logs` directory.
