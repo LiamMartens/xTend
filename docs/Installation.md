@@ -11,7 +11,7 @@ The installation is divided in several steps
 [STEP 8: SASS/SCSS compiler](#step-8)  
 
 ##STEP 1:
-After you have downloaded the files you have to put them on your hosting. Keep in mind the `/www` directory will be publicly accessible (here you will store css, javascript and images) while the `/System` directory should not be publicly visible. Another sidenote, you can rename the `/www` directory to any other name you like.  
+After you have downloaded the files you have to put them on your hosting. Keep in mind the `/www` directory will be publicly accessible (here you will store css, javascript and images) while the `/System` directory should not be publicly visible. Another sidenote, you can rename the `/www` directory to any other name you like.
 
 **Can I use this on a normal hosting?**  
 Yes you can. You just have to put the `/System` directory in the parent directory of your default public directory and copy the files from `/www` to your public directory. (could already be `/www` but can also be `/public_html` or...)
@@ -33,6 +33,12 @@ RewriteRule ^ index.php [L,QSA]
 
 **I don't know this, what does it do?**  
 The above piece of code makes sure any URL request, excluding files, will point to the `index.php` file inside your public directory.
+
+##STEP X:
+If the `/System` directory and the `/www/index.php` are writable by the framework, it will create all directories by itself. If this is not the case you'll just have create all directories yourself and set their respective CHMOD permissions. You will also have to change the `/www/index.php`. Remove all contents and put this instead:
+```
+<?php require_once("../System/Core/App.php"); xTend\App::Initialize(); ?>
+```
 
 ##STEP 3:
 xTend logs PHP errors, PHP exceptions and also it's own errors. To make this work you will have to allow writing on the `/System/Logs` directory.
