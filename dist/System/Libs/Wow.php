@@ -94,6 +94,8 @@
 					preg_match_all($RegEx, $View, $SectionContent);
 					if(count($SectionContent[2])>0) {
 						$CompiledSections[$Sections[4][$i]] = self::Compile($SectionContent[2][0]);
+					} else {
+						$CompiledSections[$Sections[4][$i]] = "";
 					}
 				}
 				foreach ($CompiledSections as $Section => $Content) {
