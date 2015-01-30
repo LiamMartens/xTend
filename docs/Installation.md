@@ -3,6 +3,7 @@ The installation is divided in several steps
 
 [STEP 1: Uploading the files](#step-1)  
 [STEP 2: Clean URL's](#step-2)  
+[STEP X: Installer](#step-2)  
 [STEP 3: Logs](#step-3)  
 [STEP 4: Backups](#step-4)  
 [STEP 5: Core config](#step-5)  
