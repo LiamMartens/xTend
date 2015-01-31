@@ -17,39 +17,39 @@
 			//	Get view version
 			private static function Version($Content) {
 				//Build Regex
-				$RegEx = self::RegEx("(@)(version)(:)(\d+)","i");
+				$RegEx = self::RegEx("(\s+|^)(@)(version)(:)(\d+)(\s+|$)","i");
 				//Get matches
 				$Matches = array();
 				preg_match($RegEx, $Content, $Matches);
 				//Check version
 				if(count($Matches)>0) {
-					return intval($Matches[4]);
+					return intval($Matches[5]);
 				}
 				return false;
 			}
 			//	Get extended layout
 			private static function Layout($Content) {
 				//Build Regex
-				$RegEx = self::RegEx("(@)(layout)(:)([\w\-\_]+)","i");
+				$RegEx = self::RegEx("(\s+|^)(@)(layout)(:)([\w\-\_]+)(\s+|$)","i");
 				//Get matches
 				$Matches = array();
 				preg_match($RegEx, $Content, $Matches);
 				//Check layout
 				if(count($Matches)>0) {
-					return $Matches[4];
+					return $Matches[5];
 				}
 				return false;
 			}
 			//	Get compile option
 			private static function CompileOption($Content) {
 				//Build Regex
-				$RegEx = self::RegEx("(@)(compile)(:)(always|version|never|change)","i");
+				$RegEx = self::RegEx("(\s+|^)(@)(compile)(:)(always|version|never|change)(\s+|$)","i");
 				//Get matches
 				$Matches = array();
 				preg_match($RegEx, $Content, $Matches);
 				//Check layout
 				if(count($Matches)>0) {
-					return $Matches[4];
+					return $Matches[5];
 				}
 				return false;
 			}
@@ -70,6 +70,9 @@
 			}
 			//Compile piece of non layout Wow 
 			private static function Compile($Content) {
+				//replace @version: and @compile stuff
+				$Content = preg_replace(self::RegEx("(\s+|^)(@version:\d+)(\s+|$)","i"), "", $Content);
+				$Content = preg_replace(self::RegEx("(\s+|^)(@compile:[a-z0-9]+)(\s+|$)","i"), "", $Content);
 				foreach (self::$_Expressions as $RegEx => $Replacement) {
 					$Content = preg_replace($RegEx, $Replacement, $Content);
 					//$Content = preg_replace($RegEx, $Replacement, $Content);
@@ -88,12 +91,12 @@
 				$CompiledSections = array();
 				//Loop through all sections and build them accordingly
 				for($i=0;$i<count($Sections[4]);$i++) {
-					$RegEx = self::RegEx("(@section:".$Sections[4][$i]."\n)([\s\S]*)(\n@endsection:".$Sections[4][$i].")", "im");
+					$RegEx = self::RegEx("(\s+|^)(@section:".$Sections[4][$i].")(\s+|$)([\s\S]*)(\s+|^)(@endsection:".$Sections[4][$i].")(\s+|$)", "im");
 					//Save Section
 					$SectionContent = array();
 					preg_match_all($RegEx, $View, $SectionContent);
-					if(count($SectionContent[2])>0) {
-						$CompiledSections[$Sections[4][$i]] = self::Compile($SectionContent[2][0]);
+					if(count($SectionContent[4])>0) {
+						$CompiledSections[$Sections[4][$i]] = self::Compile($SectionContent[4][0]);
 					} else {
 						$CompiledSections[$Sections[4][$i]] = "";
 					}
@@ -130,7 +133,7 @@
 							($CompileOption!="never"))||
 							($CompileOption=="always")||
 							(($CompileOption=="change")&&self::Changed($View->FileName))||
-							self::Changed($LayoutPath)) {
+							((File::Exists($LayoutPath)) ? self::Changed($LayoutPath) : false)) {
 							//Update ViewMeta
 							self::UpdateMeta($View->FileName);
 							self::UpdateMeta($LayoutPath);
