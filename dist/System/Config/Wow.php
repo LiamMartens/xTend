@@ -19,15 +19,15 @@
 		);
 		Wow::RegisterExpression(
 			Wow::RegEx("(@for\()(.*)(;)(.*)(;)(.*)(\))"),
-			"for($2$3$4$5$6) {"
+			"<?php for($2$3$4$5$6) { ?>"
 		);
 		Wow::RegisterExpression(
 			Wow::RegEx("(@foreach\()(.*)( )(as)( )(.*)(\))"),
-			"foreach($2 as $6) {"
+			"<?php foreach($2 as $6) { ?>"
 		);
 		Wow::RegisterExpression(
 			Wow::RegEx("(@while\()(.*)(\))"),
-			"while($2) {"
+			"<?php while($2) { ?>"
 		);
 		Wow::RegisterExpression(
 			Wow::RegEx("(@end)","i"),

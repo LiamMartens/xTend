@@ -24,13 +24,28 @@ Either way, you will need following piece of code:
 RewriteEngine On
 RewriteBase /
 
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ index.php [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L,QSA]
 ```
+
+If you also want to redirect `www.example.com` to `example.com` you can easily do this by using this adapted `.htaccess` file:
+```
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L,QSA]
+```
+
 
 **I don't know this, what does it do?**  
 The above piece of code makes sure any URL request, excluding files, will point to the `index.php` file inside your public directory.
