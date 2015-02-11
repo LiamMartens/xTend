@@ -3,7 +3,7 @@
 	{
 		class Models {
 			//Model exists
-			public function Exists($Model) {
+			public static function Exists($Model) {
 				return File::Exists(File::System("Models.$Model.php"));
 			}
 			//Initialize a model
