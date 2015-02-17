@@ -67,6 +67,16 @@
 			}
 			//Write to a file (overwrite)
 			public static function Write($FilePath, $FileContent) {
+				//create directories if necessary
+				//replace \ with /
+				$FilePath = str_replace('\\', '/', $FilePath);
+				//fetch directory path
+				$DirPath=substr($FilePath, 0, strrpos($FilePath, '/'));
+				//create dir if non existent
+				if(!Dir::Exists($DirPath)) {
+					Dir::Create($DirPath);
+				}
+				//try to put contents
 				return file_put_contents($FilePath, $FileContent);
 			}
 			//Append to a file
