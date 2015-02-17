@@ -22,9 +22,6 @@ There are 3 ways of defining this:
 * `function` : A function which can be executed. You can load views, models and controllers using code. Using `Views::Initialize({name})`, `Controllers::Initialize({name})`, `Models::Initialize({name})` respectively.
 * `array` : An array where you can define the View, the Controller and the Model. You can also pass data to the Controller, or the View if there is no Controller defined, by adding a `Data` key with an array as it's value.
 
-###View initialization
-When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`.
-
 ##Restrict
 Restrict can be used to execute a function before defining routes. For example, if you only want to allow IP address `127.0.0.1` onto a `GET` route called `hack` you can do the following:
 ```
@@ -42,3 +39,6 @@ You can set an AppError route as follows:
 Router::AppError(Error::{ErrorType}, Route);
 ```
 You can find the error types inside `/System/Core/Error.php`, but you can also defined new ones.
+
+##Namespacing
+When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`. The same goes for models and controllers.
