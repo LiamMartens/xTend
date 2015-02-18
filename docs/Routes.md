@@ -41,4 +41,4 @@ Router::AppError(Error::{ErrorType}, Route);
 You can find the error types inside `/System/Core/Error.php`, but you can also defined new ones.
 
 ##Namespacing
-When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`. The same goes for models and controllers.
+When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`. The same goes for models and controllers, but for these you need to take into account the last part. For example, `foo.bar.controller` will load the file `/foo/bar/Controller.php` inside the `/System/Controllers` directory and next it will initialize an instance of the class `controller` (hence the last part `.controller`)
