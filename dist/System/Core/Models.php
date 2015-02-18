@@ -12,7 +12,7 @@
 				if(self::Exists($Model)) {
 					//Include model
 					App::IncludeFile("Models.$Model.php");
-					$ModelName = explode('.', $PathController);
+					$ModelName = explode('.', $Model);
 					$ModelName = $ModelName[count($ModelName) - 1];
 					App::Model(new $ModelName());
 					return true;
