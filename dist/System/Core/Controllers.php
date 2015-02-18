@@ -12,10 +12,12 @@
 				//Check whether the controller exists
 				if(self::Exists($Path[0])) {
 					$PathController = $Path[0];
+					$ControllerName = explode('.', $PathController);
+					$ControllerName = $ControllerName[count($ControllerName) - 1];
 					//Include controller
 					App::IncludeFile("Controllers.$PathController.php");
 					//Create new Controller
-					$Instance = new $PathController();
+					$Instance = new $ControllerName();
 					//Set data
 					if(is_subclass_of($Instance, "xTend\BaseDataExtension")) {
 						foreach ($Data as $Key => $Value) {
