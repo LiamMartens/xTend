@@ -24,10 +24,37 @@
 				$bak = new Archive(File::System("Backups.$BackupName"), true);
 				$bak->Extract(Dir::System("Backups.Temp"));
 				//restore all files --> loop
-				$TempFiles = Dir::RecursiveFiles(Dir::System("Backups.Temp"));
-				foreach($TempFiles as $File) {
-					$FileContent = File::Read(Dir::System("Backups.Temp")."/".$File);
-					file_put_contents("../".$File, $FileContent);
+				$TempDirectories = Dir::RecursiveDirectories(Dir::System("Backups.Temp"));
+				$CurrentDirectories = Dir::RecursiveDirectories("..");
+				foreach($TempDirectories as $Dir) {
+					$FullDir = Dir::System("Backups.Temp")."/".$Dir;
+					$CurrentDir = "../$Dir";
+					$DirFiles = Dir::Files($FullDir);
+					$CurrentFiles = Dir::Files($CurrentDir);
+					foreach($DirFiles as $File) {
+						File::Write("$CurrentDir/$File", File::Read("$FullDir/$File"));
+						//remove index from currentfiles
+						$index = array_search($File, $CurrentFiles);
+						if($index!==false) {
+							unset($CurrentFiles[$index]);
+						}
+					}
+					//remove index from currentdirectories
+					$index = array_search($Dir, $CurrentDirectories);
+					if($index!==false) {
+						unset($CurrentDirectories[$index]);
+					}
+					//reset indexes of currentfiles
+					$CurrentFiles = array_values($CurrentFiles);
+					foreach($CurrentFiles as $File) {
+						//remove non backup files
+						File::Remove("$CurrentDir/$File");
+					}
+				}
+				//reset indexes of currentdirectories
+				$CurrentDirectories = array_values($CurrentDirectories);
+				foreach($CurrentDirectories as $Dir) {
+					Dir::Remove("../$Dir");
 				}
 				//remove temp directory
 				Dir::Remove(Dir::System("Backups.Temp"));
