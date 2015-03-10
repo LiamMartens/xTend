@@ -5,8 +5,11 @@
 		{
 			private $Zip;
 			private $Destination;
+			private $Exclusions;
 			
 			public function __construct($Dest, $Read = false) {
+				//Reset exclusions
+				$this->Exclusions = array();
 				//set source and destination
 				$this->Destination = $Dest;
 				//start zip archive
@@ -22,12 +25,26 @@
 			public function AddFolder($DirPath) {
 				$Directories = Dir::RecursiveDirectories($DirPath);
 				foreach($Directories as $Dir) {
-					$this->Zip->addEmptyDir($Dir);
+					$this->Zip->addEmptyDir($DirPath."/".$Dir);
 				}
 				$Files = Dir::RecursiveFiles($DirPath);
 				foreach($Files as $File) {
-					$this->Zip->addFile($DirPath."/".$File,$File);
+					$this->Zip->addFile($DirPath."/".$File, $DirPath."/".$File);
 				}
+			}
+
+			public function ExcludeFolder($DirPath) {
+				$Files = Dir::RecursiveFiles($DirPath);
+				foreach($Files as $File) {
+					$this->Exclusions[] = $DirPath."/".$File;
+					//remove name
+					$this->Zip->deleteName($DirPath."/".$File);
+				}
+			}
+
+			public function ExcludeFile($FilePath) {
+				$this->Exclusions[] = $FilePath;
+				$this->Zip->deleteName($FilePath);
 			}
 
 			public function Extract($Dest) {
@@ -35,6 +52,11 @@
 			}
 			
 			public function Save() {
+				//remove all exclusions again
+				foreach($this->Exclusions as $Excl) {
+					$this->Zip->deleteName($Excl);
+				}
+				//Save
 				return $this->Zip->close();
 			}
 		}
