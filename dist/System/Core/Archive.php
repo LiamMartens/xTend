@@ -25,11 +25,11 @@
 			public function AddFolder($DirPath) {
 				$Directories = Dir::RecursiveDirectories($DirPath);
 				foreach($Directories as $Dir) {
-					$this->Zip->addEmptyDir($DirPath."/".$Dir);
+					$this->Zip->addEmptyDir(preg_replace('/^(\.\.\/)+/', '', $DirPath."/".$Dir));
 				}
 				$Files = Dir::RecursiveFiles($DirPath);
 				foreach($Files as $File) {
-					$this->Zip->addFile($DirPath."/".$File, $DirPath."/".$File);
+					$this->Zip->addFile($DirPath."/".$File, preg_replace('/^(\.\.\/)+/', '', $DirPath."/".$File));
 				}
 			}
 
@@ -38,13 +38,13 @@
 				foreach($Files as $File) {
 					$this->Exclusions[] = $DirPath."/".$File;
 					//remove name
-					$this->Zip->deleteName($DirPath."/".$File);
+					$this->Zip->deleteName(preg_replace('/^(\.\.\/)+/', '', $DirPath."/".$File));
 				}
 			}
 
 			public function ExcludeFile($FilePath) {
 				$this->Exclusions[] = $FilePath;
-				$this->Zip->deleteName($FilePath);
+				$this->Zip->deleteName(preg_replace('/^(\.\.\/)+/', '', $FilePath));
 			}
 
 			public function Extract($Dest) {
