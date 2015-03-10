@@ -18,8 +18,10 @@
 				if($Read) { $this->Zip->open($this->Destination); } else { $this->Zip->open($this->Destination, \ZipArchive::CREATE); }
 			}
 			
-			public function AddFile($FilePath, $ZipPath) {
-				$this->Zip->addFile($FilePath);
+			public function AddFile($FilePath, $ZipPath = false) {
+				if($ZipPath===false) {
+					$this->Zip->addFile(preg_replace('/^(\.\.\/)+/', '', $FilePath));
+				} else { $this->Zip->addFile(preg_replace('/^(\.\.\/)+/', '', $FilePath), preg_replace('/^(\.\.\/)+/', '', $ZipPath)); }
 			}
 			
 			public function AddFolder($DirPath) {
