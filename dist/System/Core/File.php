@@ -73,7 +73,7 @@
 				//fetch directory path
 				$DirPath=substr($FilePath, 0, strrpos($FilePath, '/'));
 				//create dir if non existent
-				if(!Dir::Exists($DirPath)) {
+				if(!Dir::Exists($DirPath)&&(trim($DirPath)!="")) {
 					Dir::Create($DirPath);
 				}
 				//try to put contents
