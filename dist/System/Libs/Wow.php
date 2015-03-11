@@ -69,7 +69,7 @@
 				return true;
 			}
 			//Compile piece of non layout Wow 
-			private static function Compile($Content) {
+			public static function Compile($Content) {
 				//replace @version: and @compile stuff
 				$Content = preg_replace(self::RegEx("(\s+|^)(@version:\d+)(\s+|$)","i"), "", $Content);
 				$Content = preg_replace(self::RegEx("(\s+|^)(@compile:[a-z0-9]+)(\s+|$)","i"), "", $Content);

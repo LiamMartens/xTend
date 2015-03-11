@@ -14,6 +14,7 @@
 		require_once("../System/Core/URL.php");
 		require_once("../System/Core/Router.php");
 		require_once("../System/Core/Backup.php");
+		require_once("../System/Core/Modules.php");
 		//xTend Application class
 		class App
 		{
@@ -189,6 +190,7 @@
 					Dir::Create(Dir::System("Logs"));
 					Dir::Create(Dir::System("Meta"));
 					Dir::Create(Dir::System("ViewOutput"));
+					Dir::Create(Dir::System("Modules"));
 					Dir::Create(Dir::System("Models"));
 					Dir::Create(Dir::System("Layouts"));
 					Dir::Create(Dir::System("Dynamic"));
