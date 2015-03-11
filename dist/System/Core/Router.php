@@ -4,33 +4,71 @@
 		class Router {
 			private static $_Default;
 			private static $_Home;
+			private static $_Aliases = array();
 			private static $_Post = array();
 			private static $_Get = array();
 			private static $_Any = array();
 			private static $_Error = array();
+			//Redirection
+			public static function To($Alias) {
+				if(array_key_exists($Alias, self::$_Aliases)) {
+					if(self::$_Aliases[$Alias]["Url"]!==false) {
+						URL::to(self::$_Aliases[$Alias]["Url"]);
+					}
+				}
+			}
+			public static function Load($Alias) {
+				if(array_key_exists($Alias, self::$_Aliases)) {
+					self::ExecuteRoute(self::$_Aliases[$Alias]["Route"]);
+				}
+			}
 			//Post route
-			public static function Post($Url,$Route) {
+			public static function Post($Url,$Route,$Alias=false) {
 				self::$_Post[trim(strtolower($Url),"/")] = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
+				}
 			}
 			//Get route
-			public static function Get($Url,$Route) {
+			public static function Get($Url,$Route,$Alias=false) {
 				self::$_Get[trim(strtolower($Url),"/")] = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
+				}
 			}
 			//Any route
-			public static function Any($Url,$Route) {
+			public static function Any($Url,$Route,$Alias=false) {
 				self::$_Any[trim(strtolower($Url),"/")] = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
+				}
 			}
 			//Error routes
-			public static function AppError($Error, $Route) {
+			public static function AppError($Error, $Route, $Alias=false) {
 				self::$_Error[$Error] = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
+				}
 			}
 			//Set default route
-			public static function Def($Route) {
+			public static function Def($Route, $Alias=false) {
 				self::$_Default = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
+				}
 			}
 			//Set home route
-			public static function Home($Route) {
+			public static function Home($Route, $Alias=false) {
 				self::$_Home = $Route;
+				//save alias if necessary
+				if(($Alias!==false)&&is_string($Alias)) {
+					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
+				}
 			}
 			//Route restriction
 			//Restriction must return true
