@@ -81,5 +81,9 @@
 			Wow::RegEx("(@controller:)(.*)","i"),
 			"<?php echo \xTend\App::Controller()->$2(); ?>"
 		);
+		Wow::RegisterExpression(
+			Wow::RegEx("(@module\()([a-zA-Z0-9\.]+)(\))","i"),
+			"<?php xTend\Modules::Insert(\"$2\"); ?>"
+		);
 	}
 ?>
