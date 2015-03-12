@@ -6,5 +6,6 @@
 [URL Helper](http://xtend.readthedocs.org/en/latest/URL/)  
 [Libs](http://xtend.readthedocs.org/en/latest/Libs/)  
 [Configure](http://xtend.readthedocs.org/en/latest/Configure/)  
+[Modules](http://xtend.readthedocs.org/en/latest/Modules/)  
 [Backups](http://xtend.readthedocs.org/en/latest/Backups/)  
 [SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)  
