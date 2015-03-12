@@ -40,5 +40,10 @@ Router::AppError(Error::{ErrorType}, Route);
 ```
 You can find the error types inside `/System/Core/Error.php`, but you can also defined new ones.
 
+##Initializing Controllers and/or Models
+By default when you call `Controllers::Initialize({name})` or `Models::Initialize({name})` an instance of the object with name `{name}` is created and available inside `App::Controller()` and `App::Model()`. However you can also choose to not instantiate an instance of the object by passing `false`. As for the Controllers you can also pass in data, as said before. 
+An example: `Controllers::Initialize({name}, false, array());`.
+! Do keep in mind when you want to pass data to a non instantiated controller, the controller in question needs to have a class with the name `{name}` and it should extend `StaticBaseDataExtension`.
+
 ##Namespacing
 When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`. The same goes for models and controllers, but for these you need to take into account the last part. For example, `foo.bar.controller` will load the file `/foo/bar/Controller.php` inside the `/System/Controllers` directory and next it will initialize an instance of the class `controller` (hence the last part `.controller`)
