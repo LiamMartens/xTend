@@ -15,4 +15,3 @@
 			file_put_contents("css/$file.css", $string_css);
 		}
 	}
-?>

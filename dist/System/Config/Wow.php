@@ -86,4 +86,3 @@
 			"<?php xTend\Modules::Insert(\"$2\"); ?>"
 		);
 	}
-?>

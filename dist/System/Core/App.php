@@ -196,7 +196,7 @@
 					Dir::Create(Dir::System("Dynamic"));
 					Dir::Create(Dir::System("Controllers"));
 					Dir::Create(Dir::System("Views"));
-					File::Write("index.php", '<?php require_once("../System/Core/App.php"); xTend\\App::Initialize(); ?>');
+					File::Write("index.php", '<?php require_once("../System/Core/App.php"); xTend\\App::Initialize();');
 				} catch(Exception $ex) {
 					var_dump($ex);
 					die();
@@ -239,4 +239,3 @@
 			}
 		});
 	}
-?>
