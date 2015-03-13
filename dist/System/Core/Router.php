@@ -93,26 +93,22 @@
 				$rx_matches = array();
 				for($i=0;$i<count($Request);$i++) {
 					$part_valid = false;
-					//is url variable
-					if(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/([a-zA-Z0-9_]+)/', $Request[$i])) {
+					//is regexed variable
+					if(preg_match('/(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})/', $Saved[$i], $rx_matches)) {
+						if(preg_match('/'.$rx_matches[6].'/', $Request[$i])) {
+							URL::SetParameter($rx_matches[3], $Request[$i]);
+							$part_valid = true;
+						}
+					} elseif(preg_match('/(rx)(\{)(.*)(\})/', $Saved[$i], $rx_matches)) {
+						if(preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
+							$part_valid = true;
+						}
+					} elseif(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/([a-zA-Z0-9_]+)/', $Request[$i])) {
 						URL::SetParameter($rx_matches[2], $Request[$i]);
 						$part_valid = true;
-					}
-					//is regex
-					if(preg_match('/(rx)(\{)(.*)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
+					} elseif(preg_match('/(\*+)/', $Saved[$i])) {
 						$part_valid = true;
-					}
-					//is regexed variable
-					if(preg_match('/(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})/', $Saved[$i], $rx_matches)&&preg_match('/'.$rx_matches[6].'/', $Request[$i])) {
-						URL::SetParameter($rx_matches[3], $Request[$i]);
-						$part_valid = true;
-					}
-					//is *
-					if(preg_match('/(\*+)/', $Saved[$i])) {
-						$part_valid = true;
-					}
-					//is plain text
-					if($Saved[$i]==$Request[$i]) {
+					} elseif($Saved[$i]==$Request[$i]) {
 						$part_valid = true;
 					}
 					//if a part of the url is not ok -> return false
