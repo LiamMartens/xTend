@@ -84,7 +84,4 @@ xTend uses it's own templating engine called Wow. It compiles wow enabled Views 
 ##STEP 8:
 A SASS/SCSS compiler is included with version 0.4 ([Third-Party SASS compiler](http://leafo.net/scssphp/)) and to make this work you should allow writing on the `/www/css` directory. You can remove this library the same way as the Wow templating engine by removing the related files from the `/System/Libs` and the `/System/Config` folders.
 
-###Sidenote
-Don't forget to remove the `.gitignore` files inside the empty directories under `/System`.
-
 ##All set up and ready creating a great website!
