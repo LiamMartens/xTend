@@ -54,18 +54,22 @@
 				return false;
 			}
 			//Get file changed
-			private static function Changed($FileName) {
+			private static function Changed($FileName, $Layout = false) {
 				//file exists should already be checked
 				$time_last_mod = filemtime($FileName);
+				if($Layout !== false) { $time_layout_last_mod = filemtime($Layout); }
 				//get file meta info
 				$last_compile = File::GetMeta($FileName, "last_compile");
+				$last_layout_compile = File::GetMeta($FileName, "last_layout_compile");
 				if($last_compile===false) { return true; }
 				if(floatval($last_compile)<$time_last_mod) { return true; }
+				if($Layout !== false) { if(floatval($last_layout_compile)<$time_layout_last_mod) { return true; } }
 				return false;
 			}
 			//Update meta data
-			private static function UpdateMeta($FileName) {
+			private static function UpdateMeta($FileName, $usesLayout = false) {
 				File::SetMeta($FileName, "last_compile", time());
+				if($usesLayout==true) { File::SetMeta($FileName, "last_layout_compile", time()); }
 				return true;
 			}
 			//Compile piece of non layout Wow 
@@ -132,12 +136,11 @@
 						if(((!File::Exists(File::System("ViewOutput.".$View->Name."-$Version.php")))&&
 							($CompileOption!="never"))||
 							($CompileOption=="always")||
-							(($CompileOption=="change")&&self::Changed($View->FileName))||
-							((File::Exists($LayoutPath)) ? self::Changed($LayoutPath) : false)) {
+							(($CompileOption=="change")&&self::Changed($View->FileName, (($Layout!=false) ? $LayoutPath : false)))) {
 							//Update ViewMeta
-							self::UpdateMeta($View->FileName);
-							self::UpdateMeta($LayoutPath);
+							self::UpdateMeta($View->FileName, (($Layout!=false) ? true : false));
 							if($Layout!=false) {
+								echo "compile";
 								//Extend layout
 								$LayoutContent = str_replace("\r\n","\n",File::Read($LayoutPath));
 								//Compile content
