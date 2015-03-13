@@ -63,7 +63,10 @@
 				$last_layout_compile = File::GetMeta($FileName, "last_layout_compile");
 				if($last_compile===false) { return true; }
 				if(floatval($last_compile)<$time_last_mod) { return true; }
-				if($Layout !== false) { if(floatval($last_layout_compile)<$time_layout_last_mod) { return true; } }
+				if($Layout !== false) {
+					if($last_layout_compile===false) { return true; }
+					if(floatval($last_layout_compile)<$time_layout_last_mod) { return true; }
+				}
 				return false;
 			}
 			//Update meta data
