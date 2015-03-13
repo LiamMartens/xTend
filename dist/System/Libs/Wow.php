@@ -143,7 +143,6 @@
 							//Update ViewMeta
 							self::UpdateMeta($View->FileName, (($Layout!=false) ? true : false));
 							if($Layout!=false) {
-								echo "compile";
 								//Extend layout
 								$LayoutContent = str_replace("\r\n","\n",File::Read($LayoutPath));
 								//Compile content
