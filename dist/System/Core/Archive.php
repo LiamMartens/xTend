@@ -50,7 +50,9 @@
 			}
 
 			public function Extract($Dest) {
-				return $this->Zip->extractTo($Dest);
+				$r = $this->Zip->extractTo($Dest);
+				$this->Zip->close();
+				return $r;
 			}
 			
 			public function Save() {
