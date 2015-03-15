@@ -34,14 +34,14 @@
 			//Rename a file
 			public static function Rename($Source, $Destination) {
 				//Check for file existance
-				if(self::Exists($FilePath)) {
+				if(self::Exists($Source)) {
 					rename($Source, $Destination);
 				}
 			}
 			//Copy a file
 			public static function Copy($Source, $Destination) {
 				//Check for file existance
-				if(self::Exists($FilePath)) {
+				if(self::Exists($Source)) {
 					copy($Source, $Destination);
 				}
 			}
