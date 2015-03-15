@@ -8,4 +8,5 @@
 [Configure](http://xtend.readthedocs.org/en/latest/Configure/)  
 [Modules](http://xtend.readthedocs.org/en/latest/Modules/)  
 [Backups](http://xtend.readthedocs.org/en/latest/Backups/)  
+[Updater](http://xtend.readthedocs.org/en/latest/Updater/)
 [SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)  
