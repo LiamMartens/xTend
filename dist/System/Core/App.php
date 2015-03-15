@@ -15,6 +15,7 @@
 		require_once("../System/Core/Router.php");
 		require_once("../System/Core/Backup.php");
 		require_once("../System/Core/Modules.php");
+		require_once("../System/Core/Updater.php");
 		//xTend Application class
 		class App
 		{
