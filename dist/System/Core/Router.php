@@ -23,52 +23,54 @@
 				}
 			}
 			//Post route
-			public static function Post($Url,$Route,$Alias=false) {
-				self::$_Post[trim(strtolower($Url),"/")] = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
-				}
+			public static function Post($Handle,$Route=false,$Alias=false) {
+				$h; if(is_string($Handle)) {
+					$h = new Route($Handle, $Route, $Alias);
+				} elseif($Handle instanceof  Route) { $h = $Handle; }
+				//add route to post
+				self::$_Post[] = $h;
+				//return handle
+				return $h;
 			}
 			//Get route
-			public static function Get($Url,$Route,$Alias=false) {
-				self::$_Get[trim(strtolower($Url),"/")] = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
-				}
+			public static function Get($Handle,$Route=false,$Alias=false) {
+				$h; if(is_string($Handle)) {
+					$h = new Route($Handle, $Route, $Alias);
+				} elseif($Handle instanceof  Route) { $h = $Handle; }
+				//add route to post
+				self::$_Get[] = $h;
+				//return handle
+				return $h;
 			}
 			//Any route
-			public static function Any($Url,$Route,$Alias=false) {
-				self::$_Any[trim(strtolower($Url),"/")] = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => $Url, "Route" => $Route);
-				}
+			public static function Any($Handle,$Route=false,$Alias=false) {
+				$h; if(is_string($Handle)) {
+					$h = new Route($Handle, $Route, $Alias);
+				} elseif($Handle instanceof  Route) { $h = $Handle; }
+				//add route to post
+				self::$_Any[] = $h;
+				//return handle
+				return $h;
 			}
 			//Error routes
-			public static function AppError($Error, $Route, $Alias=false) {
-				self::$_Error[$Error] = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
-				}
+			public static function AppError($Handle,$Route=false,$Alias=false) {
+				$h; if(is_string($Handle)) {
+					$h = new Route($Handle, $Route, $Alias);
+				} elseif($Handle instanceof  Route) { $h = $Handle; }
+				//add route to post
+				self::$_Error[] = $h;
+				//return handle
+				return $h;
 			}
 			//Set default route
 			public static function Def($Route, $Alias=false) {
-				self::$_Default = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
-				}
+				self::$_Default = new Route(false, $Route, $Alias);
+				return self::$_Default;
 			}
 			//Set home route
 			public static function Home($Route, $Alias=false) {
-				self::$_Home = $Route;
-				//save alias if necessary
-				if(($Alias!==false)&&is_string($Alias)) {
-					self::$_Aliases[$Alias] = array("Url" => false, "Route" => $Route);
-				}
+				self::$_Home = new Route('', $Route, $Alias);
+				return self::$_Home;
 			}
 			//Route restriction
 			//Restriction must return true
@@ -82,84 +84,11 @@
 				}
 				return false;
 			}
-			//Is Match
-			private static function IsMatch($RequestUri, $SavedUri) {
-				//Explode both URLs
-				$Request = explode("/", trim(strtolower($RequestUri),"/"));
-				$Saved = explode("/", $SavedUri);
-				//check whether they have equal parts
-				if(count($Request)!=count($Saved)) { return false; };
-				//check each part
-				$rx_matches = array();
-				for($i=0;$i<count($Request);$i++) {
-					$part_valid = false;
-					//is regexed variable
-					if(preg_match('/(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})/', $Saved[$i], $rx_matches)) {
-						if(preg_match('/'.$rx_matches[6].'/', $Request[$i])) {
-							URL::SetParameter($rx_matches[3], $Request[$i]);
-							$part_valid = true;
-						}
-					} elseif(preg_match('/(rx)(\{)(.*)(\})/', $Saved[$i], $rx_matches)) {
-						if(preg_match('/'.$rx_matches[3].'/', $Request[$i])) {
-							$part_valid = true;
-						}
-					} elseif(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $Saved[$i], $rx_matches)&&preg_match('/([a-zA-Z0-9_]+)/', $Request[$i])) {
-						URL::SetParameter($rx_matches[2], $Request[$i]);
-						$part_valid = true;
-					} elseif(preg_match('/(\*+)/', $Saved[$i])) {
-						$part_valid = true;
-					} elseif($Saved[$i]==$Request[$i]) {
-						$part_valid = true;
-					}
-					//if a part of the url is not ok -> return false
-					if(!$part_valid) {
-						return false;
-					}
-				}
-				//set saved url
-				URL::SetRoute($SavedUri);
-				return true;
-			}
-			//Execute request
-			private static function ExecuteRoute($Route) {
-				if(is_callable($Route)) {
-					//It's a function
-					$Route();
-				} elseif(is_string($Route)) {
-					//Its just a string
-					echo $Route;
-				} elseif(is_array($Route)) {
-					//Check for Controller or View Data
-					$Data = array();
-					if(array_key_exists("Data", $Route)) {
-						$Data = $Route["Data"];
-					}
-					//Check for model existance
-					if(array_key_exists("Model",$Route)) {
-						Models::Initialize($Route["Model"]);
-					}
-					//Check for controller existance
-					if(array_key_exists("Controller",$Route)) {
-						Controllers::Initialize($Route["Controller"],$Data);
-					}
-					//Check for view existance
-					if(array_key_exists("View",$Route)) {
-						//Don't pass data to the view when there is a controller available
-						if(!array_key_exists("Controller",$Route)) {
-							Views::Initialize($Route["View"],$Data);
-						} else {
-							Views::Initialize($Route["View"]);
-						}
-					}
-				}
-			}
 			//Execute error 
 			public static function ThrowError($Error) {
 				//Check whether error route has been set
-				if(array_key_exists($Error, self::$_Error)) {
-					//Execute request
-					self::ExecuteRoute(self::$_Error[$Error]);
-					return true;
+				foreach(self::$_Error as $Route) {
+					if($Route->GetHandle()===$Error) {$Route->Load();return true;break;}
 				}
 				return false;
 			}
@@ -168,38 +97,29 @@
 				$Request = $_SERVER['REQUEST_URI'];
 				URL::SetRequest($Request);
 				//Step one check home
-				if(self::IsMatch($Request,'')) {
-					self::ExecuteRoute(self::$_Home);
+				if(isset(self::$_Home)&&self::$_Home->IsMatch('')) {
+					self::$_Home->Load();
 					return true;
 				}
 				//Step two, check Any Routes
-				foreach(self::$_Any as $Uri => $Route) {
+				foreach(self::$_Any as $Route) {
 					//Is Match?
-					if(self::IsMatch($Request, $Uri)) {
+					if($Route->IsMatch($Request)) {
 						//Execute route
-						self::ExecuteRoute($Route);
+						$Route->Load();
 						return true;
 					}
 				}
 				//Step three check for post or get
 				$SavedRequests=array();
-				if(
-					$_SERVER["REQUEST_METHOD"]=="POST"
-				) {
-					//POST 
-					$SavedRequests = self::$_Post;
-					URL::SetMethod("POST");
-				} else {
-					//GET
-					$SavedRequests = self::$_Get;
-					URL::SetMethod("GET");
-				}
+				if($_SERVER["REQUEST_METHOD"]=="POST") {$SavedRequests = self::$_Post;URL::SetMethod("POST");}
+				else{$SavedRequests = self::$_Get;URL::SetMethod("GET");}
 				//Execute $SavedRequests
-				foreach($SavedRequests as $Uri => $Route) {
+				foreach($SavedRequests as $Route) {
 					//Is Match?
-					if(self::IsMatch($Request, $Uri)) {
+					if($Route->IsMatch($Request)) {
 						//Execute route
-						self::ExecuteRoute($Route);
+						$Route->Load();
 						return true;
 					}
 				}
@@ -207,9 +127,9 @@
 				//Try for a not found error
 				if(!App::Error(Error::NotFound)) {
 					//Check for default route
-					if(self::$_Default) {
+					if(isset(self::$_Default)) {
 						//Execute default route
-						self::ExecuteRoute(self::$_Default);
+						self::$_Default->Load();
 						return true;
 					}
 				}

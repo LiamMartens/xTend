@@ -18,7 +18,7 @@
 				if(self::Exists($View)) {
 					$Instance = new View($View);
 					//Append data
-					if(is_subclass_of($Instance, "BaseDataExtension")) {
+					if(is_subclass_of($Instance, "xTend\BaseDataExtension")) {
 						foreach($Data as $Key => $Value) {
 							$Instance->SetData($Key,$Value);
 						}
