@@ -94,10 +94,10 @@
 			}
 			//Post configuration
 			public static function PostConfiguration() {
-				$Request = $_SERVER['REQUEST_URI'];
+				$Request = trim($_SERVER['REQUEST_URI'],'/');
 				URL::SetRequest($Request);
 				//Step one check home
-				if(isset(self::$_Home)&&self::$_Home->IsMatch('')) {
+				if(isset(self::$_Home)&&self::$_Home->IsMatch($Request)) {
 					self::$_Home->Load();
 					return true;
 				}
