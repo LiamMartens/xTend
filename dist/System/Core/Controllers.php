@@ -9,7 +9,7 @@
 			//Load a controller
 			public static function Initialize($Controller, $Param1 = true, $Param2 = array()) {
 				//check $Param1 and $Param2
-				$CreateInstance;
+				$CreateInstance=true;
 				$Data = array();
 				if(is_bool($Param1)) { $CreateInstance = $Param1; } elseif(is_bool($Param2)) { $CreateInstance = $Param2; }
 				if(is_array($Param1)) { $Data = $Param1; } elseif(is_array($Param2)) { $Data = $Param2; }
