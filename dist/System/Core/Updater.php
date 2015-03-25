@@ -10,12 +10,12 @@
 			public static function ExcludeDirectories($Directories) { self::$_ExcludeDirectories = $Directories; }
 			//read from github
 			private static function Read($Url) {
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, $Url);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				$data = curl_exec($ch);
-				curl_close($ch);
+				$ch = \curl_init();
+				\curl_setopt($ch, \CURLOPT_URL, $Url);
+				\curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, false);
+				\curl_setopt($ch, \CURLOPT_RETURNTRANSFER, 1);
+				$data = \curl_exec($ch);
+				\curl_close($ch);
 				return $data;
 			}
 			//update methods
