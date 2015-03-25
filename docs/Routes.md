@@ -18,8 +18,8 @@ Read more about setting up routes.
 
 ##Routes - What to do when a route is matched?
 There are 3 ways of defining this:
-* `text/plain` : Plain text will echo out (not exactly useful except for maybe some testing purposes)
-* `function` : A function which can be executed. You can load views, models and controllers using code. Using `Views::Initialize({name})`, `Controllers::Initialize({name})`, `Models::Initialize({name})` respectively.
+* `text/plain` : Plain text will echo out (not exactly useful except for maybe some testing purposes)  
+* `function` : A function which can be executed. You can load views, models and controllers using code. Using `Views::Initialize({name})`, `Controllers::Initialize({name})`, `Models::Initialize({name})` respectively.  
 * `array` : An array where you can define the View, the Controller and the Model. You can also pass data to the Controller, or the View if there is no Controller defined, by adding a `Data` key with an array as it's value.
 
 ##Restrict
