@@ -17,7 +17,8 @@
 			"../System/Core/Router.php",
 			"../System/Core/Backup.php",
 			"../System/Core/Modules.php",
-			"../System/Core/Updater.php"
+			"../System/Core/Updater.php",
+			"../System/Core/Session.php"
 		));
 		//xTend Application class
 		class App
@@ -209,7 +210,7 @@
 			//Initialize
 			public static function Initialize() {
 				//commmence session
-				session_start();
+				Session::Start();
 				//Set charset
 				header('Content-Type:text/html;charset='.Config::Charset);
 				//Set default timezone
