@@ -5,9 +5,11 @@
 		{
 			private static $_ExcludeFiles = array();
 			private static $_ExcludeDirectories = array("Config");
+			private static $_BackupBefore = true;
 			//setters
 			public static function ExcludeFiles($Files) { self::$_ExcludeFiles = $Files; }
 			public static function ExcludeDirectories($Directories) { self::$_ExcludeDirectories = $Directories; }
+			public static function BackupBefore($bool) { self::$_BackupBefore = $bool; }
 			//read from github
 			private static function Read($Url) {
 				$ch = \curl_init();
@@ -31,6 +33,8 @@
 				}
  			}
 			public static function Update() {
+				//check whether a backup needs to be taken
+				if(self::$_BackupBefore===true) {Backup::Save();}
 				//download GitHub Master
 				File::Write(
 					File::System("Update.xTend.zip"),
