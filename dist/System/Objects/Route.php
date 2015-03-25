@@ -16,7 +16,7 @@
 			//setters
 			public function Handle($Handle) {
 				$this->_Handle = $Handle;
-				if(is_string($this->_Handle)) { $this->_Handle = trim(strtolower($this->_Handle),"/"); }
+				if(is_string($this->_Handle)) { $this->_Handle = trim($this->_Handle,"/"); }
 				return $this;
 			}
 			public function Route($Route) {
@@ -96,10 +96,10 @@
 						if(preg_match('/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/', $exHandle[$i], $rx_matches)&&
 							preg_match('/'.$rx_matches[6].'/', $exRequest[$i])) {
 							URL::SetParameter($rx_matches[3], $exRequest[$i]);
-						} elseif(preg_match('/(\{)([a-zA-Z0-9_]+)(\})/', $exHandle[$i], $rx_matches)) {
+						} elseif(preg_match('/^(\{)([a-zA-Z0-9_]+)(\})$/', $exHandle[$i], $rx_matches)) {
 							URL::SetParameter($rx_matches[2], $exRequest[$i]);
 						} elseif(
-							!((preg_match('/(rx)(\{)(.*)(\})/', $exHandle[$i], $rx_matches)&&
+							!((preg_match('/^(rx)(\{)(.*)(\})$/', $exHandle[$i], $rx_matches)&&
 							preg_match('/'.$rx_matches[3].'/', $exRequest[$i])) ||
 							preg_match('/(\*+)/', $exHandle[$i]) ||
 							($exHandle[$i]==$exRequest[$i]))
