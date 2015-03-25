@@ -2,20 +2,23 @@
 	namespace xTend
 	{
 		//Require Core Files -> relative to /www directory
-		require_once("../System/Core/Config.php");
-		require_once("../System/Core/File.php");
-		require_once("../System/Core/Dir.php");
-		require_once("../System/Core/Archive.php");
-		require_once("../System/Core/Error.php");
-		require_once("../System/Core/Log.php");
-		require_once("../System/Core/Models.php");
-		require_once("../System/Core/Controllers.php");
-		require_once("../System/Core/Views.php");
-		require_once("../System/Core/URL.php");
-		require_once("../System/Core/Router.php");
-		require_once("../System/Core/Backup.php");
-		require_once("../System/Core/Modules.php");
-		require_once("../System/Core/Updater.php");
+		require_once("../System/Core/FileManager.php");
+		FileManager::IncludeFiles(array(
+			"../System/Core/Config.php",
+			"../System/Core/File.php",
+			"../System/Core/Dir.php",
+			"../System/Core/Archive.php",
+			"../System/Core/Error.php",
+			"../System/Core/Log.php",
+			"../System/Core/Models.php",
+			"../System/Core/Controllers.php",
+			"../System/Core/Views.php",
+			"../System/Core/URL.php",
+			"../System/Core/Router.php",
+			"../System/Core/Backup.php",
+			"../System/Core/Modules.php",
+			"../System/Core/Updater.php"
+		));
 		//xTend Application class
 		class App
 		{
@@ -62,11 +65,11 @@
 			//File inclusion methods
 			public static function IncludeFile($FilePath) {
 				//Just one file --> extension included
-				require(File::System($FilePath));
+				FileManager::IncludeFile(File::System($FilePath));
 			}
 			public static function IncludeFileName($FileName) {
 				//Raw file inclusion
-				require($FileName);
+				FileManager::IncludeFile($FileName);
 			}
 			//Include a complete directory
 			public static function IncludeDirectory($DirPath) {
