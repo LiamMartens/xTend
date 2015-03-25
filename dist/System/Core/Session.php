@@ -8,13 +8,12 @@
 			}
 
 			public static function Destroy() {
-				if(isset($_COOKIE["sname"])) {
+				if(isset($_COOKIE["sname"])&&(self::Name()==$_COOKIE["sname"])) {
 					session_destroy($_COOKIE["sname"]);
-					setcookie("sname", null, time()-1, '/');
-					unset($_COOKIE["sname"]);
-					return true;
 				}
-				return false;
+				setcookie("sname", null, time()-1, '/');
+				unset($_COOKIE["sname"]);
+				return true;
 			}
 
 			public static function Start() {
