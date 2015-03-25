@@ -47,3 +47,16 @@ An example: `Controllers::Initialize({name}, false, array());`.
 
 ##Namespacing
 When initializing views you can pass it's name but you can also pass it's subdirectories for easy namespacing of your views. For example, `just.foo.bar` will look for a view called `bar` in the directory `foo` which is a subdirectory of the directory `just`. The same goes for models and controllers, but for these you need to take into account the last part. For example, `foo.bar.controller` will load the file `/foo/bar/Controller.php` inside the `/System/Controllers` directory and next it will initialize an instance of the class `controller` (hence the last part `.controller`)
+
+##To
+Using the To method you can redirect to a route using it's alias. For example when you define a route like this:
+```
+$r = new Route('user', function() {
+    echo "user view";
+}, 'view.user');
+Router::Any($r);
+```
+Now you can redirect to the `view.user` route by calling `Router::To('view.user');`
+
+##Load
+The `Load` method works very similar to the `To` method the only difference is `Load` does not redirect it just loads the route to execute.
