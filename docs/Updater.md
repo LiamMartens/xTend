@@ -1,6 +1,10 @@
 #Updater
 More information on the Update function of xTend
 
+##Checking for an update
+To check for an update just call `Updater::Check();` and it will update your xTend version to the newest one available.
+!! DO NOTE CURL NEEDS TO BE ENABLED AND INSTALLED
+
 ##Config
 The config file is located at `/System/Config/Updater.php`, 
 however, you can name this file whatever you like.
