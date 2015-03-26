@@ -3,27 +3,35 @@
 	{
 		class Session
 		{
+			private static $_session_name = "secure_session_name";
+			private static $_initiated = "secure_initiated_key";
+			private static $_user_agent = "secure_user_agent_key_name";
+			private static $_salt = "secure_salt";
+
 			public static function Name() {
 				return session_name();
 			}
 
 			public static function Destroy() {
-				if(isset($_COOKIE["sname"])&&(self::Name()==$_COOKIE["sname"])) {
-					session_destroy($_COOKIE["sname"]);
-				}
-				setcookie("sname", null, time()-1, '/');
-				unset($_COOKIE["sname"]);
-				return true;
+				session_unset();
+				session_destroy();
 			}
 
 			public static function Start() {
-				$sname=sha1($_SERVER['REMOTE_ADDR']).hash("sha512", microtime());
-				if(!isset($_COOKIE["sname"])){setcookie('sname',$sname,time()+3600,'/');}
-				elseif(strpos($_COOKIE["sname"],sha1($_SERVER['REMOTE_ADDR']))!==0){setcookie('sname',$sname,time()+3600,'/');}
-				else{setcookie('sname',$_COOKIE["sname"],time()+3600,'/');$sname=$_COOKIE["sname"];}
-				session_name($sname);
+				//only allow http
+				ini_set('session.cookie_httponly', true);
+				//start session
+				session_name(self::$_session_name);
 				session_start();
-				return true;
+				//check instantiated
+				if(!isset($_SESSION[self::$_initiated])) {
+					session_regenerate_id();
+					$_SESSION[self::$_initiated] = true;
+				}
+				//check user agent
+				if(isset($_SESSION[self::$_user_agent])) {
+					if($_SESSION[self::$_user_agent] !== hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)) { self::Destroy(); URL::to(""); die(); }
+				} else { $_SESSION[self::$_user_agent] = hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt); }
 			}
 		}
 	}
