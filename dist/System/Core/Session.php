@@ -8,9 +8,10 @@
 			private static $_user_agent = "secure_user_agent_key_name";
 			private static $_salt = "secure_salt";
 
-			public static function Name() {
-				return session_name();
-			}
+			public static function SessionName($name) { self::$_session_name = $name; }
+			public static function InitiatedKey($key) { self::$_initiated = $key; }
+			public static function UserAgentKey($key) { self::$_user_agent = $key; }
+			public static function Salt($salt) { self::$_salt = $salt; }
 
 			public static function Destroy() {
 				session_unset();
