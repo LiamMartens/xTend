@@ -18,6 +18,9 @@
 			"../System/Core/Backup.php",
 			"../System/Core/Modules.php",
 			"../System/Core/Updater.php",
+			"../System/Core/Crypt.php",
+			"../System/Core/Sessions.php",
+			"../System/Core/Cookies.php",
 			"../System/Core/Session.php"
 		));
 		//xTend Application class

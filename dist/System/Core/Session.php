@@ -25,14 +25,14 @@
 				session_name(self::$_session_name);
 				session_start();
 				//check instantiated
-				if(!isset($_SESSION[self::$_initiated])) {
+				if(Sessions::Get(self::$_initiated)===false) {
 					session_regenerate_id();
-					$_SESSION[self::$_initiated] = true;
+					Sessions::Set(self::$_initiated,true);
 				}
 				//check user agent
-				if(isset($_SESSION[self::$_user_agent])) {
-					if($_SESSION[self::$_user_agent] !== hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)) { self::Destroy(); URL::to(""); die(); }
-				} else { $_SESSION[self::$_user_agent] = hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt); }
+				if(Sessions::Get(self::$_user_agent)!==false) {
+					if(Sessions::Get(self::$_user_agent) !== hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)) { self::Destroy(); URL::to(""); die(); }
+				} else { Sessions::Set(self::$_user_agent,hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)); }
 			}
 		}
 	}
