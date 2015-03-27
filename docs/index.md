@@ -10,4 +10,5 @@
 [Modules](http://xtend.readthedocs.org/en/latest/Modules/)  
 [Backups](http://xtend.readthedocs.org/en/latest/Backups/)  
 [Updater](http://xtend.readthedocs.org/en/latest/Updater/)  
+[Session Helper](http://xtend.readthedocs.org/en/latest/Session/)  
 [SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)  
