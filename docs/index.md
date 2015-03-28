@@ -10,5 +10,7 @@
 [Modules](http://xtend.readthedocs.org/en/latest/Modules/)  
 [Backups](http://xtend.readthedocs.org/en/latest/Backups/)  
 [Updater](http://xtend.readthedocs.org/en/latest/Updater/)  
+[Crypt](http://xtend.readthedocs.org/en/latest/Crypt/)  
+[Sessions and Cookies](http://xtend.readthedocs.org/en/latest/Sessions%20and%20Cookies/)  
 [Session Helper](http://xtend.readthedocs.org/en/latest/Session/)  
 [SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)  
