@@ -27,29 +27,31 @@
 				$TempDirectories = Dir::RecursiveDirectories(Dir::System("Backups.Temp"));
 				$CurrentDirectories = Dir::RecursiveDirectories("..");
 				foreach($TempDirectories as $Dir) {
-					$FullDir = Dir::System("Backups.Temp")."/".$Dir;
-					$CurrentDir = "../$Dir";
-					$DirFiles = Dir::Files($FullDir);
-					$CurrentFiles = Dir::Files($CurrentDir);
-					foreach($DirFiles as $File) {
-						File::Write("$CurrentDir/$File", File::Read("$FullDir/$File"));
-						//remove index from currentfiles
-						$index = array_search($File, $CurrentFiles);
-						if($index!==false) {
-							unset($CurrentFiles[$index]);
+					if($Dir!=="System/Backups"){
+						$FullDir = Dir::System("Backups.Temp")."/".$Dir;
+						$CurrentDir = "../$Dir";
+						$DirFiles = Dir::Files($FullDir);
+						$CurrentFiles = Dir::Files($CurrentDir);
+						foreach($DirFiles as $File) {
+							File::Write("$CurrentDir/$File", File::Read("$FullDir/$File"));
+							//remove index from currentfiles
+							$index = array_search($File, $CurrentFiles);
+							if($index!==false) {
+								unset($CurrentFiles[$index]);
+							}
 						}
-					}
-					//remove index from currentdirectories
-					$index = array_search($Dir, $CurrentDirectories);
-					if($index!==false) {
-						unset($CurrentDirectories[$index]);
-					}
-					//reset indexes of currentfiles
-					$CurrentFiles = array_values($CurrentFiles);
-					foreach($CurrentFiles as $File) {
-						//remove non backup files
-						File::Remove("$CurrentDir/$File");
-					}
+						//remove index from currentdirectories
+						$index = array_search($Dir, $CurrentDirectories);
+						if($index!==false) {
+							unset($CurrentDirectories[$index]);
+						}
+						//reset indexes of currentfiles
+						$CurrentFiles = array_values($CurrentFiles);
+						foreach($CurrentFiles as $File) {
+							//remove non backup files
+							File::Remove("$CurrentDir/$File");
+						}
+					}else{$index=array_search($Dir, $CurrentDirectories);unset($CurrentDirectories[$index]);}
 				}
 				//reset indexes of currentdirectories
 				$CurrentDirectories = array_values($CurrentDirectories);
