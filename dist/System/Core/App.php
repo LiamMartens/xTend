@@ -4,7 +4,7 @@
 		//Require Core Files -> relative to /www directory
 		require_once("../System/Core/FileManager.php");
 		FileManager::IncludeFiles(array(
-			"../System/Core/Config.php",
+			"../System/Config/Core.php",
 			"../System/Core/File.php",
 			"../System/Core/Dir.php",
 			"../System/Core/Archive.php",
