@@ -14,5 +14,6 @@
 			const Author = "";
 			const Copyright = "2015";
 			const Backup = '1 day';
+			const BackupLimit = 10;
 		}
 	}

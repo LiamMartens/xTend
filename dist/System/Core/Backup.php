@@ -9,6 +9,14 @@
 				$bak->AddFolder("..");
 				$bak->ExcludeFolder(Dir::System("Backups"));
 				$bak->Save();
+				//check for backup limit
+				$files = Dir::Files(Dir::System("Backups"));
+				sort($files);
+				while(count($files) > Config::BackupLimit) {
+					File::Remove(File::System("Backups.".$files[0]));
+					unset($files[0]);
+					$files = array_values($files);
+				}
 			}
 			
 			public static function Restore($Name = false) {
