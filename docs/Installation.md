@@ -70,10 +70,10 @@ The directories which need to be created are
 xTend logs PHP errors, PHP exceptions and also it's own errors. To make this work you will have to allow writing on the `/System/Logs` directory.
 
 ##STEP 4:
-There is an auto-backup feature available which requires the `/System/Backups` directory to be writable. If you don't want this feature you can disable it by editing the `/System/Core/Config.php` file and setting the `Backup` setting to false instead of a time interval.
+There is an auto-backup feature available which requires the `/System/Backups` directory to be writable. If you don't want this feature you can disable it by editing the `/System/Config/Core.php` file and setting the `Backup` setting to false instead of a time interval.
 
 ##STEP 5:
-To make everything work correctly you should edit the `/System/Core/Config.php` file. The `url` is required to be changed, the others are technically optional.
+To make everything work correctly you should edit the `/System/Config/Core.php` file. The `url` is required to be changed, the others are technically optional.
 
 ##STEP 6:
 Make sure the `/System/Meta` directory is writable as it can be used by the xTend core to store meta data about files.
