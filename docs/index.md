@@ -14,3 +14,4 @@
 [Sessions and Cookies](http://xtend.readthedocs.org/en/latest/Sessions%20and%20Cookies/)  
 [Session Helper](http://xtend.readthedocs.org/en/latest/Session/)  
 [SASS Compiler](http://xtend.readthedocs.org/en/latest/Sass%20Compiler/)  
+[Recommended extensions](http://xtend.readthedocs.org/en/latest/Recommend%20extensions/)  
