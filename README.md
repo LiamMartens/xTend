@@ -13,3 +13,6 @@ I can only give you a couple of reasons but be free to see for yourself
 
 ##*Documentation*
 [Read The Docs](http://xtend.readthedocs.org/en/latest/)
+
+##*Have questions?*
+Send an email to [hi@liammartens.com](mailto:hi@liammartens.com)
