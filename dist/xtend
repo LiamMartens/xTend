@@ -1,0 +1,148 @@
+<?php
+	//ini_set('display_errors', 0);
+	function request($url) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+		curl_exec($ch);
+		curl_close($ch);	
+	}
+	function rchmod($path, $filemode) {
+		if ( !is_dir($path) ) {
+			return chmod($path, $filemode);
+		}
+		$dh = opendir($path);
+		while ( $file = readdir($dh) ) {
+			if ( $file != '.' && $file != '..' ) {
+				$fullpath = $path.'/'.$file;
+				if( !is_dir($fullpath) ) {
+					if ( !chmod($fullpath, $filemode) ){
+						return false;
+					}
+				} else {
+					if ( !rchmod($fullpath, $filemode) ) {
+						return false;
+					}
+				}
+			}
+		}
+		closedir($dh);
+		if ( chmod($path, $filemode) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	function xtend_backup($argv) {
+		if(is_dir("System")&&file_exists("System/Core/App.php")&&file_exists("System/Config/Core.php")) {
+			//check public directory
+			$pbdir=false;
+			if((count($argv)>2)&&is_dir($argv[2])&&file_exists($argv[2]."/index.php")) {
+				$pbdir=$argv[2]; }
+			elseif(is_dir("www")&&file_exists("www/index.php")) {
+				$pbdir="www"; }
+			elseif(is_dir("web")&&file_exists("web/index.php")) {
+				$pbdir="web"; }
+			elseif(is_dir("public_html")&&file_exists("public_html/index.php")) {
+				$pbdir="public_html"; }
+			else {
+				echo "Your public web directory was not found. Call it something like 'www' or 'public_html' or specify another parameter in the backup command\n"; }
+			//if isset, do backup
+			if($pbdir!==false) {
+				file_put_contents("$pbdir/cli.backup.php", "<?php
+					require_once('../System/Core/App.php');
+					xTend\App::Initialize();
+					xTend\Backup::Save();");
+				$conf = file_get_contents('System/Config/Core.php');
+				$matches; preg_match('/(const Url)(\s*)(=)(\s*)(\"|\')(.+)(\"|\')(;)/', $conf, $matches); $url=$matches[6];
+				request("$url/cli.backup.php");
+				unlink("$pbdir/cli.backup.php");
+				echo "Backup saved\n\n";
+			}
+		} else { echo "Please navigate to a xTend project directory"; }
+	}
+	function xtend_restore($argv) {
+		if(is_dir("System")&&file_exists("System/Core/App.php")&&file_exists("System/Config/Core.php")) {
+			//check public directory
+			$pbdir=false;
+			if((count($argv)>2)&&is_dir($argv[2])&&file_exists($argv[2]."/index.php")) {
+				$pbdir=$argv[2]; }
+			elseif(is_dir("www")&&file_exists("www/index.php")) {
+				$pbdir="www"; }
+			elseif(is_dir("web")&&file_exists("web/index.php")) {
+				$pbdir="web"; }
+			elseif(is_dir("public_html")&&file_exists("public_html/index.php")) {
+				$pbdir="public_html"; }
+			else {
+				echo "Your public web directory was not found. Call it something like 'www' or 'public_html' or specify another parameter in the backup command\n"; }
+			//if isset, do backup
+			if($pbdir!==false) {
+				file_put_contents("$pbdir/cli.restore.php", "<?php
+					require_once('../System/Core/App.php');
+					xTend\App::Initialize();
+					xTend\Backup::Restore();");
+				$conf = file_get_contents('System/Config/Core.php');
+				$matches; preg_match('/(const Url)(\s*)(=)(\s*)(\"|\')(.+)(\"|\')(;)/', $conf, $matches); $url=$matches[6];
+				rchmod("System",0777);
+				request("$url/cli.restore.php");
+				unlink("$pbdir/cli.backup.php");
+				rchmod("System",0755);
+				rchmod("System/Backups",0777);
+				rchmod("System/Meta",0777);
+				rchmod("System/Logs",0777);
+				rchmod("System/ViewOutput",0777);
+				echo "Last backup restored\n\n";
+			}
+		} else { echo "Please navigate to a xTend project directory"; }
+	}
+	function xtend_upgrade($argv) {
+		if(is_dir("System")&&file_exists("System/Core/App.php")&&file_exists("System/Config/Core.php")) {
+			//check public directory
+			$pbdir=false;
+			if((count($argv)>2)&&is_dir($argv[2])&&file_exists($argv[2]."/index.php")) {
+				$pbdir=$argv[2]; }
+			elseif(is_dir("www")&&file_exists("www/index.php")) {
+				$pbdir="www"; }
+			elseif(is_dir("web")&&file_exists("web/index.php")) {
+				$pbdir="web"; }
+			elseif(is_dir("public_html")&&file_exists("public_html/index.php")) {
+				$pbdir="public_html"; }
+			else {
+				echo "Your public web directory was not found. Call it something like 'www' or 'public_html' or specify another parameter in the backup command\n"; }
+			//if isset, do backup
+			if($pbdir!==false) {
+				file_put_contents("$pbdir/cli.upgrade.php", "<?php
+					require_once('../System/Core/App.php');
+					xTend\App::Initialize();
+					 xTend\Updater::Check();");
+				$conf = file_get_contents('System/Config/Core.php');
+				$matches; preg_match('/(const Url)(\s*)(=)(\s*)(\"|\')(.+)(\"|\')(;)/', $conf, $matches); $url=$matches[6];
+				rchmod("System",0777);
+				request("$url/cli.upgrade.php");
+				unlink("$pbdir/cli.upgrade.php");
+				rchmod("System",0755);
+				rchmod("System/Backups",0777);
+				rchmod("System/Meta",0777);
+				rchmod("System/Logs",0777);
+				rchmod("System/ViewOutput",0777);
+				echo "xTend upgrade complete\n\n";
+			}
+		} else { echo "Please navigate to a xTend project directory"; }
+	}
+	if(count($argv)>1) {
+		switch($argv[1]) {
+			case "backup":
+				xtend_backup($argv);
+				break;
+			case "restore":
+				xtend_restore($argv);
+				break;
+			case "upgrade":
+				xtend_upgrade($argv);
+				break;
+		}
+	} else {
+		echo "xtend backup [public directory name]\n";
+		echo "xtend restore [public directory name]\n";
+	}
