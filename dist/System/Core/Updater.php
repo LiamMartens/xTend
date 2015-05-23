@@ -22,7 +22,7 @@
 			}
 			//update methods
 			public static function Check() {
-				$DistConfig = self::Read("https://raw.githubusercontent.com/LiamMartens/xTend/master/dist/System/Core/Config.php");
+				$DistConfig = self::Read("https://raw.githubusercontent.com/LiamMartens/xTend/master/dist/System/Config/Core.php");
 				$matches; preg_match('/(const xTendVersion)(\s*)(=)(\s*)(\"|\')([\d\.]+)(\"|\')(;)/', $DistConfig, $matches);
 				$DistVersion = intval(str_replace(".", "", $matches[6]));
 				$CurrentVersion = intval(str_replace(".", "", Config::xTendVersion));
@@ -55,17 +55,17 @@
 						//loop through files
 						foreach($Files as $File) {
 							if((array_search("$Dir/$File", self::$_ExcludeFiles)===false)&&
-								("$Dir/$File"!=="Core/Config.php")) {
+								("$Dir/$File"!=="Config/Core.php")) {
 								File::Copy("$DirPath/$File", Dir::System("")."$Dir/$File");
 							}
 						}
 					}
 				}
 				//change version number
-				$NewConfig; preg_match('/(const xTendVersion)(\s*)(=)(\s*)(\"|\')([\d\.]+)(\"|\')(;)/', File::Read(File::System("Update.xTend-master.dist.System.Core.Config.php")), $NewConfig);
-				$Config = File::Read(File::System("Core.Config.php"));
+				$NewConfig; preg_match('/(const xTendVersion)(\s*)(=)(\s*)(\"|\')([\d\.]+)(\"|\')(;)/', File::Read(File::System("Update.xTend-master.dist.System.Config.Core.php")), $NewConfig);
+				$Config = File::Read(File::System("Config.Core.php"));
 				$Config = preg_replace('/(const xTendVersion)(\s*)(=)(\s*)(\"|\')([\d\.]+)(\"|\')(;)/', 'const xTendVersion = "'.$NewConfig[6].'";', $Config);
-				File::Write(File::System("Core.Config.php"), $Config);
+				File::Write(File::System("Config.Core.php"), $Config);
 				//remove temp dir
 				Dir::Remove(Dir::System("Update"));
 			}	
