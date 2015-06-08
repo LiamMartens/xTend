@@ -12,12 +12,12 @@
 
 			public static function Set($key,$value,$time=false,$domain='/') {
 				if($time===false){$time=time()+3600*24;}
-				setcookie(sha1($key),Crypt::Create($value,self::$_enc_key),$time,$domain);
+				setcookie(sha1($key),\Crypto::Encrypt($value,self::$_enc_key),$time,$domain);
 			}
 
 			public static function Get($key,$default=false) {
 				if(isset($_COOKIE[sha1($key)])) {
-					return Crypt::Solve($_COOKIE[sha1($key)],self::$_enc_key);
+					return \Crypto::Decrypt($_COOKIE[sha1($key)],self::$_enc_key);
 				}
 				return $default;
 			}

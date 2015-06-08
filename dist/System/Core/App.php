@@ -18,7 +18,7 @@
 			"../System/Core/Backup.php",
 			"../System/Core/Modules.php",
 			"../System/Core/Updater.php",
-			"../System/Core/Crypt.php",
+			"../System/Core/Crypto.php",
 			"../System/Core/Sessions.php",
 			"../System/Core/Cookies.php",
 			"../System/Core/Session.php"
@@ -212,8 +212,6 @@
 			}
 			//Initialize
 			public static function Initialize() {
-				//commmence session
-				Session::Start();
 				//Set charset
 				header('Content-Type:text/html;charset='.Config::Charset);
 				//Set default timezone
@@ -234,6 +232,8 @@
 				self::PostConfigure();
 				//Call backup method
 				self::Backup();
+				//commmence session
+				Session::Start();
 			}
 		}
 		//Class autoloading
