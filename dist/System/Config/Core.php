@@ -3,7 +3,7 @@
 	{
 		class Config
 		{
-			const xTendVersion = "0.6.1";
+			const xTendVersion = "0.6.2";
 			const Url = "http://104.236.51.149";
 			const Development = false;
 			const Company = "";
