@@ -15,5 +15,4 @@ if ( ! class_exists('scssc')) {
     include_once __DIR__ . '/scss/Parser.php';
     include_once __DIR__ . '/scss/Version.php';
     include_once __DIR__ . '/scss/Server.php';
-    include_once __DIR__ . '/classmap.php';
 }
