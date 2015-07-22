@@ -227,13 +227,13 @@
 				self::PreConfigure();
 				//Include Configs
 				App::IncludeDirectory("Config");
+				//commmence session
+				Session::Start();
 				//Call PostConfigure
 				//The router will have a postconfiguration method to route to the MVC
 				self::PostConfigure();
 				//Call backup method
 				self::Backup();
-				//commmence session
-				Session::Start();
 			}
 		}
 		//Class autoloading
