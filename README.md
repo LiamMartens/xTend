@@ -1,3 +1,5 @@
+#AN ISSUE WITH THE CRYPTO LIBRARY IS PRESENT AND I AM WORKING ON A FIX
+
 #Introducing xTend
 
 ###*What is xTend?*
