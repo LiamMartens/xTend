@@ -24,8 +24,6 @@
 				//start session
 				session_name(self::$_session_name);
 				session_start();
-				//generate key
-				Sessions::GenerateKey();
 				//check instantiated
 				if(Sessions::Get(self::$_initiated)===false) {
 					session_regenerate_id();

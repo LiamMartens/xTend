@@ -7,7 +7,7 @@
 
 			public static function GenerateKey() {
 				$_key = sha1(session_name().session_id());
-				self::$_enc_key = substr($_key, 5, 8).substr($_key, 25, 8);
+				self::$_enc_key = substr($_key, 5, 8).substr($_key, 25, 8);,
 			}
 
 			public static function Set($key,$value) {
