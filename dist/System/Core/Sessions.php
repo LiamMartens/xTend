@@ -11,12 +11,18 @@
 			}
 
 			public static function Set($key,$value) {
-				$_SESSION[sha1($key)] = \Defuse\Crypto\Crypto::Encrypt($value,self::$_enc_key);
+				try {
+					$_SESSION[sha1($key)] = \Defuse\Crypto\Crypto::encrypt($value,self::$_enc_key);
+				} catch (\Exception $e) {}
+				self::Remove($key);
 			}
 
 			public static function Get($key,$default = false) {
 				if(isset($_SESSION[sha1($key)])) {
-					return \Defuse\Crypto\Crypto::Decrypt($_SESSION[sha1($key)],self::$_enc_key);
+					try { return \Defuse\Crypto\Crypto::decrypt($_SESSION[sha1($key)],self::$_enc_key);
+					} catch (\Exception $e) {
+						self::Remove($key);
+					}
 				}
 				return $default;
 			}
