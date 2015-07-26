@@ -13,8 +13,9 @@ Read more about setting up routes.
 * Normal URL. For example `hello` will catch `example.com/hello` and `hello/liam` will catch `example.com/hello/liam`
 * URL variables. For example `hello/{name}` will catch `example.com/hello/{anything-can-be-here}` and there will be a variable available with the key from the url. You can retrieve URL variables by using the [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
 * Regex urls. For example `hello/rx{^([a-zA-Z])$}` will catch `example.com/hello/{any-text-containing-letters-both-upper-and-lowercase}`. 
-* Regex URL variables. For example `hello/rx{name}{^([a-z])$}` will catch `example.com/hello/{any-text-containing-lowercase-letters}` and there will be a variable available with the key from the url, in this case `name`. ou can retrieve URL variables by using the [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
+* Regex URL variables. For example `hello/rx{name}{^([a-z])$}` will catch `example.com/hello/{any-text-containing-lowercase-letters}` and there will be a variable available with the key from the url, in this case `name`. You can retrieve URL variables by using the [URL helper class](http://xtend.readthedocs.org/en/latest/URL/)
 * The `*` character will catch anything. Can be used like `hello/*` but this will not make a variable available.
+* You can add `+{get}` or `+{GET}` to any URL type and it will make sure the user can add GET variables in the URL. For example `rx{name}{[a-zA-Z]}+{get}` will catch all URL's with uppercase and lowercase letters after which the user can add some GET variables.
 
 ##Routes - What to do when a route is matched?
 There are 3 ways of defining this:
