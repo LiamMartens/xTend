@@ -37,6 +37,22 @@
 				$this->Route($Route);
 				$this->Data(array());
 				if($Alias!==false) { $this->Alias($Alias); }
+				//check whether GET variables are accepted
+				if((strrpos($this->_Handle, "+{get}")==strlen($this->_Handle)-6)||
+					(strrpos($this->_Handle, "+{GET}")==strlen($this->_Handle)-6)) {
+					$this->_Handle = substr($this->_Handle, 0, strlen($this->_Handle)-6);
+					$rx_matches; $exHandle = explode("/", $this->_Handle);
+					if(preg_match('/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/', $exHandle[count($exHandle)-1], $rx_matches)) {
+						$exHandle[count($exHandle)-1] = "rx{".$rx_matches[3]."}{".("(".$rx_matches[6].")(\\?)(.*)")."}";
+					} elseif(preg_match('/^(rx)(\{)(.*)(\})$/', $exHandle[count($exHandle)-1], $rx_matches)) {
+						$exHandle[count($exHandle)-1] = "rx{".("(".$rx_matches[3].")(\\?)(.*)")."}";
+					} elseif(!preg_match('/^(\{)([a-zA-Z0-9_]+)(\})$/', $exHandle[count($exHandle)-1])) {
+						$exHandle[count($exHandle)-1] = "rx{(".$exHandle[count($exHandle)-1].")(\\?)(.*)}";
+					}
+					$this->_Handle="";
+					foreach ($exHandle as $part) { $this->_Handle.=$part."/"; }
+					$this->_Handle=rtrim($this->_Handle,"/");
+				}
 			}
 			//other methods
 			public function To() {
@@ -97,6 +113,7 @@
 							preg_match('/'.$rx_matches[6].'/', $exRequest[$i])) {
 							URL::SetParameter($rx_matches[3], $exRequest[$i]);
 						} elseif(preg_match('/^(\{)([a-zA-Z0-9_]+)(\})$/', $exHandle[$i], $rx_matches)) {
+							//is non regexed variable
 							URL::SetParameter($rx_matches[2], $exRequest[$i]);
 						} elseif(
 							!((preg_match('/^(rx)(\{)(.*)(\})$/', $exHandle[$i], $rx_matches)&&
