@@ -228,8 +228,7 @@
 				//Include Configs
 				App::IncludeDirectory("Config");
 				//commmence session
-				//Session::Start();
-				session_start();
+				Session::Start();
 				//Call PostConfigure
 				//The router will have a postconfiguration method to route to the MVC
 				self::PostConfigure();
