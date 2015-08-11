@@ -3,7 +3,7 @@
 	{
 		class Config
 		{
-			const xTendVersion = "0.6.4";
+			const xTendVersion = "0.6.5";
 			const Url = "http://localhost";
 			const Development = false;
 			const Company = "";
