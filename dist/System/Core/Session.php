@@ -27,9 +27,10 @@
 				//generate key
 				Sessions::GenerateKey();
 				//check instantiated
-				if(Sessions::Get(self::$_initiated)===false) {
+				if(Sessions::Get(self::$_initiated)==0) {
 					session_regenerate_id();
-					Sessions::Set(self::$_initiated,true);
+					Sessions::GenerateKey();
+					Sessions::Set(self::$_initiated,1);
 				}
 				//check user agent
 				if(Sessions::Get(self::$_user_agent)!==false) {

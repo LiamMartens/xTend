@@ -13,8 +13,7 @@
 			public static function Set($key,$value) {
 				try {
 					$_SESSION[sha1($key)] = \Defuse\Crypto\Crypto::encrypt($value,self::$_enc_key);
-				} catch (\Exception $e) {}
-				self::Remove($key);
+				} catch (\Exception $e) { self::Remove($key); }
 			}
 
 			public static function Get($key,$default = false) {
