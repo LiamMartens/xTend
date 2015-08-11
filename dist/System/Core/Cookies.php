@@ -3,7 +3,7 @@
 	{
 		class Cookies
 		{
-			public static $_enc_key;
+			private static $_enc_key;
 
 			public static function PreConfiguration() {
 				//generate new encryption key
