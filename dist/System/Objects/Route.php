@@ -38,8 +38,8 @@
 				$this->Data(array());
 				if($Alias!==false) { $this->Alias($Alias); }
 				//check whether GET variables are accepted
-				if((strrpos($this->_Handle, "+{get}")==strlen($this->_Handle)-6)||
-					(strrpos($this->_Handle, "+{GET}")==strlen($this->_Handle)-6)) {
+				if(((strrpos($this->_Handle, "+{get}")==strlen($this->_Handle)-6)||
+					(strrpos($this->_Handle, "+{GET}")==strlen($this->_Handle)-6))&&(strlen($this->_Handle)>6)) {
 					$this->_Handle = substr($this->_Handle, 0, strlen($this->_Handle)-6);
 					$rx_matches; $exHandle = explode("/", $this->_Handle);
 					if(preg_match('/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/', $exHandle[count($exHandle)-1], $rx_matches)) {
