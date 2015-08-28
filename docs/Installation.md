@@ -18,6 +18,7 @@ After you have downloaded the files you have to put them on your hosting. Keep i
 
 **Can I use this on a normal hosting?**  
 Yes you can. You just have to put the `/System` directory in the parent directory of your default public directory and copy the files from `/www` to your public directory. (could already be `/www` but can also be `/public_html` or...)
+!! Don't forget to change the `app.web` variable (more on using `Variables` in the respective segment)
 
 ##STEP 2:
 To get everything working correctly you will need to edit your Apache configuration or you can use the provided `.htaccess` file.  

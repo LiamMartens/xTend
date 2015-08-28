@@ -7,6 +7,7 @@
 [URL Helper](http://xtend.readthedocs.org/en/latest/URL/)  
 [Libs](http://xtend.readthedocs.org/en/latest/Libs/)  
 [Configure](http://xtend.readthedocs.org/en/latest/Configure/)  
+[Variables](http://xtend.readthedocs.org/en/latest/Variables/)  
 [Modules](http://xtend.readthedocs.org/en/latest/Modules/)  
 [Backups](http://xtend.readthedocs.org/en/latest/Backups/)  
 [Updater](http://xtend.readthedocs.org/en/latest/Updater/)  
