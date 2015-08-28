@@ -9,23 +9,24 @@
 		{
 			//Routing to a directory
 			public static function System($DirPath) {
-				$Path = "../System";
-				$DirParts = explode(".", $DirPath);
-				for($i=0;$i<count($DirParts);$i++) {
-					$Path.="/".$DirParts[$i];
-				}
-				//Return path string
-				return $Path;
-			}
-			public static function Web($DirPath) {
-				$Path = "";
+				$Path = Variables::Get('app.system')."/";
 				$DirParts = explode(".", $DirPath);
 				for($i=0;$i<count($DirParts);$i++) {
 					if($i!=0) { $Path.="/"; }
 					$Path.=$DirParts[$i];
 				}
 				//Return path string
-				return Config::Url."/".$Path;	
+				return $Path;
+			}
+			public static function Web($DirPath) {
+				$Path = Variables::Get('app.web')."/";
+				$DirParts = explode(".", $DirPath);
+				for($i=0;$i<count($DirParts);$i++) {
+					if($i!=0) { $Path.="/"; }
+					$Path.=$DirParts[$i];
+				}
+				//Return path string
+				return $Path;
 			}
 			//Check whether a directory exists
 			public static function Exists($Path) {

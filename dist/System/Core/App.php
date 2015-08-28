@@ -5,6 +5,8 @@
 		require_once("../System/Core/FileManager.php");
 		FileManager::IncludeFiles(array(
 			"../System/Config/Core.php",
+			"../System/Core/Variables.php",
+			"../System/Config/Variables.php",
 			"../System/Core/File.php",
 			"../System/Core/Dir.php",
 			"../System/Core/Archive.php",

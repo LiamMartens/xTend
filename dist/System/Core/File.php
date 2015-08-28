@@ -5,18 +5,7 @@
 		{
 			//Routing to files
 			public static function System($FilePath) {
-				$Path = "../System";
-				$FileParts = explode(".", $FilePath);
-				for($i=0;$i<count($FileParts)-1;$i++) {
-					$Path.="/".$FileParts[$i];
-				}
-				//Add extension
-				$Path.=".".$FileParts[count($FileParts)-1];
-				//Return path string
-				return $Path;
-			}
-			public static function Web($FilePath) {
-				$Path = "";
+				$Path = Variables::Get('app.system')."/";
 				$FileParts = explode(".", $FilePath);
 				for($i=0;$i<count($FileParts)-1;$i++) {
 					if($i!=0) { $Path .= "/"; }
@@ -25,7 +14,19 @@
 				//Add extension
 				$Path.=".".$FileParts[count($FileParts)-1];
 				//Return path string
-				return Config::Url."/".$Path;	
+				return $Path;
+			}
+			public static function Web($FilePath) {
+				$Path = Variables::Get('app.web')."/";
+				$FileParts = explode(".", $FilePath);
+				for($i=0;$i<count($FileParts)-1;$i++) {
+					if($i!=0) { $Path .= "/"; }
+					$Path.=$FileParts[$i];
+				}
+				//Add extension
+				$Path.=".".$FileParts[count($FileParts)-1];
+				//Return path string
+				return $Path;
 			}
 			//Check whether a file exists
 			public static function Exists($FilePath) {
