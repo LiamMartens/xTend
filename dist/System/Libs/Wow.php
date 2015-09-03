@@ -17,7 +17,7 @@
 			//	Get view version
 			private static function Version($Content) {
 				//Build Regex
-				$RegEx = self::RegEx("(\s+|^)(@)(version)(:)(\d+)(\s+|$)","i");
+				$RegEx = self::RegEx("(\s+|^)(@)(version)(:)([\d\.]+)(\s+|$)","i");
 				//Get matches
 				$Matches = array();
 				preg_match($RegEx, $Content, $Matches);
