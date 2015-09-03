@@ -30,7 +30,7 @@
 			//	Get extended layout
 			private static function Layout($Content) {
 				//Build Regex
-				$RegEx = self::RegEx("(\s+|^)(@)(layout)(:)([\w\-\_]+)(\s+|$)","i");
+				$RegEx = self::RegEx("(\s+|^)(@)(layout)(:)([\w\-\_\.]+)(\s+|$)","i");
 				//Get matches
 				$Matches = array();
 				preg_match($RegEx, $Content, $Matches);
