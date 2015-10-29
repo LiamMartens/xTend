@@ -35,12 +35,12 @@
 				//clean logs
 				self::CleanLogs();
 			}
-			public static function AppError($Error, $Message = "") {
+			public static function AppError($Message) {
 				$DateTime = new DateTime();
 				//Write to PHP Error Log file
 				File::Append(
 					File::System("Logs.AppError-".$DateTime->format("d-m-Y").".log"),
-					$DateTime->format("H:i:s")."    (".App::RequestUrl()."):    $Error => $Message \r\n"
+					$DateTime->format("H:i:s")."    (".App::RequestUrl()."):    ".$Message."\r\n"
 				);
 				//clean logs
 				self::CleanLogs();
