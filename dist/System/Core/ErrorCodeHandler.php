@@ -53,7 +53,7 @@
 					return self::$_errorCodes[$key];
 				} elseif(is_string($key)) {
 					//check every errorCode
-					foreach ($c as self::$_errorCodes) {
+					foreach (self::$_errorCodes as $c) {
 						if($c->isError($key)) { return $c; }
 					}
 				}
