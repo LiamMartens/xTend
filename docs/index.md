@@ -1,7 +1,8 @@
 #Welcome to xTend
 [Installation](http://xtend.readthedocs.org/en/latest/Installation/)  
 [Folder Structure](http://xtend.readthedocs.org/en/latest/Structure/)  
-[Getting Started](http://xtend.readthedocs.org/en/latest/Getting%20Started/)  
+[Getting Started](http://xtend.readthedocs.org/en/latest/Getting%20Started/)
+[Error Code Handler](http://xtend.readthedocs.org/en/latest/ErrorCodeHandler/)    
 [Routes](http://xtend.readthedocs.org/en/latest/Routes/)  
 [Route Object](http://xtend.readthedocs.org/en/latest/Route%20Object/)  
 [URL Helper](http://xtend.readthedocs.org/en/latest/URL/)  
