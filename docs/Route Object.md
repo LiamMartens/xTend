@@ -8,7 +8,7 @@ Creating a route is as simple as calling
 ##The Parameters
 ###Handle
 The handle is the URL or error the route object is related to.
-This can be a `string` or an `Error::{ErrorType}`.
+This can be a `string` or an error code (hex or decimal // take a look in the `ErrorCodeHandler` section).
 
 ###Route
 The route defines what to execute when a match is found.  
