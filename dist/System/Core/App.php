@@ -10,7 +10,7 @@
 			"../System/Core/File.php",
 			"../System/Core/Dir.php",
 			"../System/Core/Archive.php",
-			"../System/Core/Error.php",
+			"../System/Core/ErrorCodeHandler.php",
 			"../System/Core/Log.php",
 			"../System/Core/Models.php",
 			"../System/Core/Controllers.php",
@@ -60,9 +60,9 @@
 			public static function PHPException($Exception) {
 				Log::PHPException($Exception->getMessage());
 			}
-			public static function Error($ErrorType, $Message = "") {
-				Log::AppError($ErrorType, $Message);
-				return Router::ThrowError($ErrorType);
+			public static function Error($Exception) {
+				Log::AppError($Exception->getMessage());
+				return Router::ThrowError($Exception->getCode());
 			}
 			//Request URL
 			public static function RequestUrl() {

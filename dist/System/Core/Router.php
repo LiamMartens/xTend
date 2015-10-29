@@ -125,7 +125,7 @@
 				}
 				//No routes comply
 				//Try for a not found error
-				if(!App::Error(Error::NotFound)) {
+				if(!App::Error(ErrorCodeHandler::FindError("http:404-not-found")->getException())) {
 					//Check for default route
 					if(isset(self::$_Default)) {
 						//Execute default route
