@@ -50,7 +50,7 @@
 				$Files = array();
 				//Check whether dir exists and get all files and directories
 				$Contents = self::Scan($Path);
-				if($Contents) {
+				if($Contents!==False) {
 					//Directory exists
 					foreach($Contents as $Content) {
 						if(File::Exists("$Path/$Content")) {
