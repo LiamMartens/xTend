@@ -1,6 +1,8 @@
 <?php
 	namespace xTend
 	{
+		use \Exception as Exception;
+
 		class ErrorCode
 		{
 			protected $_code;
@@ -17,7 +19,7 @@
 			}
 			public function getHexCode() {
 				$hex=strval(dechex($this->_code));
-				return ("0x".str_pad($hex, 4, "0"));
+				return ("0x".str_pad($hex, 4, "0", STR_PAD_LEFT));
 			}
 			public function getName() {
 				return $this->_name;
@@ -29,7 +31,7 @@
 				return $this->getHexCode()." ".$this->getName()." ".$this->getHumanName();
 			}
 			public function isError($key) {
-				if(($key==$this->_code) || ($key==$this->_name)) {
+				if(($key===$this->_code) || ($key===$this->_name)) {
 					return true;
 				}
 				return false;
@@ -42,6 +44,7 @@
 		class ErrorCodeHandler
 		{
 			protected static $_errorCodes=[];
+
 			public static function PreConfiguration() {
 				self::RegisterErrorCode(0x0000, "errorcodehandler:invalid-code", "Error in class ErrorCodeHandler: Trying to register invalid error code");
 				self::RegisterErrorCode(0x0001, "errorcodehandler:invalid-name", "Error in class ErrorCodeHandler: Trying to register empty name");
