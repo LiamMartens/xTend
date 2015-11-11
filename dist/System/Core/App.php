@@ -125,7 +125,7 @@
 						}
 					} else {
 						//Add to excludedlibraries regex
-						$ExcludedLibraries.="|";
+						if($ExcludedLibraries!="") { $ExcludedLibraries.="|"; }
 						$ExcludedLibraries .= "^(".preg_quote($Directory,"/").")";
 					}
 				}
