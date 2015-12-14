@@ -94,6 +94,8 @@
 			}
 			//Post configuration
 			public static function PostConfiguration() {
+				if(App::BootstrapMode())
+					return;
 				$Request = trim($_SERVER['REQUEST_URI'],'/');
 				URL::SetRequest($Request);
 				//Step one check home

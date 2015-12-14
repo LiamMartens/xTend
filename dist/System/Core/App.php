@@ -32,25 +32,33 @@
 			private static $_Model = null;
 			private static $_Controller = null;
 			private static $_View = null;
+			private static $_BootstrapMode = false;
 			public static function Model($Model = false) {
 				if($Model===false) {
-					return self::$_Model;
+					return App::$_Model;
 				} else {
-					self::$_Model = $Model;
+					App::$_Model = $Model;
 				}
 			}
 			public static function Controller($Controller = false) {
 				if($Controller === false) {
-					return self::$_Controller;
+					return App::$_Controller;
 				} else {
-					self::$_Controller = $Controller;
+					App::$_Controller = $Controller;
 				}
 			}
 			public static function View($View = false) {
 				if($View === false) {
-					return self::$_View;
+					return App::$_View;
 				} else {
-					self::$_View = $View;
+					App::$_View = $View;
+				}
+			}
+			public static function BootstrapMode($setMode = null) {
+				if(!is_bool($setMode)) {
+					return App::$_BootstrapMode;
+				} else {
+					App::$_BootstrapMode = $setMode;
 				}
 			}
 			//Error handling
@@ -109,7 +117,7 @@
 								//Check whether file exists
 								if(File::Exists("$Directory/$File")&&(array_search($File, $Ignore)===false)) {
 									//Include file
-									self::IncludeFileName("$Directory/$File");
+									App::IncludeFileName("$Directory/$File");
 									//Remove from files array
 									unset($Files[array_search($File, $Files)]);
 								}
@@ -118,7 +126,7 @@
 							foreach($Files as $File) {
 								if(File::Exists("$Directory/$File")&&(array_search($File, $Ignore)===false)) {
 									//Include file
-									self::IncludeFileName("$Directory/$File");
+									App::IncludeFileName("$Directory/$File");
 								}
 							}
 							//DONE
@@ -146,7 +154,7 @@
 			}
 			//Call Pre configuration methods
 			private static function PreConfigure() {
-				$xTendStart = self::xTendStart();
+				$xTendStart = App::xTendStart();
 				$Classes = get_declared_classes();
 				for($i=$xTendStart;$i<count($Classes);$i++) {
 					//Check for preconfig method
@@ -159,7 +167,7 @@
 			}
 			//Call Post Configuration methods
 			private static function PostConfigure() {
-				$xTendStart = self::xTendStart();
+				$xTendStart = App::xTendStart();
 				$Classes = get_declared_classes();
 				for($i=$xTendStart;$i<count($Classes);$i++) {
 					//Check for preconfig method
@@ -213,7 +221,7 @@
 				}
 			}
 			//Initialize
-			public static function Initialize() {
+			public static function Initialize($bootstrapMode = false) {
 				//Set charset
 				header('Content-Type:text/html;charset='.Config::Charset);
 				//Set default timezone
@@ -221,21 +229,23 @@
 				//Set error handlers
 				set_error_handler("xTend\App::PHPError", E_ALL);
 				set_exception_handler("xTend\App::PHPException");
+				//set bootstrapMode on/off
+				App::BootstrapMode($bootstrapMode);
 				//Include all necessary files
 				App::IncludeDirectory("Libs");
 				App::IncludeDirectory("Blueprints");
 				App::IncludeDirectory("Objects");
 				//Call PreConfigure
-				self::PreConfigure();
+				App::PreConfigure();
 				//Include Configs
 				App::IncludeDirectory("Config");
 				//commmence session
 				Session::Start();
 				//Call PostConfigure
 				//The router will have a postconfiguration method to route to the MVC
-				self::PostConfigure();
+				App::PostConfigure();
 				//Call backup method
-				self::Backup();
+				App::Backup();
 			}
 		}
 		//Class autoloading
