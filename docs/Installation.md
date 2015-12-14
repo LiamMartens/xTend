@@ -1,4 +1,4 @@
-#REQUIRED PHP VERSION IS 5.4 OR HIGHER
+#REQUIRED PHP VERSION IS 5.4 OR HIGHER (PHP 7.0 COMPATIBLE)
 
 #Installation
 The installation is divided in several steps
