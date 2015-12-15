@@ -1,5 +1,7 @@
 #Introducing xTend
 
+##Working on version 7.0, big update on the way
+
 ###*What is xTend?*
 xTend is a simple and easy to use yet powerful and very extendable PHP MVC framework
 
