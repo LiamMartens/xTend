@@ -1,29 +1,27 @@
 <?php
 	namespace xTend
 	{
-		abstract class BaseDataExtension
+		class BaseDataExtension
 		{
-			//For passing and saving data into controllers and views
-			protected $_Data = array();
-			//Get Data
-			public function GetData($Key) {
-				if(array_key_exists($Key,$this->_Data)) {
-					return $this->_Data[$Key];
-				}
+			protected $_data=[];
+			public function setData($key,$value) {
+				$this->_data[$key]=$value;
+			}
+			public function getData($key, $default=false) {
+				if(array_key_exists($key, $this->_data))
+					return $this->_data[$key];
+				return $default;
+			}
+			public function inData($key) {
+				return array_key_exists($key, $this->_data);
+			}
+			public function getAllData() {
+				return $this->_data;
+			}
+			public function __get($name) {
+				if($this->inData($name))
+					return $this->getData($name);
 				return false;
-			}
-			//Set Data
-			public function SetData($Key,$Value) {
-				$this->_Data[$Key]=$Value;
-				return true;
-			}
-			//Is in data?
-			public function InData($Key) {
-				return array_key_exists($Key,$this->_Data);
-			}
-			//Return all data
-			public function AllData() {
-				return $this->_Data;
 			}
 		}
 	}

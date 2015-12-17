@@ -1,41 +1,39 @@
 <?php
 	namespace xTend
 	{
+		/**
+			The session class is also static as there should only be 1
+			interaction class active on a single domain / page otherwise you'll create
+			inaccessible data -> make sure to check when running multiple xTend App instances
+			that there aren't multiple keys otherwise you'll have encrypted session data without 
+			the possibility to decrypt it
+		**/
+		use \Defuse\Crypto\Crypto as Crypto;
 		class Session
 		{
-			private static $_session_name = "secure_session_name";
-			private static $_initiated = "secure_initiated_key";
-			private static $_user_agent = "secure_user_agent_key_name";
-			private static $_salt = "secure_salt";
-
-			public static function SessionName($name) { self::$_session_name = $name; }
-			public static function InitiatedKey($key) { self::$_initiated = $key; }
-			public static function UserAgentKey($key) { self::$_user_agent = $key; }
-			public static function Salt($salt) { self::$_salt = $salt; }
-
-			public static function Destroy() {
-				session_unset();
-				session_destroy();
+			private static $_enckey;
+			public static function generate() {
+				self::$_enckey = sha1(session_name().session_id());
 			}
 
-			public static function Start() {
-				//only allow http
-				ini_set('session.cookie_httponly', true);
-				//start session
-				session_name(self::$_session_name);
-				session_start();
-				//generate key
-				Sessions::GenerateKey();
-				//check instantiated
-				if(Sessions::Get(self::$_initiated)==0) {
-					session_regenerate_id();
-					Sessions::GenerateKey();
-					Sessions::Set(self::$_initiated,1);
+			public static function remove($key) {
+				if(isset($_SESSION[sha1($key)]))
+					unset($_SESSION[sha1($key)]);
+			}
+
+			public static function set($key, $value) {
+				try {
+					$_SESSION[sha1($key)] = Crypto::encrypt($value, self::$_enckey);
+				} catch(\Exception $e) { self::remove($key); }
+			}
+
+			public static function get($key, $default=false) {
+				if(isset($_SESSION[sha1($key)])) {
+					try {
+						return Crypto::decrypt($_SESSION[sha1($key)], self::$_enckey);
+					} catch (\Exception $e) { self::remove($key); }
 				}
-				//check user agent
-				if(Sessions::Get(self::$_user_agent)!==false) {
-					if(Sessions::Get(self::$_user_agent) !== hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)) { self::Destroy(); URL::to(""); die(); }
-				} else { Sessions::Set(self::$_user_agent,hash("sha256", $_SERVER['HTTP_USER_AGENT'].self::$_salt)); }
+				return $default;
 			}
 		}
 	}

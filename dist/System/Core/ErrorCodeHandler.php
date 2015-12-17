@@ -2,69 +2,52 @@
 	namespace xTend
 	{
 		use \Exception as Exception;
-
 		class ErrorCode
 		{
 			protected $_code;
 			protected $_name;
-			protected $_humanName;
+			protected $_readableName;
 
-			public function __construct($code, $name, $human='') {
-				$this->_code=$code;
-				$this->_name=$name;
-				$this->_humanName=$human;
-			}
-			public function getCode() {
-				return $this->_code;
-			}
-			public function getHexCode() {
-				$hex=strval(dechex($this->_code));
-				return ("0x".str_pad($hex, 4, "0", STR_PAD_LEFT));
-			}
-			public function getName() {
-				return $this->_name;
-			}
-			public function getHumanName() {
-				return $this->_humanName;
-			}
-			public function getError() {
-				return $this->getHexCode()." ".$this->getName()." ".$this->getHumanName();
-			}
-			public function isError($key) {
-				if(($key===$this->_code) || ($key===$this->_name)) {
-					return true;
-				}
-				return false;
-			}
-			public function getException() {
-				return new Exception($this->getError(), $this->getCode());
+			public function getCode() { return $this->_code; }
+			public function getHexCode() { return ("0x".str_pad(strval(dechex($this->getCode())), 4, "0", STR_PAD_LEFT)); }
+			public function getName() { return $this->_name; }
+			public function getReadableName() { return $this->_readableName; }
+			public function getError() { return "(".$this->getHexCode()." ".$this->getName().") ".$this->getReadableName(); }
+			public function isError($key) { return (($key==$this->getCode())||($key==$this->getName())||($key==$this->getHexCode())); }
+			public function getException() { return new Exception($this->getError(), $this->getCode()); }
+
+			public function __construct($code, $name, $readable="") {
+				$this->_code = $code;
+				$this->_name = $name;
+				$this->_readableName = $readable;
 			}
 		}
-
 		class ErrorCodeHandler
 		{
-			protected static $_errorCodes=[];
+			protected $_errorCodes;
 
-			public static function PreConfiguration() {
-				self::RegisterErrorCode(0x0000, "errorcodehandler:invalid-code", "Error in class ErrorCodeHandler: Trying to register invalid error code");
-				self::RegisterErrorCode(0x0001, "errorcodehandler:invalid-name", "Error in class ErrorCodeHandler: Trying to register empty name");
-				self::RegisterErrorCode(0x0194, "http:404-not-found", "HTTP error 404: File Not Found");
-			}
-			public static function FindError($key) {
-				if(is_numeric($key)&&(array_key_exists($key, self::$_errorCodes))) {
-					//provided key is numeric -> find it in the directory itself
-					return self::$_errorCodes[$key];
+			public function findError($key) {
+				if(is_numeric($key)&&(array_key_exists($key, $this->_errorCodes))) {
+					//provided key is numeric -> found it in error code directory itself
+					return $this->_errorCodes[$key];
 				} elseif(is_string($key)) {
-					//check every errorCode
-					foreach (self::$_errorCodes as $c) {
-						if($c->isError($key)) { return $c; }
+					foreach ($this->_errorCodes as $c) {
+						if($c->isError($key)) return $c;
 					}
 				}
+ 			}
+
+			public function registerErrorCode($code, $name, $readable = "") {
+				if(!is_numeric($code)) { throw $this->findError(0x0000)->getException(); }
+				if(strlen($name)==0) { throw $this->findError(0x0001)->getException(); }
+				$this->_errorCodes[$code]=new ErrorCode($code,$name,$readable);
 			}
-			public static function RegisterErrorCode($code, $name, $human='') {
-				if(!is_numeric($code)) { throw new Exception(self::FindError(0x0000)->getError(), 0x0000); }
-				if(strlen($name)==0) { throw new Exception(self::FindError(0x0001)->getError(), 0x0001); }
-				self::$_errorCodes[$code]=new ErrorCode($code,$name,$human);
+
+			public function __construct() {
+				//initialize default error codes
+				$this->registerErrorCode(0x0000, "errorcodehandler:invalid-code","Error in ErrorCodeHandler: Trying to register invalid error code");
+				$this->registerErrorCode(0x0001, "errorcodehandler:invalid-name","Error in ErrorCodeHandler: Trying to register invalid error name");
+				$this->registerErrorCode(0x0194, "http:404", "HTTP 404: Page not found");
 			}
 		}
 	}

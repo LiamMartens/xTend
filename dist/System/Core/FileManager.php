@@ -3,18 +3,20 @@
 	{
 		class FileManager
 		{
-			private static $_IncludedFiles = array("../System/Core/FileManager.php");
-			public static function IncludeFile($FilePath) {
-				if(self::IsIncluded($FilePath)) return false;
-				self::$_IncludedFiles[] = $FilePath;
-				require_once($FilePath);
-				return true;
+			private $_files;
+			public function __construct() {
+				$this->_files=[];
 			}
-			public static function IncludeFiles($FilePaths) {
-				foreach($FilePaths as $f) { self::IncludeFile($f); }
+			public function includeFile($fullPath) {
+				if(array_search($fullPath, $this->_files)===false) {
+					include($fullPath);
+					$this->_files[]=$fullPath;
+				}
 			}
-			public static function IsIncluded($FilePath) {
-				return ((array_search($FilePath, self::$_IncludedFiles)===false) ? false : true);
+			public function includeFiles($filePaths) {
+				foreach ($filePaths as $path) {
+					$this->includeFile($path);
+				}
 			}
 		}
 	}

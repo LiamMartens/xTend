@@ -1,137 +1,197 @@
 <?php
 	namespace xTend
 	{
-		class Router {
-			private static $_Default;
-			private static $_Home;
-			private static $_Aliases = array();
-			private static $_Post = array();
-			private static $_Get = array();
-			private static $_Any = array();
-			private static $_Error = array();
-			//Redirection
-			public static function To($Alias) {
-				if(array_key_exists($Alias, self::$_Aliases)) {
-					if(self::$_Aliases[$Alias]["Url"]!==false) {
-						URL::to(self::$_Aliases[$Alias]["Url"]);
-					}
-				}
+		class Router
+		{
+			private $_default;
+			private $_home;
+			private $_post;
+			private $_get;
+			private $_any;
+			private $_error;
+			private $_aliases;
+
+			private $_app;
+			public function __construct($app) {
+				$this->_app = $app;
+				//init empty
+				$this->_post=[];
+				$this->_get=[];
+				$this->_any=[];
+				$this->_error=[];
+				$this->_aliases=[];
 			}
-			public static function Load($Alias) {
-				if(array_key_exists($Alias, self::$_Aliases)) {
-					self::ExecuteRoute(self::$_Aliases[$Alias]["Route"]);
-				}
-			}
-			//Post route
-			public static function Post($Handle,$Route=false,$Alias=false) {
-				$h; if(is_string($Handle)) {
-					$h = new Route($Handle, $Route, $Alias);
-				} elseif($Handle instanceof  Route) { $h = $Handle; }
-				//add route to post
-				self::$_Post[] = $h;
-				//return handle
-				return $h;
-			}
-			//Get route
-			public static function Get($Handle,$Route=false,$Alias=false) {
-				$h; if(is_string($Handle)) {
-					$h = new Route($Handle, $Route, $Alias);
-				} elseif($Handle instanceof  Route) { $h = $Handle; }
-				//add route to post
-				self::$_Get[] = $h;
-				//return handle
-				return $h;
-			}
-			//Any route
-			public static function Any($Handle,$Route=false,$Alias=false) {
-				$h; if(is_string($Handle)) {
-					$h = new Route($Handle, $Route, $Alias);
-				} elseif($Handle instanceof  Route) { $h = $Handle; }
-				//add route to post
-				self::$_Any[] = $h;
-				//return handle
-				return $h;
-			}
-			//Error routes
-			public static function AppError($Handle,$Route=false,$Alias=false) {
-				$h; if(is_string($Handle)) {
-					$h = new Route($Handle, $Route, $Alias);
-				} elseif($Handle instanceof  Route) { $h = $Handle; }
-				//add route to post
-				self::$_Error[] = $h;
-				//return handle
-				return $h;
-			}
-			//Set default route
-			public static function Def($Route, $Alias=false) {
-				self::$_Default = new Route(false, $Route, $Alias);
-				return self::$_Default;
-			}
-			//Set home route
-			public static function Home($Route, $Alias=false) {
-				self::$_Home = new Route('', $Route, $Alias);
-				return self::$_Home;
-			}
-			//Route restriction
-			//Restriction must return true
-			//Routes will define the routes to be executed
-			public static function Restrict($Restriction, $Routes) {
-				//Restriction is callable and returns true OR
-				//Restriction is not callable and represents true AND
-				//Routes is callable
-				if(((is_callable($Restriction)&&($Restriction()==true))||(($Restriction==true)&&!is_callable($Restriction)))&&is_callable($Routes)) {
-					$Routes();
-				}
+
+			public function getRouteByAlias($alias) {
+				if(array_key_exists($alias, $this->_aliases))
+					return $this->_aliases[$alias];
 				return false;
 			}
-			//Execute error 
-			public static function ThrowError($Error) {
-				//Check whether error route has been set
-				foreach(self::$_Error as $Route) {
-					if($Route->GetHandle()===$Error) {$Route->Load();return true;break;}
-				}
+
+			public function getPostRoute($handle) {
+				if(array_key_exists($handle, $this->_post))
+					return $this->_post[$handle];
 				return false;
 			}
-			//Post configuration
-			public static function PostConfiguration() {
-				if(App::BootstrapMode())
-					return;
-				$Request = trim($_SERVER['REQUEST_URI'],'/');
-				URL::SetRequest($Request);
-				//Step one check home
-				if(isset(self::$_Home)&&self::$_Home->IsMatch($Request)) {
-					self::$_Home->Load();
+
+			public function getGetRoute($handle) {
+				if(array_key_exists($handle, $this->_get))
+					return $this->_get[$handle];
+				return false;
+			}
+
+			public function getAnyRoute($handle) {
+				if(array_key_exists($handle, $this->_any))
+					return $this->_any[$handle];
+				return false;
+			}
+
+			public function getErrorRoute($handle) {
+				if(array_key_exists($handle, $this->_error))
+					return $this->_error[$handle];
+				return false;
+			}
+
+			public function post($handle, $route=false, $alias=false) {
+				//you can either pass an actual handle as the handle
+				//or directly pass a route object as the handle
+				//ignoring the route and alias parameters completely
+				$h; if(is_string($handle)&&($route!==false)) {
+					$h = new Route($this->_app, $handle, $route, $alias);
+				} elseif($handle instanceof Route) { $h=$handle; }
+				//add route to the post
+				$this->_post[$h->getHandle()]=$h;
+				//add to aliases if there is any
+				if($h->getAlias()!==false) {
+					$this->_aliases[$h->getAlias()]=$h;
+				}
+				//return Route object
+				return $h;
+			}
+
+			public function get($handle, $route=false, $alias=false) {
+				//you can either pass an actual handle as the handle
+				//or directly pass a route object as the handle
+				//ignoring the route and alias parameters completely
+				$h; if(is_string($handle)&&($route!==false)) {
+					$h = new Route($this->_app, $handle, $route, $alias);
+				} elseif($handle instanceof Route) { $h=$handle; }
+				//add route to the get
+				$this->_get[$h->getHandle()]=$h;
+				//add to aliases if there is any
+				if($h->getAlias()!==false) {
+					$this->_aliases[$h->getAlias()]=$h;
+				}
+				//return Route object
+				return $h;
+			}
+
+			public function any($handle, $route=false, $alias=false) {
+				//you can either pass an actual handle as the handle
+				//or directly pass a route object as the handle
+				//ignoring the route and alias parameters completely
+				$h; if(is_string($handle)&&($route!==false)) {
+					$h = new Route($this->_app, $handle, $route, $alias);
+				} elseif($handle instanceof Route) { $h=$handle; }
+				//add route to the any
+				$this->_any[$h->getHandle()]=$h;
+				//add to aliases if there is any
+				if($h->getAlias()!==false) {
+					$this->_aliases[$h->getAlias()]=$h;
+				}
+				//return Route object
+				return $h;
+			}
+
+			public function error($handle, $route=false, $alias=false) {
+				//here the handler should be an errorcode
+				//you can either pass an actual handle as the handle
+				//or directly pass a route object as the handle
+				//ignoring the route and alias parameters completely
+				$h; if(is_numeric($handle)&&($route!==false)) {
+					$h = new Route($this->_app, $handle, $route, $alias);
+				} elseif($handle instanceof Route) { $h=$handle; }
+				//add route to the error list
+				$this->_error[$h->getHandle()]=$h;
+				//add to aliases if there is any
+				if($h->getAlias()!==false) {
+					$this->_aliases[$h->getAlias()]=$h;
+				}
+				//return Route object
+				return $h;
+			}
+
+			public function def($route) {
+				//the default should always be a route, not a handle or route object
+				$this->_default = new Route($this->_app, false, $route, false);
+				return $this->_default;
+			}
+
+			public function home($route) {
+				$home_handle = "";
+				$forw_pos = strpos($this->_app->getUrl(), "/", 7);
+				if($forw_pos!==false) { $home_handle=substr($this->_app->getUrl(), $forw_pos+1); }
+				//the home should always be a route not a handle or route object
+				$this->_home = new Route($this->_app, $home_handle, $route, false);
+				return $this->_home;
+			}
+
+			//route restrction
+			//a restriction function should always return a boolean (or 0 or 1)
+			//routes will only be defined when restriction func returns true
+			public function restrict($rest, $routes) {
+				if(is_callable($rest)&&is_callable($routes)&&($rest()==true)) {
+					$routes();
 					return true;
 				}
-				//Step two, check Any Routes
-				foreach(self::$_Any as $Route) {
-					//Is Match?
-					if($Route->IsMatch($Request)) {
-						//Execute route
-						$Route->Load();
-						return true;
+				return false;
+			}
+
+			public function throwError($error) {
+				$code=$error;
+				if($error instanceof ErrorCode) { $code=$error->getCode(); }
+				//find the error route if set
+				if(array_key_exists($code, $this->_error)) {
+					$this->_error[$code]->execute();
+					return true;
+				}
+				return false;
+			}
+
+			public function execute() {
+				$request = trim($_SERVER["REQUEST_URI"], "/");
+				$this->_app->getUrlHandle()->setRequest($request);
+				//check home route
+				if(isset($this->_home)&&$this->_home->isMatch($request)) {
+					$this->_home->execute(); return true;
+				}
+				//check any routes
+				foreach ($this->_any as $handle => $route_obj) {
+					if($route_obj->isMatch($request)) {
+						$route_obj->execute(); return true;
 					}
 				}
-				//Step three check for post or get
-				$SavedRequests=array();
-				if($_SERVER["REQUEST_METHOD"]=="POST") {$SavedRequests = self::$_Post;URL::SetMethod("POST");}
-				else{$SavedRequests = self::$_Get;URL::SetMethod("GET");}
-				//Execute $SavedRequests
-				foreach($SavedRequests as $Route) {
-					//Is Match?
-					if($Route->IsMatch($Request)) {
-						//Execute route
-						$Route->Load();
-						return true;
+				//check for method routes | POST or GET
+				$relevant_requests;
+				if($_SERVER["REQUEST_METHOD"]=="POST") {
+					$relevant_requests = $this->_post;
+					$this->_app->getUrlHandle()->setMethod("POST");
+				} elseif($_SERVER["REQUEST_METHOD"]=="GET") {
+					$relevant_requests = $this->_get;
+					$this->_app->getUrlHandle()->setMethod("GET");
+				}
+				//check the releavant requests
+				foreach ($relevant_requests as $handle => $route_obj) {
+					if($route_obj->isMatch($request)) {
+						$route_obj->execute(); return true;
 					}
 				}
-				//No routes comply
-				//Try for a not found error
-				if(!App::Error(ErrorCodeHandler::FindError("http:404-not-found")->getException())) {
-					//Check for default route
-					if(isset(self::$_Default)) {
-						//Execute default route
-						self::$_Default->Load();
+				//no routes have been executed here
+				//check for error page
+				if(!$this->_app->throwError(0x0194)) {
+					//check for default
+					if(isset($this->_default)) {
+						$this->_default->execute();
 						return true;
 					}
 				}

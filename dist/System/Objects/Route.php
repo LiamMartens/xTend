@@ -3,130 +3,129 @@
 	{
 		class Route
 		{
-			private $_Handle;
-			private $_Route;
-			private $_Alias;
-			private $_Data;
+			private $_app;
+			private $_handle;
+			private $_route;
+			private $_alias;
 
-			//getters
-			public function GetHandle() { return $this->_Handle; }
-			public function GetRoute() { return $this->_Route; }
-			public function GetAlias() { return $this->_Alias; }
-			public function GetData() { return $this->_Data; }
-			//setters
-			public function Handle($Handle) {
-				$this->_Handle = $Handle;
-				if(is_string($this->_Handle)) { $this->_Handle = trim($this->_Handle,"/"); }
-				return $this;
+			public function getHandle() { return $this->_handle; }
+			public function getRoute() { return $this->_route; }
+			public function getAlias() { return $this->_alias; }
+
+			public function __construct($app, $handle, $route, $alias=false) {
+				$this->_app = $app;
+				$this->_handle = trim($handle, "/");
+				$this->_route = $route;
+				$this->_alias = $alias;
 			}
-			public function Route($Route) {
-				$this->_Route = $Route;
-				return $this;
-			}
-			public function Alias($Alias) {
-				$this->_Alias = $Alias;
-				return $this;
-			}
-			public function Data($Data) {
-				$this->_Data = $Data;
-				return $this;
-			}
-			//constructor
-			public function __construct($Handle, $Route, $Alias = false) {
-				$this->Handle($Handle);
-				$this->Route($Route);
-				$this->Data(array());
-				if($Alias!==false) { $this->Alias($Alias); }
-				//check whether GET variables are accepted
-				if(((strrpos($this->_Handle, "+{get}")==strlen($this->_Handle)-6)||
-					(strrpos($this->_Handle, "+{GET}")==strlen($this->_Handle)-6))&&(strlen($this->_Handle)>6)) {
-					$this->_Handle = substr($this->_Handle, 0, strlen($this->_Handle)-6);
-					$rx_matches; $exHandle = explode("/", $this->_Handle);
-					if(preg_match('/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/', $exHandle[count($exHandle)-1], $rx_matches)) {
-						$exHandle[count($exHandle)-1] = "rx{".$rx_matches[3]."}{".("(".$rx_matches[6].")(\\?)(.*)")."}";
-					} elseif(preg_match('/^(rx)(\{)(.*)(\})$/', $exHandle[count($exHandle)-1], $rx_matches)) {
-						$exHandle[count($exHandle)-1] = "rx{".("(".$rx_matches[3].")(\\?)(.*)")."}";
-					} elseif(!preg_match('/^(\{)([a-zA-Z0-9_]+)(\})$/', $exHandle[count($exHandle)-1])) {
-						$exHandle[count($exHandle)-1] = "rx{(".$exHandle[count($exHandle)-1].")(\\?)(.*)}";
-					}
-					$this->_Handle="";
-					foreach ($exHandle as $part) { $this->_Handle.=$part."/"; }
-					$this->_Handle=rtrim($this->_Handle,"/");
+
+			public function navigate() {
+				if(is_string($this->_handle)) {
+					$this->_app->getUrlHandle()->navigate($this->_handle);
 				}
 			}
-			//other methods
-			public function To() {
-				if(is_string($this->_Handle)) {
-					URL::to($this->_Handle);
-					return true;
-				}
-				return false;
-			}
-			public function Load() {
-				if(is_callable($this->_Route)) {
-					//call function
-					call_user_func($this->_Route);
-					return true;
-				} elseif (is_string($this->_Route)) {
-					//just a string
-					echo $this->_Route;
-					return true;
-				} elseif(is_array($this->_Route)) {
-					//check for controller or view data
-					$Data = array();
-					if(array_key_exists("Data", $this->_Route)) {
-						$Data = $this->_Route["Data"];
-					} else { $Data = $this->_Data; }
-					//Check for model existance
-					if(array_key_exists("Model",$this->_Route)) {
-						Models::Initialize($this->_Route["Model"]);
+
+			public function execute() {
+				//this function will execute whatever is attached to the route
+				if(is_callable($this->_route)) {
+					//the route is a function -> so call it
+					call_user_func($this->_route);
+				} elseif(is_string($this->_route)) {
+					//the route is a string, so just echo it
+					echo $this->_route;
+				} elseif(is_array($this->_route)) {
+					//data array passed 
+					//view, controller, model, data
+					$data=(array_key_exists("data", $this->_route)&&(is_array($this->_route["data"]))) ? $this->_route["data"] : [];
+					//check and load one model
+					if(array_key_exists("model", $this->_route)) {
+						$this->_app->getModelHandler()->loadModel($this->_route["model"]);
 					}
-					//Check for controller existance
-					if(array_key_exists("Controller",$this->_Route)) {
-						Controllers::Initialize($this->_Route["Controller"],$Data);
-					}
-					//Check for view existance
-					if(array_key_exists("View",$this->_Route)) {
-						//Don't pass data to the view when there is a controller available
-						if(!array_key_exists("Controller",$this->_Route)) {
-							Views::Initialize($this->_Route["View"],$Data);
-						} else {
-							Views::Initialize($this->_Route["View"]);
+					//check and load multiple models
+					if(array_key_exists("models", $this->_route)) {
+						foreach ($this->_route["models"] as $model) {
+							$this->_app->getModelHandler()->loadModel($model);
 						}
 					}
-					return true;
-				}
-				return false;
+					//check for controller
+					$controller_found=false;
+					if(array_key_exists("controller", $this->_route)) {
+						$this->_app->getControllerHandler()->loadController($this->_route["controller"], "xTend", $data);
+						$controller_found=true;
+					}
+					//check for multiple controllers
+					if(array_key_exists("controllers", $this->_route)) {
+						foreach ($this->_route["controllers"] as $controller) {
+							$this->_app->getControllerHandler()->loadController($controller, "xTend", $data);
+						}
+						$controller_found=true;
+					}
+					//check for view
+					//For views, don't pass data, when a controller already has the data
+					//No need for duplicate data
+					if(array_key_exists("view", $this->_route)) {
+						$this->_app->getViewHandler()->loadView($this->_route["view"], ($controller_found) ? [] : $data);
+					}
+					//check for multiple views
+					if(array_key_exists("views", $this->_route)) {
+						foreach ($this->_route["views"] as $view) {
+							$this->_app->getViewHandler()->loadView($view, ($controller_found) ? [] : $data);
+						}
+					}
+				} else return false;
+				return true;
 			}
-			public function IsMatch($Request) {
-				if(is_string($this->_Handle)) {
-					//explode both urls
-					$exRequest = explode("/", $Request);
-					$exHandle = explode("/", $this->_Handle);
-					//check for equal parts
-					if(count($exRequest)!==count($exHandle)) { return false; }
-					//check each part
-					$rx_matches;
-					for($i=0;$i<count($exRequest);$i++) {
-						//is regexed variable
-						if(preg_match('/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/', $exHandle[$i], $rx_matches)&&
-							preg_match('/'.$rx_matches[6].'/', $exRequest[$i])) {
-							URL::SetParameter($rx_matches[3], $exRequest[$i]);
-						} elseif(preg_match('/^(\{)([a-zA-Z0-9_]+)(\})$/', $exHandle[$i], $rx_matches)) {
-							//is non regexed variable
-							URL::SetParameter($rx_matches[2], $exRequest[$i]);
+
+			public function isMatch($request) {
+				if(is_string($this->_handle)) {
+					//ignore starting and trailing slashes
+					$ex_request = explode("/", trim($request, "/"));
+					$ex_handle = explode("/", $this->_handle);
+					//if the amount of parts dont comply just, end
+					if(count($ex_request)!=count($ex_handle)) return false;
+					//check all parts of the handle and see whether they match up  to the request
+					$ex_count=count($ex_handle); $rx_matches;
+					for($i=0;$i<$ex_count;$i++) {
+						$handle_part=$ex_handle[$i];
+						$request_part=$ex_request[$i];
+						//check {get} parameter first
+						if($i==$ex_count-1) {
+							//checking the last part of the handle
+							//+{get}
+							if(preg_match("/^(.*)(\+{get})$/i", $handle_part)) {
+								//$handle_part ends with +{get}
+								//thus get parameters are allowed
+								//get rid of +{get} in the handle
+								$handle_part=substr($handle_part, 0, strlen($handle_part)-6);
+								//get rid of anything after first question mark in the request part
+								$qm_pos = strpos($request_part, "?");
+								if($qm_pos!==false)
+									$request_part=substr($request_part, 0, $qm_pos);
+							}
+						}
+						//check up
+						//most complicated structure -> regexed URL variable
+						if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $handle_part, $rx_matches)&&
+							preg_match("/".$rx_matches[6]."/", $request_part)) {
+							//regex for URL variable matches and handle is a regexed variable
+							//setData on the UrlHandle to set URL parameter with name and value
+							$this->_app->getUrlHandle()->setData($rx_matches[3], $request_part);
+						} elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $handle_part, $rx_matches)) {
+							//the handle is a non regex URL variable
+							//just set whatever is in the URL to the variable
+							$this->_app->getUrlHandle()->setData($rx_matches[2], $request_part);
 						} elseif(
-							!((preg_match('/^(rx)(\{)(.*)(\})$/', $exHandle[$i], $rx_matches)&&
-							preg_match('/'.$rx_matches[3].'/', $exRequest[$i])) ||
-							preg_match('/(\*+)/', $exHandle[$i]) ||
-							($exHandle[$i]==$exRequest[$i]))
-						) {
+							!((preg_match("/^(rx)(\{)(.*)(\})$/", $handle_part, $rx_matches)&& //its a regexed part and it matches
+							preg_match("/".$rx_matches[3]."/", $request_part)) ||
+							preg_match("/^(\*+)$/", $handle_part) || //its just a bunch of wildcards
+							($request_part==$handle_part)) /*they just equal each other*/) {
+							//if all of te above fails, return false
 							return false;
 						}
+						//set the route on the UrlHandle
+						$this->_app->getUrlHandle()->setRoute($this);
+						return true;
 					}
-					//set saved url
-					URL::SetRoute($this->_Handle);
-					return true;
 				}
 				return false;
 			}

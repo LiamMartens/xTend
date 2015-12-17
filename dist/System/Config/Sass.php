@@ -1,13 +1,19 @@
 <?php
 	use Leafo\ScssPhp\Compiler;
-	if(xTend\Config::Development==true) {
-		//all scss file names you want to compile
+	$app=xTend\getCurrentApp(__DIR__);
+	//get public dir
+	$pubdir=$app->getPublicDirectory();
+	//get file handler
+	$fh=$app->getFileHandler();
+	//check app development status
+	if($app->getDevelopmentStatus()==true) {
 		$sass_files = array("main");
 		$scss = new Compiler();
-		$scss->setImportPaths("sass/");
+		$scss->setFormatter("Leafo\ScssPhp\\Formatter\\Crunched");
+		$scss->setImportPaths("$pubdir\\sass\\");
 		foreach($sass_files as $file) {
-			$string_sass = file_get_contents("sass/$file.scss");
-			$string_css = $scss->compile($string_sass);
-			file_put_contents("css/$file.css", $string_css);
+			$string_sass=$fh->read("$pubdir\\sass\\$file.scss");
+			$string_css=$scss->compile($string_sass);
+			$fh->write("$pubdir\\css\\$file.css", $string_css);
 		}
 	}

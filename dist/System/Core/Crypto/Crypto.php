@@ -49,12 +49,12 @@ final class Crypto
      * So, PLEASE, do not change these constants.
      */
     const CIPHER_METHOD = 'aes-128-cbc';
-    const KEY_BYTE_SIZE = 16;
+    const KEY_BYTE_SIZE = 40;
     const HASH_FUNCTION = 'sha256';
     const MAC_BYTE_SIZE = 32;
     const ENCRYPTION_INFO = 'DefusePHP|KeyForEncryption';
     const AUTHENTICATION_INFO = 'DefusePHP|KeyForAuthentication';
-
+    
     /**
      * Use this to generate a random encryption key.
      * 
