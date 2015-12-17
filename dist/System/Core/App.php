@@ -143,7 +143,7 @@
 				//include archive class
 				ClassManager::includeClass("xTend\\Archive", $this->_dirSystem."\\Core\\Archive.php");
 				//include ErrorCodeHandler
-				ClassManager::includeClass("xTend\\ErrorCodeHandler", $this->_dirSystem."\\Core\\ErrorCodeHandler.php");	
+				ClassManager::includeClass("xTend\\ErrorCodeHandler", $this->_dirSystem."\\Core\\ErrorCodeHandler.php");
 				$this->_errorCodeHandler = new ErrorCodeHandler();
 				//include LogHandler
 				ClassManager::includeClass("xTend\\LogHandler", $this->_dirSystem."\\Core\\LogHandler.php");
@@ -272,11 +272,11 @@
 				//run library inclusion
 				$this->loadLibraries();
 				//run preconfig methods
-				foreach ($this->_preConfigMethods as $method) { $method(); }
+				foreach ($this->_preConfigMethods as $method) { $method($this); }
 				//include config
 				$this->configure();
 				//run post config methhods
-				foreach ($this->_postConfigMethods as $method) { $method(); }
+				foreach ($this->_postConfigMethods as $method) { $method($this); }
 
 				//start the router
 				if(!$this->_bootstrapMode)
