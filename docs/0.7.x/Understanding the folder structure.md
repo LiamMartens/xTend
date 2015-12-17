@@ -42,4 +42,4 @@ The `www` folder is the public directory. Here you will store all your publicly 
 images, javascript files, css files (the sass files are currently also located here, but you could change this).
 In essence, you can call this directory anything you want. It can be `public`, `public_html`, ... You'll just have to make sure
 the `index.php` file inside the public directory requires in the right file. At this moment the `require_once` points to
-`../System/Core/App.php` but if you move or rename this directory you'll have to change this to wherever your `System` directory is located. If you don't do this, the `index.php` won't find the xTend files and it, obviously, won't work.
+`..\System\Core\App.php` but if you move or rename this directory you'll have to change this to wherever your `System` directory is located. If you don't do this, the `index.php` won't find the xTend files and it, obviously, won't work.
