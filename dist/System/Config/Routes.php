@@ -1,7 +1,7 @@
 <?php
-	namespace xTend
+	namespace xTend\Application
 	{
-		$app=getCurrentApp(__DIR__);
+		$app=\xTend\getCurrentApp(__NAMESPACE__);
 		$app->getRouter()->home(array(
 			"view" => "example",
 			"controller" => "ExampleController@info",

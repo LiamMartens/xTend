@@ -287,30 +287,21 @@
 			Global functions for initializing and retrieving app instances
 		**/
 		if(!function_exists("getCurrentApp")) {
-			function getCurrentApp($dir) {
+			function getCurrentApp($ns) {
 				//get system directory
-				$back_pos=strrpos($dir, "\\");
 				global $apps;
-				if(is_array($apps)) {
-					while ($back_pos!==false) {
-						if(isset($apps[$dir])) {
-							return $apps[$dir];
-						}
-						$dir=substr($dir, 0, $back_pos); $back_pos=strrpos($dir, "\\");
-					}
+				if(is_array($apps)&&isset($apps[$ns])) {
+					return $apps[$ns];
 				} return false;
 			}
 		}
 		if(!function_exists("createNewApp")) {
-			function createNewApp($public_directory, $bootstrap_mode = false) {
+			function createNewApp($ns, $public_directory, $bootstrap_mode = false) {
 				global $apps;
 				if(!is_array($apps))
 					$apps=[];
-				//get system directory
-				$sysdir = substr(__DIR__, 0, strlen(__DIR__)-5);
 				//create new app instance
-				$apps[$sysdir]=new App($public_directory, $bootstrap_mode);
-				$apps[$public_directory]=&$apps[$sysdir];
-				return $apps[$sysdir];
+				$apps[$ns]=new App($public_directory, $bootstrap_mode);
+				return $apps[$ns];
 			} }
 	}
