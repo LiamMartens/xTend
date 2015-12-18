@@ -203,14 +203,5 @@
 				//return compiled view filename
 				return ($this->_app->getFileHandler()->systemFile("ViewOutput.$file_hash.v")."$version.php");
 			}
-			//module inclusion
-			public function module($mod_name) {
-				$file_path=$this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow").".php";
-				if($this->_app->getFileHandler()->exists($file_path)) {
-					$content = $this->_app->getFileHandler()->read($file_path);
-					return $this->compile($content);
-				}
-				return false;
-			}
 		}
 	}
