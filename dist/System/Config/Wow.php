@@ -52,7 +52,7 @@
 		//internal css
 		$wow->registerExpression(
 			$wow->rx("(@css:)(.*)","i"),
-			'<link rel="stylesheet" href="<?php echo \\xTend\\getCurrentApp(__DIR__)->getUrl()."/$2"; ?>" type="text/css">'
+			'<link rel="stylesheet" href="<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl()."/$2"; ?>" type="text/css">'
 		);
 		//external css
 		$wow->registerExpression(
@@ -62,7 +62,7 @@
 		//internal script
 		$wow->registerExpression(
 			$wow->rx("(@script:)(.*)","i"),
-			'<script src="<?php echo \\xTend\\getCurrentApp(__DIR__)->getUrl()."/$2"; ?>" type="text/javascript"></script>'
+			'<script src="<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl()."/$2"; ?>" type="text/javascript"></script>'
 		);
 		//external script
 		$wow->registerExpression(
@@ -72,32 +72,32 @@
 		//app lang
 		$wow->registerExpression(
 			$wow->rx("(@lang)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getLanguage(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getLanguage(); ?>"
 		);
 		//app charset
 		$wow->registerExpression(
 			$wow->rx("(@charset)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getCharset(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getCharset(); ?>"
 		);
 		//app description
 		$wow->registerExpression(
 			$wow->rx("(@description)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getDescription(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getDescription(); ?>"
 		);
 		//app keywords
 		$wow->registerExpression(
 			$wow->rx("(@keywords)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getKeywords(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getKeywords(); ?>"
 		);
 		//app author
 		$wow->registerExpression(
 			$wow->rx("(@author)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getAuthor(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getAuthor(); ?>"
 		);
 		//app url
 		$wow->registerExpression(
 			$wow->rx("(@url)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__DIR__)->getUrl(); ?>"
+			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl(); ?>"
 		);
 		//app title
 		$wow->registerExpression(
@@ -107,6 +107,6 @@
 		//get current app
 		$wow->registerExpression(
 			$wow->rx("(@app:)(\{)(.+)(\})","i"),
-			"<?php \\xTend\\getCurrentApp(__DIR__)->$3; ?>"
+			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->$3; ?>"
 		);
 	}

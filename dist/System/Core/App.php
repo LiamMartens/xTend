@@ -17,6 +17,7 @@
 			private $_backupInterval = "1 week";
 			private $_backupLimit = 10;
 			private $_logLimit = 30;
+			private $_namespace = "xTend\\Application";
 			//app configuration getters
 			public function getVersion() { return $this->_xTendVersion; }
 			public function getUrl() { return $this->_url; }
@@ -31,6 +32,7 @@
 			public function getBackupInterval() { return $this->_backupInterval; }
 			public function getBackupLimit() { return $this->_backupLimit; }
 			public function getLogLimit() { return $this->_logLimit; }
+			public function getNamespace() { return $this->_namespace; }
 			/**
 				app configuration setters -> if needed to set during runtime (for a cms for exmaple)
 				-> not for xTend version, url and charset. These should not be changed only if really necessary
@@ -46,6 +48,7 @@
 			public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
 			public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
 			public function setLogLimit($limit) { $this->_logLimit = $limit; }
+			public function setNamespace($ns) { $this->_namespace=$ns; }
 			//Application defined variables
 			private $_dirSystem;
 			private $_dirPublic;
@@ -114,7 +117,8 @@
 			private $_postConfigMethods;
 			public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
 			//constructor
-			public function __construct($public_directory, $bootstrap_mode = false) {
+			public function __construct($ns, $public_directory, $bootstrap_mode = false) {
+				$this->_namespace=$ns;
 				//the directives are set automatically since they are very important to the application itself
 				//set system directory
 				$this->_dirSystem = substr(__DIR__,0,strlen(__DIR__)-5);
@@ -301,7 +305,7 @@
 				if(!is_array($apps))
 					$apps=[];
 				//create new app instance
-				$apps[$ns]=new App($public_directory, $bootstrap_mode);
+				$apps[$ns]=new App($ns, $public_directory, $bootstrap_mode);
 				return $apps[$ns];
 			} }
 	}
