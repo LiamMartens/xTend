@@ -17,7 +17,7 @@
 				$this->_rx_layout = $this->rx("(\s+|^)(@)(layout)(:)([\w\-\_\.]+)(\s+|$)", "i");
 				$this->_rx_flag = $this->rx("(\s+|^)(@)(compile)(:)(always|version|never|change|change\+version)(\s+|$)", "i");
 				$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
-				$this->_rx_section_extract = $this->rx("(@startsection:%s)((\s|.)*)(@endsection:%s)", "i");
+				$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
 				$this->_rx_module = $this->rx("(@module\()(.+)(\))", "i");
 
 				$this->_expressions=[];
@@ -26,7 +26,7 @@
 				/**
 					add modules rx -> modules are not pre compiled parts, they are dynamically inserted
 				**/
-				$this->registerExpression($this->_rx_module, "<?php echo \\xTend\\getCurrentApp(__DIR__)->getWowCompiler()->module(\"$2\"); ?>");
+				$this->registerExpression($this->_rx_module, "<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getWowCompiler()->module(\"$2\"); ?>");
 			}
 			public function rx($pattern, $flags) {
 				return "/$pattern/$flags";
@@ -172,7 +172,7 @@
 						}
 					} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file)); }
 					//add namespace to compiled_string
-					$compiled_string="<?php namespace ".$this->_app->getNamespace()." ?>";
+					$compiled_string="<?php namespace ".$this->_app->getNamespace()." ?>".$compiled_string;
 					//write view output
 					$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile("ViewOutput.$file_hash.v")."$version.php", $compiled_string);
 					//update meta file
