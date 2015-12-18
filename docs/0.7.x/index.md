@@ -11,3 +11,5 @@
 [5. Creating config files](/0.7.x/5.%20Creating%20config%20files/)  
 
 [6. Auto backup](/0.7.x/6.%20Auto%20backup)  
+
+[7. Understanding the app launch sequence](/0.7.x/7.%20Understanding%20the%20app%20launch%20sequence/)  
