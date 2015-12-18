@@ -9,6 +9,7 @@
 			private $_rx_section;
 			private $_rx_section_extract;
 			private $_rx_module;
+			private $_rx_module_extract;
 
 			private $_expressions;
 			private $_app;
@@ -18,15 +19,11 @@
 				$this->_rx_flag = $this->rx("(\s+|^)(@)(compile)(:)(always|version|never|change|change\+version)(\s+|$)", "i");
 				$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
 				$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
-				$this->_rx_module = $this->rx("(@module\()(.+)(\))", "i");
+				$this->_rx_module = $this->rx("(@module\()([\w\-\_\.]+)(\))", "i");
+				$this->_rx_module_extract = $this->rx("(@module\([\w\-\_\.]+\))", "i");
 
 				$this->_expressions=[];
 				$this->_app=$app;
-
-				/**
-					add modules rx -> modules are not pre compiled parts, they are dynamically inserted
-				**/
-				$this->registerExpression($this->_rx_module, "<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getWowCompiler()->module(\"$2\"); ?>");
 			}
 			public function rx($pattern, $flags) {
 				return "/$pattern/$flags";
@@ -60,7 +57,7 @@
 				return false;
 			}
 			//file changed
-			private function changed($path, $layout=false) {
+			private function changed($path, &$view_content, $layout=false) {
 				//get last modification time
 				$time_last_mod=filemtime($path);
 				//get last compile times
@@ -69,6 +66,14 @@
 				if($last_compile==false) return true;
 				//if the last compile time is smaller than the last compile time also return true
 				if(floatval($last_compile)<$time_last_mod) return true;
+				//check for all the modules
+				$modules=[]; preg_match_all($this->_rx_module, $view_content, $modules);
+				if(isset($modules[2])) {
+					foreach ($modules[2] as $mod_name) {
+						$file_path=$this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow").".php";
+						if($this->_app->getFileHandler()->exists($file_path)) {
+							//module exists -> check the change time
+							if(filemtime($file_path)>floatval($last_compile)) return true; } } }
 				//check layout compile time
 				if($layout!==false) {
 					//a layout was passed and no value was returned yet -> check the layout change and the view compile time
@@ -83,6 +88,11 @@
 				$this->_app->getFileHandler()->setFileMeta($path, "last_compile", time());
 			}
 			//compile part method
+			private function compileRaw(&$content) {
+				foreach ($this->_expressions as $rx => $repl) {
+					$content = preg_replace($rx, $repl, $content); }
+				return $content;
+			}
 			private function compile(&$content) {
 				//remove @version, @compile, @layout and @section flags as these
 				//should not be repaced by anything, they should be ignored
@@ -90,10 +100,22 @@
 				$content = preg_replace($this->_rx_layout, "", $content);
 				$content = preg_replace($this->_rx_flag, "", $content);
 				$content = preg_replace($this->_rx_section, "", $content);
-				//check every registered expression
-				foreach ($this->_expressions as $rx => $repl) {
-					$content = preg_replace($rx, $repl, $content); }
-				return $content;
+				//split into modules if any
+				$final_content="";
+				$mod_split = preg_split($this->_rx_module_extract, $content, NULL, PREG_SPLIT_DELIM_CAPTURE);
+				foreach ($mod_split as $part) {
+					if(!preg_match($this->_rx_module, $part)) {
+						//it is not a module
+						$part=$this->compileRaw($part);
+					} else {
+						//get module contents
+						$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name)-1);
+						$mod_path=$this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow").".php";
+						if($this->_app->getFileHandler()->exists($mod_path)) {
+							$part=$this->compile($this->_app->getFileHandler()->read($mod_path)); } }
+					$final_content.=$part; }
+				$content=$final_content;
+				return $final_content;
 			}
 			//compile layout method
 			private function compileLayout(&$layout_c) {
