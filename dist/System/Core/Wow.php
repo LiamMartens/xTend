@@ -160,7 +160,7 @@
 						$one_found=true; if($v_num<$version) {
 							$is_new_version=true; break; } } }
 				//get whether the view has changed (either the view itself or the layout)
-				$has_changed=$this->changed($file, $layout_path);
+				$has_changed=$this->changed($file, $view_c, $layout_path);
 				//check whether view needs to be compiled
 				$compile_view=false;
 				if($flag!==false) {
