@@ -13,3 +13,5 @@
 [6. Auto backup](/0.7.x/6.%20Auto%20backup)  
 
 [7. Understanding the app launch sequence](/0.7.x/7.%20Understanding%20the%20app%20launch%20sequence/)  
+
+[8. Pre and post configuration methods](/0.7.x/8.%20Pre%20and%20post%20configuration%20methods/)  
