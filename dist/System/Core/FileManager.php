@@ -8,6 +8,7 @@
 				$this->_files=[];
 			}
 			public function includeFile($fullPath) {
+				$fullPath=realpath($fullPath);
 				if(array_search($fullPath, $this->_files)===false) {
 					include($fullPath);
 					$this->_files[]=$fullPath;
