@@ -15,3 +15,5 @@
 [7. Understanding the app launch sequence](/0.7.x/7.%20Understanding%20the%20app%20launch%20sequence/)  
 
 [8. Pre and post configuration methods](/0.7.x/8.%20Pre%20and%20post%20configuration%20methods/)  
+
+[9. Including additional classes and files](/0.7.x/9.%20Including%20additional%20classes%20and%20files/)  
