@@ -16,4 +16,6 @@
 
 [8. Pre and post configuration methods](/0.7.x/8.%20Pre%20and%20post%20configuration%20methods/)  
 
-[9. Including additional classes and files](/0.7.x/9.%20Including%20additional%20classes%20and%20files/)  
+[9. Including Libs](/0.7.x/9.%20Including%20Libs/)  
+
+[10. Including additional classes and files](/0.7.x/9.%20Including%20additional%20classes%20and%20files/)  
