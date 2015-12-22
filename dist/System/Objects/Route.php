@@ -29,12 +29,12 @@
 				//this function will execute whatever is attached to the route
 				if(is_callable($this->_route)) {
 					//the route is a function -> so call it
-					call_user_func($this->_route);
+					call_user_func($this->_route, $this->_app);
 				} elseif(is_string($this->_route)) {
 					//the route is a string, so just echo it
 					echo $this->_route;
 				} elseif(is_array($this->_route)) {
-					//data array passed 
+					//data array passed
 					//view, controller, model, data
 					$data=(array_key_exists("data", $this->_route)&&(is_array($this->_route["data"]))) ? $this->_route["data"] : [];
 					//check and load one model
