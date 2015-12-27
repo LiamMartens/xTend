@@ -10,7 +10,7 @@
 	@module(example)
 	@({
 
-		$app=xTend\getCurrentApp(__DIR__);
+		$app=\xTend\getCurrentApp(__NAMESPACE__);
 		$app->getModelHandler()->getModel()->function_call();
 
 	})

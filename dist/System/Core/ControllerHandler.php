@@ -19,6 +19,13 @@
 				$dot_pos = strrpos($controllerName, ".");
 				$first_at_pos = ($dot_pos!==false) ? strpos($controllerName, "@", $dot_pos) : strpos($controllerName, "@");
 				$controllerPath = ($first_at_pos!==false) ? substr($controllerName, 0, $first_at_pos) : $controllerName;
+				//check namespace addition
+				//check for namespace in controllername
+				$last_back_pos = ($dot_pos!==false) ? strrpos($controllerPath, "\\", $dot_pos) : strrpos($controllerPath, "\\");
+				$add_ns = ($last_back_pos!==false) ? substr($controllerPath, ($dot_pos===false) ? 0 : $dot_pos+1, ($dot_pos===false) ? $last_back_pos : $last_back_pos-$dot_pos) : false;
+				$controllerPath = ($last_back_pos!==false) ? substr($controllerPath, 0, $dot_pos+1).substr($controllerPath, $last_back_pos+1) : $controllerPath;
+				if($add_ns!==false)
+					$namespace="";
 				//ControllerClass
 				$controllerClass = explode(".", $controllerName);
 				$controllerClass = $controllerClass[count($controllerClass) - 1];

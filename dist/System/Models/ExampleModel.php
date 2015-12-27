@@ -1,5 +1,5 @@
 <?php
-	namespace xtend
+	namespace xTend
 	{
 		class ExampleModel extends BaseModel
 		{

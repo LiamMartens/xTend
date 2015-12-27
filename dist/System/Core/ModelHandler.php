@@ -19,10 +19,16 @@
 				//keep in mind also that the modelName also includes any directives you need to enter
 				//so modelName Foo.Bar will be located at /System/Models/Foo/Bar.php
 				//The namespace will differ but you can set this using the parameter -> by default xTend namespace
-				if($this->exists($modelName)) {
-					$modelName_parts = explode(".", $modelName);
-					$className = "$namespace\\".$modelName_parts[count($modelName_parts) - 1];
-					ClassManager::includeClass($className, $this->_app->getFileHandler()->systemFile("Models.$modelName.php"));
+				$modelName_parts = explode(".", $modelName);
+				$dot_pos = strrpos($modelName, ".");
+				$last_back_pos = ($dot_pos!==false) ? strrpos($modelName, "\\", $dot_pos) : strrpos($modelName, "\\");
+				$add_ns = ($last_back_pos!==false) ? substr($modelName, ($dot_pos===false) ? 0 : $dot_pos+1, ($dot_pos===false) ? $last_back_pos : $last_back_pos-$dot_pos) : false;
+				$modelPath = ($last_back_pos!==false) ? substr($modelName, 0, $dot_pos+1).substr($modelName, $last_back_pos+1) : $modelName;
+				if($add_ns!==false)
+					$namespace="";
+				$className = "$namespace\\".$modelName_parts[count($modelName_parts) - 1];
+				if($this->exists($modelPath)) {
+					ClassManager::includeClass($className, $this->_app->getFileHandler()->systemFile("Models.$modelPath.php"));
 					if($createInstance) {
 						//by default a reference to the app is passed as well in order to make it's directives and settings available
 						$this->_models[$modelName] = new $className($this->_app);
