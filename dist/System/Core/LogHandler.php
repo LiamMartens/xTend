@@ -26,7 +26,7 @@
 				$dt = new DateTime();
 				$this->_app->getFileHandler()->append(
 					$this->_app->getFileHandler()->systemFile("Logs.log_".$dt->format("Y-m-d").".log"),
-					$dt->format("H:i:s")."\t".$err->getError()."\t$additional\n"
+					$dt->format("H:i:s")."\t".$err->getError()."\t$additional\r\n"
 				);
 				$this->cleanLogs();
 			}
