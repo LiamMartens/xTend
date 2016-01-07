@@ -116,6 +116,30 @@
 			//postconfiguration methods
 			private $_postConfigMethods;
 			public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
+			//application integrity check
+			private function applicationIntegrityCheck() {
+				$directories = [
+					"Backups",
+					"Controllers",
+					"Layouts",
+					"Logs",
+					"Models",
+					"Modules",
+					"ViewOutput",
+					"Views"
+				];
+				$can_write = is_writable($this->_dirSystem);
+				$integrity_success = true;
+				foreach ($directories as $dir) {
+					if(!is_dir($this->_dirSystem."/$dir")) {
+						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write))
+							$integrity_success=false;
+						else echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>");
+					}
+				}
+				if(!$integrity_success)
+					die("<br>Integrity check failed");
+			}
 			//constructor
 			public function __construct($ns, $public_directory, $bootstrap_mode = false) {
 				$this->_namespace=$ns;
@@ -124,6 +148,8 @@
 				$this->_dirSystem = substr(__DIR__,0,strlen(__DIR__)-5);
 				//set public directory
 				$this->_dirPublic = $public_directory;
+				//integrity check
+				$this->applicationIntegrityCheck();
 				//set content charset
 				header("Content-Type:text/html;charset=".$this->_charset);
 				//set default time zone to UTC
