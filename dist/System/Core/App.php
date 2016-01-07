@@ -118,23 +118,26 @@
 			public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
 			//application integrity check
 			private function applicationIntegrityCheck() {
-				$directories = [
-					"Backups",
-					"Controllers",
-					"Layouts",
-					"Logs",
-					"Models",
-					"Modules",
-					"ViewOutput",
-					"Views"
-				];
+				$directories = ["Backups","Controllers","Layouts","Logs","Models","Modules","ViewOutput","Views","Meta"];
+				$writable_system_directories = ["Backups","Logs","ViewOutput","Meta"];
+				$writable_public_directories = ["css"];
 				$can_write = is_writable($this->_dirSystem);
 				$integrity_success = true;
 				foreach ($directories as $dir) {
 					if(!is_dir($this->_dirSystem."/$dir")) {
-						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write))
-							$integrity_success=false;
-						else echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>");
+						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write)) {
+							echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>"); $integrity_success=false;
+						}
+					}
+				}
+				foreach ($writable_system_directories as $dir) {
+					if(is_dir($this->_dirSystem."/$dir")&&!is_writable($this->_dirSystem."/$dir")) {
+						echo $this->_dirSystem."/$dir is not writable<br>"; $integrity_success=false;
+					}
+				}
+				foreach ($writable_public_directories as $dir) {
+					if(is_dir($this->_dirPublic."/$dir")&&!is_writable($this->_dirPublic."/$dir")) {
+						echo $this->_dirPublic."/$dir is not writable<br>"; $integrity_success=false;
 					}
 				}
 				if(!$integrity_success)
