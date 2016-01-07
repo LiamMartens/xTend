@@ -4,8 +4,8 @@
 		class DirectoryHandler
 		{
 			/**
-				Consistent \ instead of /
-				\\.[!.][!.]* includes all hidden files but exclude entries such as . and ..
+				Consistent / instead of \
+				/.[!.][!.]* includes all hidden files but exclude entries such as . and ..
 			**/
 			private $_app;
 			public function __construct($app) {
@@ -16,14 +16,14 @@
 				$path=$this->_app->getSystemDirectory();
 				$dir_parts = explode(".", $dirName);
 				//foreach loop is possible here
-				foreach ($dir_parts as $part) { $path.="\\".$part; }
+				foreach ($dir_parts as $part) { $path.="/".$part; }
 				return $path;
 			}
 			public function publicDirectory($dirName) {
 				$path=$this->_app->getPublicDirectory();
 				$dir_parts = explode(".", $dirName);
 				//foreach loop is possible here
-				foreach ($dir_parts as $part) { $path.="\\".$part; }
+				foreach ($dir_parts as $part) { $path.="/".$part; }
 				return $path;
 			}
 			public function exists($path) {
@@ -31,25 +31,25 @@
 			}
 			//helper function to get the last part of the path
 			private function getName($path) {
-				//replace any / with \
-				$path=str_replace("/", "\\", $path);
-				//get postion of last \
-				$pos_back = strrpos($path, "\\");
+				//replace any \\ with /
+				$path=str_replace("\\", "/", $path);
+				//get postion of last /
+				$pos_back = strrpos($path, "/");
 				//return full path if there was no \
 				return ($pos_back===false) ? $path : substr($path, $pos_back+1);
 			}
 			//directory scan
 			private function scanIncudingDirectory($path) {
 				//no directory exists checking here as they are only used in scan and shouldn't be called separately
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				return glob($path."\\*");
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				return glob($path."/*");
 			}
 			private function scanExcludingDirectory($path) {
 				//no directory exists checking here as they are only used in scan and shouldn't be called separately
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				$contents = glob($path."\\*"); $entries=[];
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				$contents = glob($path."/*"); $entries=[];
 				foreach ($contents as $entry) { $entries[]=$this->getName($entry); }
 				return $entries;
 			}
@@ -63,16 +63,16 @@
 			}
 			//directory files
 			private function filesIncludingDirectory($path) {
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				$contents = array_merge(glob($path."\\*"), glob($path."\\.[!.][!.]*")); $entries=[];
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				$contents = array_merge(glob($path."/*"), glob($path."/.[!.][!.]*")); $entries=[];
 				foreach ($contents as $entry) { if(is_file($entry)) $entries[] = $entry; }
 				return $entries;
 			}
 			private function filesExcludingDirectory($path) {
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				$contents = array_merge(glob($path."\\*"), glob($path."\\.[!.][!.]*"));; $entries=[];
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				$contents = array_merge(glob($path."/*"), glob($path."/.[!.][!.]*"));; $entries=[];
 				foreach ($contents as $entry) { if(is_file($entry)) $entries[] = $this->getName($entry); }
 				return $entries;	
 			}
@@ -86,14 +86,14 @@
 			}
 			//directory dirs
 			private function directoriesIncludingDirectory($path) {
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				return array_merge(glob($path."\\*", GLOB_ONLYDIR), glob($path."\\.[!.][!.]*", GLOB_ONLYDIR));
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				return array_merge(glob($path."/*", GLOB_ONLYDIR), glob($path."/.[!.][!.]*", GLOB_ONLYDIR));
 			}
 			private function directoriesExcludingDirectory($path) {
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				$contents = array_merge(glob($path."\\*", GLOB_ONLYDIR), glob($path."\\.[!.][!.]*", GLOB_ONLYDIR)); $entries=[];
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				$contents = array_merge(glob($path."/*", GLOB_ONLYDIR), glob($path."/.[!.][!.]*", GLOB_ONLYDIR)); $entries=[];
 				foreach ($contents as $entry) { $entries[] = $this->getName($entry); }
 				return $entries;
 			}
@@ -136,9 +136,9 @@
 					$entries = $this->scan($path, true);
 					foreach ($entries as $entry) {
 						if($this->_app->getFileHandler()->exists($entry)) {
-							$this->_app->getFileHandler()->copy($entry, $dest."\\".$this->getName($entry));
+							$this->_app->getFileHandler()->copy($entry, $dest."/".$this->getName($entry));
 						} else if($this->exists($entry)) {
-							$this->copy($entry, $dest."\\".$this->getName($entry));
+							$this->copy($entry, $dest."/".$this->getName($entry));
 						}
 					}
 				}

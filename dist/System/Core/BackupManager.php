@@ -41,17 +41,17 @@
 				$bak = new Archive($this->_app->getFileHandler()->systemFile("Backups.".time()."-".date("YmdHis").".zip"));
 				$systemfiles = $this->_app->getDirectoryHandler()->recursiveFiles($this->_app->getSystemDirectory());
 				$sysdir_len = strlen($this->_app->getSystemDirectory())+1;
-				$sysdir_name = substr($this->_app->getSystemDirectory(), strrpos($this->_app->getSystemDirectory(), "\\")+1);
+				$sysdir_name = substr($this->_app->getSystemDirectory(), strrpos($this->_app->getSystemDirectory(), "/")+1);
 				foreach ($systemfiles as $sysfile) {
 					$sysfile_relname = substr($sysfile, $sysdir_len);
-					if(substr($sysfile_relname, 0, 8)!="Backups\\") { $bak->addFile($sysfile, "$sysdir_name\\$sysfile_relname"); }
+					if(substr($sysfile_relname, 0, 8)!="Backups/") { $bak->addFile($sysfile, "$sysdir_name/$sysfile_relname"); }
 				}
 				$publicfiles = $this->_app->getDirectoryHandler()->recursiveFiles($this->_app->getPublicDirectory());
 				$pubdir_len = strlen($this->_app->getPublicDirectory())+1;
-				$pubdir_name = substr($this->_app->getPublicDirectory(), strrpos($this->_app->getPublicDirectory(), "\\")+1);
+				$pubdir_name = substr($this->_app->getPublicDirectory(), strrpos($this->_app->getPublicDirectory(), "/")+1);
 				foreach ($publicfiles as $pubfile) {
 					$pubfile_relname = substr($pubfile, $pubdir_len);
-					$bak->addFile($pubfile, "$pubdir_name\\$pubfile_relname");
+					$bak->addFile($pubfile, "$pubdir_name/$pubfile_relname");
 				}
 				$bak->save();
 				//clean backups here

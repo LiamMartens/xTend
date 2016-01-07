@@ -13,7 +13,7 @@
 				$file_parts = explode(".", $fileName);
 				//for loop here since we need to exclude the last part of the array -> extension
 				$file_parts_count = count($file_parts)-1;
-				for($i=0;$i<$file_parts_count;$i++) { $path.="\\".$file_parts[$i]; }
+				for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
 				//add extension part
 				$path.=".".$file_parts[$file_parts_count];
 				return $path;
@@ -23,16 +23,16 @@
 				$file_parts = explode(".", $fileName);
 				//for loop here since we need to exclude the last part of the array -> extension
 				$file_parts_count = count($file_parts)-1;
-				for($i=0;$i<$file_parts_count;$i++) { $path.="\\".$file_parts[$i]; }
+				for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
 				//add extension part
 				$path.=".".$file_parts[$file_parts_count];
 				return $path;
 			}
 			//helper function to get the last part of the path
 			private function getName($path) {
-				//replace / with \
-				$path=str_replace("/", "\\", $path);
-				$pos_back = strrpos($path, "\\");
+				//replace \\ with /
+				$path=str_replace("\\", "/", $path);
+				$pos_back = strrpos($path, "/");
 				return ($pos_back===false) ? $path : substr($path, $pos_back);
 			}
 			public function exists($filePath) {
@@ -73,7 +73,7 @@
 			public function setFileMeta($path, $key, $value) {
 				//end func call if file doesn't exist
 				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."\\".hash("sha256", $path).".meta";
+					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."/".hash("sha256", $path).".meta";
 					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
 					$meta[$key]=$value;
 					$this->write($metaFile, json_encode($meta));
@@ -83,7 +83,7 @@
 			}
 			public function getFileMeta($path, $key, $default=false) {
 				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."\\".hash("sha256", $path).".meta";
+					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."/".hash("sha256", $path).".meta";
 					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
 					if(array_key_exists($key, $meta))
 						return $meta[$key];

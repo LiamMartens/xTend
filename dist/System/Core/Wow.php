@@ -133,7 +133,7 @@
 				//file hash
 				$file_hash = hash("sha256", $file);
 				//get file name 'name'
-				$file_name=substr($file, strrpos($file, "\\")+1); $file_name=substr($file_name, 0, strpos($file_name, "."));
+				$file_name=substr($file, strrpos($file, "/")+1); $file_name=substr($file_name, 0, strpos($file_name, "."));
 				//get view content
 				$view_c = $this->_app->getFileHandler()->read($file);
 				//get view flags
