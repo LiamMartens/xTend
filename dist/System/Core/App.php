@@ -118,6 +118,10 @@
 			public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
 			//application integrity check
 			private function applicationIntegrityCheck() {
+				//check php version
+				if(phpversion()<"5.4")
+					die("Your PHP version is lower than 5.4");
+				//check directories
 				$directories = ["Backups","Controllers","Layouts","Logs","Models","Modules","ViewOutput","Views","Meta"];
 				$writable_system_directories = ["Backups","Logs","ViewOutput","Meta"];
 				$writable_public_directories = ["css"];
