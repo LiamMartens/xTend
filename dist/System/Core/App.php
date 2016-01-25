@@ -35,9 +35,10 @@
 			public function getNamespace() { return $this->_namespace; }
 			/**
 				app configuration setters -> if needed to set during runtime (for a cms for exmaple)
-				-> not for xTend version, url and charset. These should not be changed only if really necessary
-				or for example when switching from domain or hosting or xTend version
+				-> not for xTend version.
 			**/
+			public function setUrl($url) { $this->_url = $url; }
+			public function setCharset($chars) { $this->_charset = $charset; }
 			public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
 			public function setCompanyName($name) { $this->__companyName = $name; }
 			public function setLanguage($lang) { $this->_language = $lang; }

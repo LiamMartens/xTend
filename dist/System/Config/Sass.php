@@ -8,14 +8,16 @@
 		$fh=$app->getFileHandler();
 		//check app development status
 		if($app->getDevelopmentStatus()==true) {
-			$sass_files = array("main");
+			$sass_files = $app->getDirectoryHandler()->files("$pubdir/css");
 			$scss = new Compiler();
 			$scss->setFormatter("Leafo\\ScssPhp\\Formatter\\Crunched");
 			$scss->setImportPaths("$pubdir/sass/");
 			foreach($sass_files as $file) {
-				$string_sass=$fh->read("$pubdir/sass/$file.scss");
-				$string_css=$scss->compile($string_sass);
-				$fh->write("$pubdir/css/$file.css", $string_css);
+				if(substr($file, 0, 1)!="_") {
+					$string_sass=$fh->read("$pubdir/sass/$file.scss");
+					$string_css=$scss->compile($string_sass);
+					$fh->write("$pubdir/css/$file.css", $string_css);
+				}
 			}
 		}
 	}
