@@ -38,7 +38,7 @@
 				-> not for xTend version.
 			**/
 			public function setUrl($url) { $this->_url = $url; }
-			public function setCharset($chars) { $this->_charset = $charset; }
+			public function setCharset($chars) { $this->_charset = $chars; }
 			public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
 			public function setCompanyName($name) { $this->__companyName = $name; }
 			public function setLanguage($lang) { $this->_language = $lang; }
