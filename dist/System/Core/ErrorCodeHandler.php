@@ -13,7 +13,7 @@
 			public function getName() { return $this->_name; }
 			public function getReadableName() { return $this->_readableName; }
 			public function getError() { return "(".$this->getHexCode()." ".$this->getName().") ".$this->getReadableName(); }
-			public function isError($key) { return (($key==$this->getCode())||($key==$this->getName())||($key==$this->getHexCode())); }
+			public function isError($key) { return (($key===$this->getCode())||($key===$this->getName())||($key==$this->getHexCode())); }
 			public function getException() { return new Exception($this->getError(), $this->getCode()); }
 
 			public function __construct($code, $name, $readable="") {

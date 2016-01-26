@@ -111,6 +111,8 @@
 				$h; if(is_numeric($handle)&&($route!==false)) {
 					$h = new Route($this->_app, $handle, $route, $alias);
 				} elseif($handle instanceof Route) { $h=$handle; }
+				elseif($this->_app->getErrorCodeHandler()->findError($handle) instanceof ErrorCode) {
+					$h = new Route($this->_app, $this->_app->getErrorCodeHandler()->findError($handle)->getCode(), $route, $alias); }
 				//add route to the error list
 				$this->_error[$h->getHandle()]=$h;
 				//add to aliases if there is any
