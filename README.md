@@ -1,5 +1,8 @@
 #Introducing xTend
 
+###What changed in 0.7.x?
+Everything did! The new version of xTend is a complete rewrite from scratch of xTend 0.6.x. It is now more than 20% faster even!
+
 ###*What is xTend?*
 xTend is a simple and easy to use yet powerful and very extendable PHP MVC framework
 
@@ -12,8 +15,8 @@ I can only give you a couple of reasons but be free to see for yourself
 * Easy to extend
 * Fast
 
-##*Documentation*
+###*Documentation*
 [Read The Docs](http://xtend.readthedocs.org/en/latest/)
 
-##*Have questions?*
+###*Have questions?*
 Send an email to [hi@liammartens.com](mailto:hi@liammartens.com)
