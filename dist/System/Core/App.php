@@ -102,6 +102,9 @@
 			//Wow layout engine
 			private $_wowCompiler;
 			public function getWowCompiler() { return $this->_wowCompiler; }
+			//Simple HTML writer
+			private $_htmlHandler;
+			public function getHTMLHandler() { return $this->_htmlHandler; }
 			//error throw
 			public function throwError($code) {
 				$error = $this->_errorCodeHandler->findError($code);
@@ -228,6 +231,9 @@
 				//include Wow Compiler
 				ClassManager::includeClass("xTend\\Wow", $this->_dirSystem."/Core/Wow.php");
 				$this->_wowCompiler = new Wow($this);
+				//include HTMLHandler
+				ClassManager::includeClass("xTend\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
+				$this->_htmlHandler = new HTMLHandler($this);
 				//inlcude Controller and model bluepprints
 				ClassManager::includeClass("xTend\\BaseController", $this->_dirSystem."/Blueprints/BaseController.php");
 				ClassManager::includeClass("xTend\\BaseDataController", $this->_dirSystem."/Blueprints/BaseDataController.php");
