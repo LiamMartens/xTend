@@ -7,7 +7,7 @@
 
 			NOTICE: The code in here is the same as in BaseDataExtension but PHP sadly doesn't support muti inheritance,
 					So I had to duplicate the code, though I still added the BaseDataExtension code for those who want custom
-					Controllers with the same data functionality (also, the UrlHandle extends BaseDataExtension)
+					Controllers with the same data functionality (also, the UrlHandler extends BaseDataExtension)
 		**/
 		class BaseDataController extends BaseController
 		{

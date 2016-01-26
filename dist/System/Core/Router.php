@@ -162,7 +162,7 @@
 
 			public function execute() {
 				$request = trim($_SERVER["REQUEST_URI"], "/");
-				$this->_app->getUrlHandle()->setRequest($request);
+				$this->_app->getUrlHandler()->setRequest($request);
 				//check home route
 				if(isset($this->_home)&&$this->_home->isMatch($request)) {
 					$this->_home->execute(); return true;
@@ -177,10 +177,10 @@
 				$relevant_requests;
 				if($_SERVER["REQUEST_METHOD"]=="POST") {
 					$relevant_requests = $this->_post;
-					$this->_app->getUrlHandle()->setMethod("POST");
+					$this->_app->getUrlHandler()->setMethod("POST");
 				} elseif($_SERVER["REQUEST_METHOD"]=="GET") {
 					$relevant_requests = $this->_get;
-					$this->_app->getUrlHandle()->setMethod("GET");
+					$this->_app->getUrlHandler()->setMethod("GET");
 				}
 				//check the releavant requests
 				foreach ($relevant_requests as $handle => $route_obj) {

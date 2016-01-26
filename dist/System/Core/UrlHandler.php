@@ -1,7 +1,7 @@
 <?php
 	namespace xTend
 	{
-		class UrlHandle extends BaseDataExtension
+		class UrlHandler extends BaseDataExtension
 		{
 			private $_route;
 			public function getRoute() { return $this->_route; }

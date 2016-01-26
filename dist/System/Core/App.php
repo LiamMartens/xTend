@@ -85,8 +85,8 @@
 			private $_viewHandler;
 			public function getViewHandler() { return $this->_viewHandler; }
 			//URL handle
-			private $_urlHandle;
-			public function getUrlHandle() { return $this->_urlHandle; }
+			private $_UrlHandler;
+			public function getUrlHandler() { return $this->_UrlHandler; }
 			//Router
 			private $_router;
 			public function getRouter() { return $this->_router; }
@@ -202,10 +202,10 @@
 				//include ViewHandler
 				ClassManager::includeClass("xTend\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 				$this->_viewHandler = new ViewHandler($this);
-				//include UrlHandle
+				//include UrlHandler
 				ClassManager::includeClass("xTend\\BaseDataExtension", $this->_dirSystem."/Blueprints/BaseDataExtension.php");
-				ClassManager::includeClass("xTend\\UrlHandle", $this->_dirSystem."/Core/UrlHandle.php");
-				$this->_urlHandle = new UrlHandle($this);
+				ClassManager::includeClass("xTend\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
+				$this->_UrlHandler = new UrlHandler($this);
 				//include Route Object
 				ClassManager::includeClass("xTend\\Route", $this->_dirSystem."/Objects/Route.php");
 				//include Router

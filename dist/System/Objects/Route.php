@@ -21,7 +21,7 @@
 
 			public function navigate() {
 				if(is_string($this->_handle)) {
-					$this->_app->getUrlHandle()->navigate($this->_handle);
+					$this->_app->getUrlHandler()->navigate($this->_handle);
 				}
 			}
 
@@ -108,12 +108,12 @@
 						if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $handle_part, $rx_matches)&&
 							preg_match("/".$rx_matches[6]."/", $request_part)) {
 							//regex for URL variable matches and handle is a regexed variable
-							//setData on the UrlHandle to set URL parameter with name and value
-							$this->_app->getUrlHandle()->setData($rx_matches[3], $request_part);
+							//setData on the UrlHandler to set URL parameter with name and value
+							$this->_app->getUrlHandler()->setData($rx_matches[3], $request_part);
 						} elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $handle_part, $rx_matches)) {
 							//the handle is a non regex URL variable
 							//just set whatever is in the URL to the variable
-							$this->_app->getUrlHandle()->setData($rx_matches[2], $request_part);
+							$this->_app->getUrlHandler()->setData($rx_matches[2], $request_part);
 						} elseif(
 							!((preg_match("/^(rx)(\{)(.*)(\})$/", $handle_part, $rx_matches)&& //its a regexed part and it matches
 							preg_match("/".$rx_matches[3]."/", $request_part)) ||
@@ -122,8 +122,8 @@
 							//if all of te above fails, return false
 							return false;
 						}
-						//set the route on the UrlHandle
-						$this->_app->getUrlHandle()->setRoute($this);
+						//set the route on the UrlHandler
+						$this->_app->getUrlHandler()->setRoute($this);
 						return true;
 					}
 				}
