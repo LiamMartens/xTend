@@ -109,7 +109,7 @@
 			public function throwError($code) {
 				$error = $this->_errorCodeHandler->findError($code);
 				if($error instanceof ErrorCode) {
-					$this->_logHandler->write($error, $_SERVER["REQUEST_URI"]."/".$_SERVER["REMOTE_ADDR"]);
+					$this->_logHandler->write($error, $_SERVER["REQUEST_URI"]."\t".$_SERVER["REMOTE_ADDR"]);
 					return $this->_router->throwError($code);
 				}
 				return false;
