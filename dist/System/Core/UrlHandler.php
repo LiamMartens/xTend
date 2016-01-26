@@ -19,9 +19,9 @@
 			public function __construct($app) {
 				$this->_app = $app;
 			}
-			public function navigate($request) {
+			public function navigate($request, $inc_url = true) {
 				if(is_string($request))
-					header("Location: ".$this->_app->getUrl()."/$request");
+					header("Location: ".(($inc_url) ? ($this->_app->getUrl()."/") : "")."$request");
 				elseif(($request instanceof Route)&&is_string($request->getHandle()))
 					header("Location: ".$this->_app->getUrl()."/".$request->getHandle());
 			}
