@@ -109,4 +109,12 @@
 			$wow->rx("(@app:)(\{)(.+)(\})","i"),
 			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->$3; ?>"
 		);
+		$wow->registerExpression(
+			$wow->rx("(@controller:)(.*)","i"),
+			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController()->$2; ?>"
+		);
+		$wow->registerExpression(
+			$wow->rx("(@controller:)(.*):(.*)","i"),
+			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController(\"$2\")->$3; ?>"
+		);
 	}

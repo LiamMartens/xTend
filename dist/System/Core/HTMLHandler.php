@@ -21,6 +21,13 @@
 				return $el;
 			}
 
+			public function addElement($el) {
+				if($el instanceof HTMLElement) {
+					$this->_elements[] = $el;
+					return $el;
+				} return false;
+			}
+
 			public function addText($text) {
 				$this->_text .= $text;
 				return $this;
