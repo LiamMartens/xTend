@@ -122,10 +122,10 @@
 							//if all of te above fails, return false
 							return false;
 						}
-						//set the route on the UrlHandler
-						$this->_app->getUrlHandler()->setRoute($this);
-						return true;
 					}
+					//set the route on the UrlHandler
+					$this->_app->getUrlHandler()->setRoute($this);
+					return true;
 				}
 				return false;
 			}
