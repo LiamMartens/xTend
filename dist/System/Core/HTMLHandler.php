@@ -34,21 +34,24 @@
 			}
 
 			public function write($output=false) {
-				$html = "<".$this->_name;
-				//add attributes
-				foreach ($this->_attributes as $key => $value) {
-					$html.=" $key=";
-					if(is_numeric($value))
-						$html.="$value";
-					else $html.="\"$value\"";
-				} $html.=">";
+				$html="";
+				if($this->_name!==false) {
+					$html = "<".$this->_name;
+					//add attributes
+					foreach ($this->_attributes as $key => $value) {
+						$html.=" $key=";
+						if(is_numeric($value))
+							$html.="$value";
+						else $html.="\"$value\"";
+					} $html.=">";
+				}
 				//add text content
 				$html.=$this->_text;
 				//add children
 				foreach ($this->_elements as $el) {
 					$html.=$el->write(); }
 				//close
-				$html.="</".$this->_name.">";
+				$html.= ($this->_name===false) ? "" : "</".$this->_name.">";
 				if($output)
 					echo $html;
 				else return $html;
