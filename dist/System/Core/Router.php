@@ -142,8 +142,8 @@
 			//a restriction function should always return a boolean (or 0 or 1)
 			//routes will only be defined when restriction func returns true
 			public function restrict($rest, $routes) {
-				if(is_callable($rest)&&is_callable($routes)&&($rest()==true)) {
-					$routes();
+				if(is_callable($rest)&&is_callable($routes)&&($rest($this->_app)==true)) {
+					$routes($this->_app);
 					return true;
 				}
 				return false;
