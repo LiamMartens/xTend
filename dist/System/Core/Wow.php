@@ -194,7 +194,7 @@
 						}
 					} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file)); }
 					//add namespace to compiled_string
-					$compiled_string="<?php namespace ".$this->_app->getNamespace()." ?>$app=\\xTend\\getCurrentApp(__NAMESPACE__);".$compiled_string;
+					$compiled_string="<?php namespace ".$this->_app->getNamespace()." ?>\$app=\\xTend\\getCurrentApp(__NAMESPACE__);".$compiled_string;
 					//write view output
 					$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile("ViewOutput.$file_hash.v")."$version.php", $compiled_string);
 					//update meta file
