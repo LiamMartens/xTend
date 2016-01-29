@@ -110,11 +110,11 @@
 			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->$3; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("(@controller:)(.*)","i"),
+			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
 			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController()->$2; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("(@controller:)(.*):(.*)","i"),
+			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*):([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
 			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController(\"$2\")->$3; ?>"
 		);
 	}
