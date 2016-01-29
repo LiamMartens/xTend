@@ -11,7 +11,7 @@
 		);
 		//insert PHP code
 		$wow->registerExpression(
-			$wow->rx("(@)(\(\{)((\s|.)+)(\}\))", "i"),
+			$wow->rx("(@)(\(\{)(.+)(\}\))", "is"),
 			"<?php $3 ?>"
 		);
 		//if
