@@ -16,7 +16,7 @@
 				if((substr($file, 0, 1)!="_")&&((substr($file, strlen($file) - 5)==".scss") || (substr($file, strlen($file) - 5)==".sass"))) {
 					$string_sass=$fh->read("$pubdir/sass/$file");
 					$string_css=$scss->compile($string_sass);
-					$fh->write("$pubdir/css/$file.css", $string_css);
+					$fh->write("$pubdir/css/".substr($file, 0, strlen($file)-4)."css", $string_css);
 				}
 			}
 		}
