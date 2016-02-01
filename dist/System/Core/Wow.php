@@ -93,7 +93,7 @@
 					$content = preg_replace($rx, $repl, $content); }
 				return $content;
 			}
-			private function compile(&$content) {
+			private function compile(&$content, $modules_dir = false) {
 				//remove @version, @compile, @layout and @section flags as these
 				//should not be repaced by anything, they should be ignored
 				$content = preg_replace($this->_rx_version, "", $content);
@@ -110,26 +110,28 @@
 					} else {
 						//get module contents
 						$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name)-1);
-						$mod_path=$this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow").".php";
+						$mod_path=($modules_dir===false) ?
+										($this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow").".php") :
+										($this->_app->getFileHandler()->systemFile("$modules_dir.$mod_name.wow").".php");
 						if($this->_app->getFileHandler()->exists($mod_path)) {
-							$part=$this->compile($this->_app->getFileHandler()->read($mod_path)); } }
+							$part=$this->compile($this->_app->getFileHandler()->read($mod_path), $modules_dir); } }
 					$final_content.=$part; }
 				$content=$final_content;
 				return $final_content;
 			}
 			//compile layout method
-			private function compileLayout(&$layout_c) {
+			private function compileLayout(&$layout_c, $modules_dir = false) {
 				//split the layout into sections
 				$split = preg_split($this->_rx_section, $layout_c, NULL, PREG_SPLIT_DELIM_CAPTURE);
 				foreach ($split as &$part) {
 					if(!preg_match($this->_rx_section, $part))
-						$this->compile($part);
+						$this->compile($part, $modules_dir);
 				}
 				//returns array of compiled parts and the section parts
 				return $split;
 			}
 			//compile view method
-			public function compileView($file) {
+			public function compileView($file, $layout_dir = false, $modules_dir = false) {
 				//file hash
 				$file_hash = hash("sha256", $file);
 				//get file name 'name'
@@ -143,7 +145,9 @@
 				$flag=$this->flag($view_c);
 				//check for layout existance -> if it doesnt exist, ignore the layout, thus set it to false
 				if($layout!==false) {
-					$layout_path=$this->_app->getFileHandler()->systemFile("Layouts.$layout.wow").".php";
+					$layout_path=($layout_dir===false) ?
+										($this->_app->getFileHandler()->systemFile("Layouts.$layout.wow").".php") :
+										($this->_app->getFileHandler()->systemFile("$layout_dir.$layout.wow").".php");
 					if(!$this->_app->getFileHandler()->exists($layout_path)) { $layout=false; $layout_path=false; } }
 				//get last compiled version of this view file -> sorting works descending thus most recent versions are first
 				$is_new_version = false; $one_found=false;
@@ -179,7 +183,7 @@
 					$compiled_string="";
 					if($layout!==false) {
 						//compile using a layout
-						$layout_parts=$this->compileLayout($this->_app->getFileHandler()->read($layout_path));
+						$layout_parts=$this->compileLayout($this->_app->getFileHandler()->read($layout_path), $modules_dir);
 						foreach ($layout_parts as $part) {
 							//check for section request
 							$is_section=(preg_match($this->_rx_section, $part)==1) ? true : false;
@@ -189,10 +193,10 @@
 								$rx = sprintf($this->_rx_section_extract, $section_name, $section_name);
 								$rx_matches=[]; preg_match($rx, $view_c, $rx_matches);
 								if(isset($rx_matches[2]))
-									$compiled_string.=$this->compile($rx_matches[2]);
+									$compiled_string.=$this->compile($rx_matches[2], $modules_dir);
 							} else { $compiled_string.=$part; }
 						}
-					} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file)); }
+					} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file), $modules_dir); }
 					//add namespace to compiled_string
 					$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
 					//write view output
