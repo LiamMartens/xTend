@@ -76,13 +76,14 @@
 	}
 	namespace xTend
 	{
-		class HTMLHandler
+		class HTMLHandler extends \xTend\HTMLHandler\HTMLElement
 		{
 			private $_app;
 			private $_documents;
 			public function __construct($app) {
 				$this->_app = $app;
 				$this->_documents = [];
+				$this->_elements = [];
 			}
 
 			public function createDocument($fullDoc = false) {
