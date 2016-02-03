@@ -179,15 +179,15 @@
 				$can_write = is_writable($this->_dirSystem);
 				$integrity_success = true;
 				foreach ($directories as $dir) {
-					if(!is_dir($this->_dirSystem."/$dir")) {
-						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write)) {
-							echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>"); $integrity_success=false;
+					if(!is_dir($this->getDirectoryHandler()->systemDirectory("$dir"))) {
+						if((($can_write)&&(mkdir($this->getDirectoryHandler()->systemDirectory("$dir"))===false))||(!$can_write)) {
+							echo ("Failed to create System directory ".$$this->getDirectoryHandler()->systemDirectory("$dir")."<br>"); $integrity_success=false;
 						}
 					}
 				}
 				foreach ($writable_system_directories as $dir) {
-					if(is_dir($this->_dirSystem."/$dir")&&!is_writable($this->_dirSystem."/$dir")) {
-						echo $this->_dirSystem."/$dir is not writable<br>"; $integrity_success=false;
+					if(is_dir($this->getDirectoryHandler()->systemDirectory("$dir"))&&!is_writable($this->getDirectoryHandler()->systemDirectory("$dir"))) {
+						echo $this->getDirectoryHandler()->systemDirectory("$dir")." is not writable<br>"; $integrity_success=false;
 					}
 				}
 				if(!$integrity_success)
@@ -201,8 +201,6 @@
 				$this->_dirSystem = substr(__DIR__,0,strlen(__DIR__)-5);
 				//set public directory
 				$this->_dirPublic = $public_directory;
-				//integrity check
-				$this->applicationIntegrityCheck();
 				//set content charset
 				header("Content-Type:text/html;charset=".$this->_charset);
 				//set default time zone to UTC
@@ -238,18 +236,18 @@
 				ClassManager::includeClass("xTend\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 				$this->_controllerHandler = new ControllerHandler($this);
 				//Include view blueprints
-				ClassManager::includeClass("xTend\\BaseView", $this->_dirSystem."/".$this->_dirBlueprints."/BaseView.php");
-				ClassManager::includeClass("xTend\\BaseDataView", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataView.php");
-				ClassManager::includeClass("xTend\\View", $this->_dirSystem."/".$this->_dirObjects."/View.php");
+				ClassManager::includeClass("xTend\\BaseView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseView.php"));
+				ClassManager::includeClass("xTend\\BaseDataView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataView.php"));
+				ClassManager::includeClass("xTend\\View",  $this->getFileHandler()->systemFile($this->_dirObjects.".View.php"));
 				//include ViewHandler
 				ClassManager::includeClass("xTend\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 				$this->_viewHandler = new ViewHandler($this);
 				//include UrlHandler
-				ClassManager::includeClass("xTend\\BaseDataExtension", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataExtension.php");
+				ClassManager::includeClass("xTend\\BaseDataExtension", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataExtension.php"));
 				ClassManager::includeClass("xTend\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 				$this->_UrlHandler = new UrlHandler($this);
 				//include Route Object
-				ClassManager::includeClass("xTend\\Route", $this->_dirSystem."/".$this->_dirObjects."/Route.php");
+				ClassManager::includeClass("xTend\\Route",  $this->getFileHandler()->systemFile($this->_dirObjects.".Route.php"));
 				//include Router
 				ClassManager::includeClass("xTend\\Router", $this->_dirSystem."/Core/Router.php");
 				$this->_router = new Router($this);
@@ -277,22 +275,24 @@
 				ClassManager::includeClass("xTend\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 				$this->_htmlHandler = new HTMLHandler($this);
 				//inlcude Controller and model bluepprints
-				ClassManager::includeClass("xTend\\BaseController", $this->_dirSystem."/".$this->_dirBlueprints."/BaseController.php");
-				ClassManager::includeClass("xTend\\BaseDataController", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataController.php");
-				ClassManager::includeClass("xTend\\BaseModel", $this->_dirSystem."/".$this->_dirBlueprints."/BaseModel.php");
+				ClassManager::includeClass("xTend\\BaseController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseController.php"));
+				ClassManager::includeClass("xTend\\BaseDataController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataController.php"));
+				ClassManager::includeClass("xTend\\BaseModel", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseModel.php"));
 				//set post and pre config arrays
 				$this->_preConfigMethods = [];
 				$this->_postConfigMethods = [];
+				//integrity check
+				$this->applicationIntegrityCheck();
 			}
 			//config include
 			public function configure() {
 				//add configuration files
-				$files=$this->_directoryHandler->recursiveFiles($this->_dirSystem."/".$this->_dirConfig);
+				$files=$this->_directoryHandler->recursiveFiles($this->getDirectoryHandler()->systemDirectory($this->_dirConfig));
 				$this->_fileManager->includeFiles($files);
 			}
 			//libraries include
 			public function loadLibraries() {
-				$directories = $this->_directoryHandler->recursiveDirectories($this->_dirSystem."/".$this->_dirLibs); $directories[] = $this->_dirSystem."/".$this->_dirLibs;
+				$directories = $this->_directoryHandler->recursiveDirectories($this->getDirectoryHandler()->systemDirectory($this->_dirLibs)); $directories[] = $this->getDirectoryHandler()->systemDirectory($this->_dirLibs);
 				//sort by directory depth
 				$this->_sortHelper->sortByNumberOfSlashes($directories);
 				//go through directories to see whether they need to be excluded
