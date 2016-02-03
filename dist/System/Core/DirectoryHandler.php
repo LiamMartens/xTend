@@ -11,6 +11,19 @@
 			public function __construct($app) {
 				//store containing app reference so the DirectoryHandler can use it's directives
 				$this->_app = $app;
+				$this->_app->getErrorCodeHandler()->registerErrorCode(0x0006, "directoryhandler:directory-not-writable", "A directory you are tryig to write to is not writable");
+			}
+			public function writableCheck($path) {
+				$path=str_replace("\\", "/", $path);
+				if(!is_writable($path)&&is_dir($path)) {
+					throw $this->_app->getErrorCodeHandler()->findError(0x0006)->getException();
+					die($path);
+				} else {
+					$path = substr($path, 0, strrpos($path, "/"));
+					if(!is_writable($path)&&is_dir($path)) {
+						throw $this->_app->getErrorCodeHandler()->findError(0x0006)->getException();
+						die($path); }
+				}
 			}
 			public function systemDirectory($dirName) {
 				$path=$this->_app->getSystemDirectory();
@@ -122,14 +135,17 @@
 				return $entries;
 			}
 			public function create($path) {
+				$this->writableCheck($path);
 				if(!$this->exists($path))
 					mkdir($path, 0777, true);
 			}
 			public function move($src,$dst) {
+				$this->writableCheck($dst);
 				if($this->exists($src))
 					rename($src, $dst);
 			}
 			public function copy($path, $dest) {
+				$this->writableCheck($dest);
 				if($this->exists($path)) {
 					//create directory
 					$this->create($dest);
@@ -145,6 +161,7 @@
 				return false;
 			}
 			public function remove($path) {
+				$this->writableCheck($path);
 				if($this->exists($path)) {
 					$entries = $this->scan($path, true);
 					foreach ($entries as $entry) {

@@ -7,6 +7,12 @@
 			public function __construct($app) {
 				//store containing app reference so the FileHandler can use it's directives
 				$this->_app = $app;
+				$this->_app->getErrorCodeHandler()->registerErrorCode(0x0005, "filehandler:file-not-writable", "A file you are tryig to write to is not writable");
+			}
+			public function writableCheck($path) {
+				if(!is_writable($path)&&is_file($path)) {
+					throw $this->_app->getErrorCodeHandler()->findError(0x0005)->getException();
+					die($path); }
 			}
 			public function systemFile($fileName) {
 				$path=$this->_app->getSystemDirectory();
@@ -40,10 +46,12 @@
 			}
 			public function move($src,$dest) {
 				//renaming a file is also possible using move
+				$this->_app->getDirectoryHandler()->writableCheck($dest);
 				if($this->exists($src))
 					rename($src, $dest);
 			}
 			public function copy($src,$dest) {
+				$this->_app->getDirectoryHandler()->writableCheck($dest);
 				if($this->exists($src))
 					copy($src, $dest);
 			}
@@ -54,17 +62,20 @@
 				return $content;
 			}
 			public function write($path, $content) {
+				$this->writableCheck($path);
 				$handle = fopen($path, 'w');
 				fwrite($handle, $content);
 				fclose($handle);
 			}
 			public function append($path, $content) {
+				$this->writableCheck($path);
 				$handle = fopen($path, 'a');
 				fwrite($handle, $content);
 				fclose($handle);
 			}
 			public function remove($path) {
 				if($this->exists($path)) {
+					$this->writableCheck($path);
 					unlink($path);
 					return true;
 				}

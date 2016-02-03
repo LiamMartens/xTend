@@ -50,6 +50,46 @@
 			public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
 			public function setLogLimit($limit) { $this->_logLimit = $limit; }
 			public function setNamespace($ns) { $this->_namespace=$ns; }
+			//directory location configuration
+			private $_dirBackups = "/Backups";
+			public function setBackupsDirectory($dir) { $this->_dirBackups = $dir; }
+			public function getBackupsDirectory() { return $this->_dirBackups; }
+			private $_dirBlueprints = "/Blueprints";
+			public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $dir; }
+			public function getBlueprintsDirectory() { return $this->_dirBlueprints; }
+			private $_dirConfig = "/Config";
+			public function setConfigDirectory($dir) { $this->_dirConfig = $dir; }
+			public function getConfigDirectory() { return $this->_dirConfig; }
+			private $_dirControllers = "/Controllers";
+			public function setControllersDirectory($dir) { $this->_dirControllers = $dir; }
+			public function getControllersDirectory() { return $this->_dirControllers; }
+			private $_dirLayouts = "/Layouts";
+			public function setLayoutsDirectory($dir) { $this->_dirLayouts = $dir; }
+			public function getLayoutsDirectory() { return $this->_dirLayouts; }
+			private $_dirLibs = "/Libs";
+			public function setLibsDirectory($dir) { $this->_dirLibs = $dir; }
+			public function getLibsDirectory() { return $this->_dirLibs; }
+			private $_dirLogs = "/Logs";
+			public function setLogsDirectory($dir) { $this->_dirLogs = $dir; }
+			public function getLogsDirectory() { return $this->_dirLogs; }
+			private $_dirMeta = "/Meta";
+			public function setMetaDirectory($dir) { $this->_dirMeta = $dir; }
+			public function getMetaDirectory() { return $this->_dirMeta; }
+			private $_dirModels = "/Models";
+			public function setModelsDirectory($dir) { $this->_dirModels = $dir; }
+			public function getModelsDirectory() { return $this->_dirModels; }
+			private $_dirModules = "/Modules";
+			public function setModulesDirectory($dir) { $this->_dirModules = $dir; }
+			public function getModulesDirectory() { return $this->_dirModules; }
+			private $_dirObjects = "/Objects";
+			public function setObjectsDirectory($dir) { $this->_dirObjects = $dir; }
+			public function getObjectsDirectory() { return $this->_dirObjects; }
+			private $_dirViewOutput = "/ViewOutput";
+			public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $dir; }
+			public function getViewOutputDirectory() { return $this->_dirViewOutput; }
+			private $_dirViews = "/Views";
+			public function setViewsDirectory($dir) { $this->_dirViews = $dir; }
+			public function getViewsDirectory() { return $this->_dirViews; }
 			//Application defined variables
 			private $_dirSystem;
 			private $_dirPublic;
@@ -126,26 +166,20 @@
 				if(phpversion()<"5.4")
 					die("Your PHP version is lower than 5.4");
 				//check directories
-				$directories = ["Backups","Controllers","Layouts","Logs","Models","Modules","ViewOutput","Views","Meta"];
-				$writable_system_directories = ["Backups","Logs","ViewOutput","Meta"];
-				$writable_public_directories = ["css"];
+				$directories = [$this->_dirBackups,$this->_dirControllers,$this->_dirLayouts,$this->_dirLogs,$this->_dirModels,$this->_dirModules,$this->_dirViewOutput,$this->_dirViews,$this->_dirMeta];
+				$writable_system_directories = [$this->_dirBackups,$this->_dirLogs,$this->_dirViewOutput,$this->_dirMeta];
 				$can_write = is_writable($this->_dirSystem);
 				$integrity_success = true;
 				foreach ($directories as $dir) {
-					if(!is_dir($this->_dirSystem."/$dir")) {
-						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write)) {
-							echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>"); $integrity_success=false;
+					if(!is_dir($this->_dirSystem."$dir")) {
+						if((($can_write)&&(mkdir($this->_dirSystem."$dir")===false))||(!$can_write)) {
+							echo ("Failed to create System directory ".$this->_dirSystem."$dir<br>"); $integrity_success=false;
 						}
 					}
 				}
 				foreach ($writable_system_directories as $dir) {
-					if(is_dir($this->_dirSystem."/$dir")&&!is_writable($this->_dirSystem."/$dir")) {
-						echo $this->_dirSystem."/$dir is not writable<br>"; $integrity_success=false;
-					}
-				}
-				foreach ($writable_public_directories as $dir) {
-					if(is_dir($this->_dirPublic."/$dir")&&!is_writable($this->_dirPublic."/$dir")) {
-						echo $this->_dirPublic."/$dir is not writable<br>"; $integrity_success=false;
+					if(is_dir($this->_dirSystem."$dir")&&!is_writable($this->_dirSystem."$dir")) {
+						echo $this->_dirSystem."$dir is not writable<br>"; $integrity_success=false;
 					}
 				}
 				if(!$integrity_success)
@@ -175,17 +209,17 @@
 				//include and initialize SettingsContainer class
 				ClassManager::includeClass("xTend\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php");
 				$this->_settingsContainer = new SettingsContainer();
+				//include archive class
+				ClassManager::includeClass("xTend\\Archive", $this->_dirSystem."/Core/Archive.php");
+				//include ErrorCodeHandler
+				ClassManager::includeClass("xTend\\ErrorCodeHandler", $this->_dirSystem."/Core/ErrorCodeHandler.php");
+				$this->_errorCodeHandler = new ErrorCodeHandler();
 				//include dir class
 				ClassManager::includeClass("xTend\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
 				$this->_directoryHandler = new DirectoryHandler($this);
 				//include file class
 				ClassManager::includeClass("xTend\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
 				$this->_fileHandler = new FileHandler($this);
-				//include archive class
-				ClassManager::includeClass("xTend\\Archive", $this->_dirSystem."/Core/Archive.php");
-				//include ErrorCodeHandler
-				ClassManager::includeClass("xTend\\ErrorCodeHandler", $this->_dirSystem."/Core/ErrorCodeHandler.php");
-				$this->_errorCodeHandler = new ErrorCodeHandler();
 				//include LogHandler
 				ClassManager::includeClass("xTend\\LogHandler", $this->_dirSystem."/Core/LogHandler.php");
 				$this->_logHandler = new LogHandler($this);

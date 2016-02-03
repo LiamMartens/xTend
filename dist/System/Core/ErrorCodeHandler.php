@@ -26,6 +26,10 @@
 		{
 			protected $_errorCodes;
 
+			public function getErrorCodes() {
+				return $this->_errorCodes;
+			}
+
 			public function findError($key) {
 				if(is_numeric($key)&&(array_key_exists($key, $this->_errorCodes))) {
 					//provided key is numeric -> found it in error code directory itself
