@@ -151,7 +151,7 @@
 					if(!$this->_app->getFileHandler()->exists($layout_path)) { $layout=false; $layout_path=false; } }
 				//get last compiled version of this view file -> sorting works descending thus most recent versions are first
 				$is_new_version = false; $one_found=false;
-				$compiled_views = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory("ViewOutput")); rsort($compiled_views);
+				$compiled_views = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getViewOutputDirectory())); rsort($compiled_views);
 				//check for the current version in the array
 				foreach ($compiled_views as $cv) {
 					$pos=strpos($cv, ".v");
@@ -200,12 +200,12 @@
 					//add namespace to compiled_string
 					$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
 					//write view output
-					$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile("ViewOutput.$file_hash.v")."$version.php", $compiled_string);
+					$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile($this->_app->getViewOutputDirectory().".$file_hash.v")."$version.php", $compiled_string);
 					//update meta file
 					$this->update($file);
 				}
 				//return compiled view filename
-				return ($this->_app->getFileHandler()->systemFile("ViewOutput.$file_hash.v")."$version.php");
+				return ($this->_app->getFileHandler()->systemFile($this->_app->getViewOutputDirectory().".$file_hash.v")."$version.php");
 			}
 		}
 	}

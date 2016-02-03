@@ -18,8 +18,8 @@
 				//view construct
 				$this->_name = $view;
 				//get wow and php paths
-				$wowPath = $this->_app->getFileHandler()->systemFile("Views.$view.wow").".php";
-				$phpPath = $this->_app->getFileHandler()->systemFile("Views.$view.php");
+				$wowPath = $this->_app->getFileHandler()->systemFile($this->_app->getViewsDirectory().".$view.wow").".php";
+				$phpPath = $this->_app->getFileHandler()->systemFile($this->_app->getViewsDirectory().".$view.php");
 				//check files
 				if($this->_app->getFileHandler()->exists($wowPath)) {
 					$this->_filePath = $wowPath;
@@ -36,7 +36,7 @@
 				//this is what happens when a view is executed
 				$path=$this->_filePath;
 				if($this->_isWow) {
-					$path=$this->_app->getWowCompiler()->compileView($this->_filePath);
+					$path=$this->_app->getWowCompiler()->compileView($this->_filePath, $this->_app->getLayoutsDirectory(), $this->_app->getModulesDirectory());
 				}
 				$this->_app->getFileManager()->includeFile($path);
 			}
