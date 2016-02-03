@@ -255,8 +255,8 @@
 				ClassManager::includeClass("xTend\\BackupManager", $this->_dirSystem."/Core/BackupManager.php");
 				$this->_backupManager = new BackupManager($this);
 				//include crypto
-				ClassManager::includeClass("Defuse\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php");
-				\Defuse\Crypto\CryptoLoader::load();
+				if(ClassManager::includeClass("Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php"))
+					\Defuse\Crypto\CryptoLoader::load();
 				//include SessionHandler class
 				ClassManager::includeClass("xTend\\Session", $this->_dirSystem."/Core/Session.php");
 				ClassManager::includeClass("xTend\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php");
@@ -388,5 +388,6 @@
 				//create new app instance
 				$apps[$ns]=new App($ns, $public_directory, $bootstrap_mode);
 				return $apps[$ns];
-			} }
+			}
+		}
 	}
