@@ -7,7 +7,7 @@
 
 		$app->setBackupsDirectory("Backups");
 		$app->setBlueprintsDirectory("Blueprints");
-		$app->setConfigDirectory("OtherConf");
+		$app->setConfigDirectory("Config");
 		$app->setControllersDirectory("Controllers");
 		$app->setLayoutsDirectory("Layouts");
 		$app->setLibsDirectory("Libs");
