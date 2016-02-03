@@ -22,27 +22,29 @@
 			}
 
 			public static function start() {
-				ini_set("session.cookie_httponly", true);
-				//start session
-				//set session name
-				session_name(self::$_sessionName);
-				session_start();
-				//generate key
-				Session::generate();
-				//check initiated status
-				if(intval(Session::get(self::$_initiated))==0) {
-					//regen
-					session_regenerate_id();
+				if (session_status()==PHP_SESSION_NONE) {
+					ini_set("session.cookie_httponly", true);
+					//start session
+					//set session name
+					session_name(self::$_sessionName);
+					session_start();
+					//generate key
 					Session::generate();
-					Session::set(self::$_initiated, 1);
-				}
-				//check for corresponding user agent on same session
-				if(Session::get(self::$_userAgent)!==false) {
-					if(Session::get(self::$_userAgent)!=hash("sha512", $_SERVER["HTTP_USER_AGENT"].self::$_salt)) {
-						//invalid user agent detected
-						self::destroy(); die();
+					//check initiated status
+					if(intval(Session::get(self::$_initiated))==0) {
+						//regen
+						session_regenerate_id();
+						Session::generate();
+						Session::set(self::$_initiated, 1);
 					}
-				} else { Session::set(self::$_userAgent, hash("sha512", $_SERVER["HTTP_USER_AGENT"].self::$_salt)); }
+					//check for corresponding user agent on same session
+					if(Session::get(self::$_userAgent)!==false) {
+						if(Session::get(self::$_userAgent)!=hash("sha512", $_SERVER["HTTP_USER_AGENT"].self::$_salt)) {
+							//invalid user agent detected
+							self::destroy(); die();
+						}
+					} else { Session::set(self::$_userAgent, hash("sha512", $_SERVER["HTTP_USER_AGENT"].self::$_salt)); }
+				}
 			}
 		}
 	}
