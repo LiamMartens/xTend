@@ -51,43 +51,43 @@
 			public function setLogLimit($limit) { $this->_logLimit = $limit; }
 			public function setNamespace($ns) { $this->_namespace=$ns; }
 			//directory location configuration
-			private $_dirBackups = "/Backups";
+			private $_dirBackups = "Backups";
 			public function setBackupsDirectory($dir) { $this->_dirBackups = $dir; }
 			public function getBackupsDirectory() { return $this->_dirBackups; }
-			private $_dirBlueprints = "/Blueprints";
+			private $_dirBlueprints = "Blueprints";
 			public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $dir; }
 			public function getBlueprintsDirectory() { return $this->_dirBlueprints; }
-			private $_dirConfig = "/Config";
+			private $_dirConfig = "Config";
 			public function setConfigDirectory($dir) { $this->_dirConfig = $dir; }
 			public function getConfigDirectory() { return $this->_dirConfig; }
-			private $_dirControllers = "/Controllers";
+			private $_dirControllers = "Controllers";
 			public function setControllersDirectory($dir) { $this->_dirControllers = $dir; }
 			public function getControllersDirectory() { return $this->_dirControllers; }
-			private $_dirLayouts = "/Layouts";
+			private $_dirLayouts = "Layouts";
 			public function setLayoutsDirectory($dir) { $this->_dirLayouts = $dir; }
 			public function getLayoutsDirectory() { return $this->_dirLayouts; }
-			private $_dirLibs = "/Libs";
+			private $_dirLibs = "Libs";
 			public function setLibsDirectory($dir) { $this->_dirLibs = $dir; }
 			public function getLibsDirectory() { return $this->_dirLibs; }
-			private $_dirLogs = "/Logs";
+			private $_dirLogs = "Logs";
 			public function setLogsDirectory($dir) { $this->_dirLogs = $dir; }
 			public function getLogsDirectory() { return $this->_dirLogs; }
-			private $_dirMeta = "/Meta";
+			private $_dirMeta = "Meta";
 			public function setMetaDirectory($dir) { $this->_dirMeta = $dir; }
 			public function getMetaDirectory() { return $this->_dirMeta; }
-			private $_dirModels = "/Models";
+			private $_dirModels = "Models";
 			public function setModelsDirectory($dir) { $this->_dirModels = $dir; }
 			public function getModelsDirectory() { return $this->_dirModels; }
-			private $_dirModules = "/Modules";
+			private $_dirModules = "Modules";
 			public function setModulesDirectory($dir) { $this->_dirModules = $dir; }
 			public function getModulesDirectory() { return $this->_dirModules; }
-			private $_dirObjects = "/Objects";
+			private $_dirObjects = "Objects";
 			public function setObjectsDirectory($dir) { $this->_dirObjects = $dir; }
 			public function getObjectsDirectory() { return $this->_dirObjects; }
-			private $_dirViewOutput = "/ViewOutput";
+			private $_dirViewOutput = "ViewOutput";
 			public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $dir; }
 			public function getViewOutputDirectory() { return $this->_dirViewOutput; }
-			private $_dirViews = "/Views";
+			private $_dirViews = "Views";
 			public function setViewsDirectory($dir) { $this->_dirViews = $dir; }
 			public function getViewsDirectory() { return $this->_dirViews; }
 			//Application defined variables
@@ -166,20 +166,28 @@
 				if(phpversion()<"5.4")
 					die("Your PHP version is lower than 5.4");
 				//check directories
-				$directories = [$this->_dirBackups,$this->_dirControllers,$this->_dirLayouts,$this->_dirLogs,$this->_dirModels,$this->_dirModules,$this->_dirViewOutput,$this->_dirViews,$this->_dirMeta];
+				$directories = [$this->_dirBackups,
+								$this->_dirControllers,
+								$this->_dirLayouts,
+								$this->_dirLogs,
+								$this->_dirModels,
+								$this->_dirModules,
+								$this->_dirViewOutput,
+								$this->_dirViews,
+								$this->_dirMeta];
 				$writable_system_directories = [$this->_dirBackups,$this->_dirLogs,$this->_dirViewOutput,$this->_dirMeta];
 				$can_write = is_writable($this->_dirSystem);
 				$integrity_success = true;
 				foreach ($directories as $dir) {
-					if(!is_dir($this->_dirSystem."$dir")) {
-						if((($can_write)&&(mkdir($this->_dirSystem."$dir")===false))||(!$can_write)) {
-							echo ("Failed to create System directory ".$this->_dirSystem."$dir<br>"); $integrity_success=false;
+					if(!is_dir($this->_dirSystem."/$dir")) {
+						if((($can_write)&&(mkdir($this->_dirSystem."/$dir")===false))||(!$can_write)) {
+							echo ("Failed to create System directory ".$this->_dirSystem."/$dir<br>"); $integrity_success=false;
 						}
 					}
 				}
 				foreach ($writable_system_directories as $dir) {
-					if(is_dir($this->_dirSystem."$dir")&&!is_writable($this->_dirSystem."$dir")) {
-						echo $this->_dirSystem."$dir is not writable<br>"; $integrity_success=false;
+					if(is_dir($this->_dirSystem."/$dir")&&!is_writable($this->_dirSystem."/$dir")) {
+						echo $this->_dirSystem."/$dir is not writable<br>"; $integrity_success=false;
 					}
 				}
 				if(!$integrity_success)
@@ -230,18 +238,18 @@
 				ClassManager::includeClass("xTend\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 				$this->_controllerHandler = new ControllerHandler($this);
 				//Include view blueprints
-				ClassManager::includeClass("xTend\\BaseView", $this->_dirSystem."/Blueprints/BaseView.php");
-				ClassManager::includeClass("xTend\\BaseDataView", $this->_dirSystem."/Blueprints/BaseDataView.php");
-				ClassManager::includeClass("xTend\\View", $this->_dirSystem."/Objects/View.php");
+				ClassManager::includeClass("xTend\\BaseView", $this->_dirSystem."/".$this->_dirBlueprints."/BaseView.php");
+				ClassManager::includeClass("xTend\\BaseDataView", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataView.php");
+				ClassManager::includeClass("xTend\\View", $this->_dirSystem."/".$this->_dirObjects."/View.php");
 				//include ViewHandler
 				ClassManager::includeClass("xTend\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 				$this->_viewHandler = new ViewHandler($this);
 				//include UrlHandler
-				ClassManager::includeClass("xTend\\BaseDataExtension", $this->_dirSystem."/Blueprints/BaseDataExtension.php");
+				ClassManager::includeClass("xTend\\BaseDataExtension", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataExtension.php");
 				ClassManager::includeClass("xTend\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 				$this->_UrlHandler = new UrlHandler($this);
 				//include Route Object
-				ClassManager::includeClass("xTend\\Route", $this->_dirSystem."/Objects/Route.php");
+				ClassManager::includeClass("xTend\\Route", $this->_dirSystem."/".$this->_dirObjects."/Route.php");
 				//include Router
 				ClassManager::includeClass("xTend\\Router", $this->_dirSystem."/Core/Router.php");
 				$this->_router = new Router($this);
@@ -269,9 +277,9 @@
 				ClassManager::includeClass("xTend\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 				$this->_htmlHandler = new HTMLHandler($this);
 				//inlcude Controller and model bluepprints
-				ClassManager::includeClass("xTend\\BaseController", $this->_dirSystem."/Blueprints/BaseController.php");
-				ClassManager::includeClass("xTend\\BaseDataController", $this->_dirSystem."/Blueprints/BaseDataController.php");
-				ClassManager::includeClass("xTend\\BaseModel", $this->_dirSystem."/Blueprints/BaseModel.php");
+				ClassManager::includeClass("xTend\\BaseController", $this->_dirSystem."/".$this->_dirBlueprints."/BaseController.php");
+				ClassManager::includeClass("xTend\\BaseDataController", $this->_dirSystem."/".$this->_dirBlueprints."/BaseDataController.php");
+				ClassManager::includeClass("xTend\\BaseModel", $this->_dirSystem."/".$this->_dirBlueprints."/BaseModel.php");
 				//set post and pre config arrays
 				$this->_preConfigMethods = [];
 				$this->_postConfigMethods = [];
@@ -279,12 +287,12 @@
 			//config include
 			public function configure() {
 				//add configuration files
-				$files=$this->_directoryHandler->recursiveFiles($this->_dirSystem."/Config");
+				$files=$this->_directoryHandler->recursiveFiles($this->_dirSystem."/".$this->_dirConfig);
 				$this->_fileManager->includeFiles($files);
 			}
 			//libraries include
 			public function loadLibraries() {
-				$directories = $this->_directoryHandler->recursiveDirectories($this->_dirSystem."/Libs"); $directories[] = $this->_dirSystem."/Libs";
+				$directories = $this->_directoryHandler->recursiveDirectories($this->_dirSystem."/".$this->_dirLibs); $directories[] = $this->_dirSystem."/".$this->_dirLibs;
 				//sort by directory depth
 				$this->_sortHelper->sortByNumberOfSlashes($directories);
 				//go through directories to see whether they need to be excluded
@@ -346,7 +354,6 @@
 				SessionHandler::start();
 				//generate the cookie key
 				Cookie::generate();
-
 				//run library inclusion
 				$this->loadLibraries();
 				//run preconfig methods
