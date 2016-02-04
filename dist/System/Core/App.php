@@ -174,7 +174,8 @@
 								$this->_dirModules,
 								$this->_dirViewOutput,
 								$this->_dirViews,
-								$this->_dirMeta];
+								$this->_dirMeta,
+								$this->_dirLibs];
 				$writable_system_directories = [$this->_dirBackups,$this->_dirLogs,$this->_dirViewOutput,$this->_dirMeta];
 				$can_write = is_writable($this->_dirSystem);
 				$integrity_success = true;
