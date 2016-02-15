@@ -84,7 +84,7 @@
 			public function setFileMeta($path, $key, $value) {
 				//end func call if file doesn't exist
 				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."/".hash("sha256", $path).".meta";
+					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory($this->_app->getMetaDirectory())."/".hash("sha256", $path).".meta";
 					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
 					$meta[$key]=$value;
 					$this->write($metaFile, json_encode($meta));
@@ -94,7 +94,7 @@
 			}
 			public function getFileMeta($path, $key, $default=false) {
 				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory("Meta")."/".hash("sha256", $path).".meta";
+					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory($this->_app->getMetaDirectory())."/".hash("sha256", $path).".meta";
 					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
 					if(array_key_exists($key, $meta))
 						return $meta[$key];

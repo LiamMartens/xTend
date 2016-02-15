@@ -11,28 +11,34 @@
 				$this->_models = [];
 			}
 			public function exists($modelName) {
-				return $this->_app->getFileHandler()->exists($this->_app->getFileHandler()->systemFile("Models.$modelName.php"));
+				return $this->_app->getFileHandler()->exists($this->_app->getFileHandler()->systemFile($this->_app->getModelsDirectory().".$modelName.php"));
 			}
-			public function loadModel($modelName, $namespace = "xTend", $createInstance = true) {
+			public function loadModel($modelName, $ns = "xTend", $createInstance = true) {
 				//if create instance is set to false their will not be an instance of the model available
 				//any reference to this model inclusion is also lost except for the fact that the file has been required
 				//keep in mind also that the modelName also includes any directives you need to enter
 				//so modelName Foo.Bar will be located at /System/Models/Foo/Bar.php
 				//The namespace will differ but you can set this using the parameter -> by default xTend namespace
-				$modelName_parts = explode(".", $modelName);
-				$dot_pos = strrpos($modelName, ".");
-				$last_back_pos = ($dot_pos!==false) ? strrpos($modelName, "\\", $dot_pos) : strrpos($modelName, "\\");
-				$add_ns = ($last_back_pos!==false) ? substr($modelName, ($dot_pos===false) ? 0 : $dot_pos+1, ($dot_pos===false) ? $last_back_pos : $last_back_pos-$dot_pos) : false;
-				$modelPath = ($last_back_pos!==false) ? substr($modelName, 0, $dot_pos+1).substr($modelName, $last_back_pos+1) : $modelName;
-				if($add_ns!==false)
-					$namespace="";
-				$className = "$namespace\\".$modelName_parts[count($modelName_parts) - 1];
+                //
+                //  controller => "My.Directive.My\Namespace\ControllerName@function@function
+                //
+                //extract directive
+                $dot_pos = strrpos($modelName, ".");
+                $directive = ($dot_pos!==false) ? substr($modelName, 0, $dot_pos) : false;
+                if($dot_pos!==false) { $modelName=substr($modelName, $dot_pos+1); }
+                //extract namespace
+                $back_pos = strrpos($modelName, "\\");
+                $namespace = ($back_pos!==false) ? substr($modelName, 0, $back_pos) : false;
+                if($back_pos!==false) { $modelName=substr($modelName, $back_pos+1); }
+                //extract function calls and real controller name
+                $modelPath = "$directive.$modelName";
+                $className = (($namespace!==false) ? $namespace : $ns)."\\".$modelName;
 				if($this->exists($modelPath)) {
-					ClassManager::includeClass($className, $this->_app->getFileHandler()->systemFile("Models.$modelPath.php"));
+					ClassManager::includeClass($className, $this->_app->getFileHandler()->systemFile($this->_app->getModelsDirectory().".$modelPath.php"));
 					if($createInstance) {
 						//by default a reference to the app is passed as well in order to make it's directives and settings available
-						$this->_models[$modelName] = new $className($this->_app);
-						return $this->_models[$modelName];
+						$this->_models[$className] = new $className($this->_app);
+						return $this->_models[$className];
 					}
 					return true;
 				}
