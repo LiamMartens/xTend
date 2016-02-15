@@ -282,8 +282,6 @@
 				//set post and pre config arrays
 				$this->_preConfigMethods = [];
 				$this->_postConfigMethods = [];
-				//integrity check
-				$this->applicationIntegrityCheck();
 			}
 			//config include
 			public function configure() {
@@ -349,6 +347,8 @@
 			}
 			//run function
 			public function run() {
+				//integrity check
+				$this->applicationIntegrityCheck();
 				//create backup if necessary
 				$this->_backupManager->create();
 				//start a session
