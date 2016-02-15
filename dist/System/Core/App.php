@@ -167,11 +167,14 @@
 					die("Your PHP version is lower than 5.4");
 				//check directories
 				$directories = [$this->_dirBackups,
+                                $this->_dirBlueprints,
+                                $this->_dirConfig,
 								$this->_dirControllers,
 								$this->_dirLayouts,
 								$this->_dirLogs,
 								$this->_dirModels,
 								$this->_dirModules,
+                                $this->_dirObjects,
 								$this->_dirViewOutput,
 								$this->_dirViews,
 								$this->_dirMeta,
