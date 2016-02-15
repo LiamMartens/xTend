@@ -52,7 +52,7 @@
 		//internal css
 		$wow->registerExpression(
 			$wow->rx("(@css:)(.*?)","i"),
-			'<link rel="stylesheet" href="<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl()."/$2"; ?>" type="text/css">'
+			'<link rel="stylesheet" href="<?php echo \$app->getUrl()."/$2"; ?>" type="text/css">'
 		);
 		//external css
 		$wow->registerExpression(
@@ -62,7 +62,7 @@
 		//internal script
 		$wow->registerExpression(
 			$wow->rx("(@script:)(.*?)","i"),
-			'<script src="<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl()."/$2"; ?>" type="text/javascript"></script>'
+			'<script src="<?php echo \$app->getUrl()."/$2"; ?>" type="text/javascript"></script>'
 		);
 		//external script
 		$wow->registerExpression(
@@ -72,32 +72,32 @@
 		//app lang
 		$wow->registerExpression(
 			$wow->rx("(@lang)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getLanguage(); ?>"
+			"<?php echo \$app->getLanguage(); ?>"
 		);
 		//app charset
 		$wow->registerExpression(
 			$wow->rx("(@charset)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getCharset(); ?>"
+			"<?php echo \$app->getCharset(); ?>"
 		);
 		//app description
 		$wow->registerExpression(
 			$wow->rx("(@description)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getDescription(); ?>"
+			"<?php echo \$app->getDescription(); ?>"
 		);
 		//app keywords
 		$wow->registerExpression(
 			$wow->rx("(@keywords)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getKeywords(); ?>"
+			"<?php echo \$app->getKeywords(); ?>"
 		);
 		//app author
 		$wow->registerExpression(
 			$wow->rx("(@author)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getAuthor(); ?>"
+			"<?php echo \$app->getAuthor(); ?>"
 		);
 		//app url
 		$wow->registerExpression(
 			$wow->rx("(@url)","i"),
-			"<?php echo \\xTend\\getCurrentApp(__NAMESPACE__)->getUrl(); ?>"
+			"<?php echo \$app->getUrl(); ?>"
 		);
 		//app title
 		$wow->registerExpression(
@@ -107,15 +107,15 @@
 		//get current app
 		$wow->registerExpression(
 			$wow->rx("(@app:)(\{)(.+?)(\})","i"),
-			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->$3; ?>"
+			"<?php \$app->$3; ?>"
 		);
 		$wow->registerExpression(
 			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
-			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController()->$2; ?>"
+			"<?php \$app->getControllerHandler()->getController()->$2; ?>"
 		);
 		$wow->registerExpression(
 			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*):([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
-			"<?php \\xTend\\getCurrentApp(__NAMESPACE__)->getControllerHandler()->getController(\"$2\")->$3; ?>"
+			"<?php \$app->getControllerHandler()->getController(\"$2\")->$3; ?>"
 		);
         $wow->registerExpression(
             $wow->rx("(@nohref)", "i"),
