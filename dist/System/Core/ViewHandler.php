@@ -13,7 +13,7 @@
 			}
 			public function exists($view) {
 				$fh = $this->_app->getFileHandler();
-				if($fh->exists($fh->systemFile("Views.$view.php"))||$fh->exists($fh->systemFile("Views.$view.wow").".php"))
+				if($fh->exists($fh->systemFile($this->_app->getViewsDirectory().".$view.php"))||$fh->exists($fh->systemFile($this->_app->getViewsDirectory().".$view.wow").".php"))
 					return true;
 				return false;
 			}
