@@ -32,7 +32,7 @@
                 $split = explode("@", $controllerName);
                 $controllerClassName = (($namespace!==false) ? $namespace : $ns)."\\".$split[0];
 				//start inclusion
-                $controllerPath = "$directive$controllerClassName";
+                $controllerPath = $directive.$split[0];
 				//start inclusion
 				if($this->exists($controllerPath)) {
 					ClassManager::includeClass($controllerClassName, $this->_app->getFileHandler()->systemFile($this->_app->getControllersDirectory().".$controllerPath.php"));
