@@ -22,6 +22,7 @@
                 //extract directive
                 $dot_pos = strrpos($controllerName, ".");
                 $directive = ($dot_pos!==false) ? substr($controllerName, 0, $dot_pos) : false;
+                if($directive!==false) { $directive.="."; }
                 if($dot_pos!==false) { $controllerName=substr($controllerName, $dot_pos+1); }
                 //extract namespace
                 $back_pos = strrpos($controllerName, "\\");
@@ -31,7 +32,7 @@
                 $split = explode("@", $controllerName);
                 $controllerClassName = (($namespace!==false) ? $namespace : $ns)."\\".$split[0];
 				//start inclusion
-                $controllerPath = "$directive.$controllerClassName";
+                $controllerPath = "$directive$controllerClassName";
 				//start inclusion
 				if($this->exists($controllerPath)) {
 					ClassManager::includeClass($controllerClassName, $this->_app->getFileHandler()->systemFile($this->_app->getControllersDirectory().".$controllerPath.php"));

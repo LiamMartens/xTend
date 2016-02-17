@@ -25,13 +25,14 @@
                 //extract directive
                 $dot_pos = strrpos($modelName, ".");
                 $directive = ($dot_pos!==false) ? substr($modelName, 0, $dot_pos) : false;
+                if($directive!==false) { $directive.="."; }
                 if($dot_pos!==false) { $modelName=substr($modelName, $dot_pos+1); }
                 //extract namespace
                 $back_pos = strrpos($modelName, "\\");
                 $namespace = ($back_pos!==false) ? substr($modelName, 0, $back_pos) : false;
                 if($back_pos!==false) { $modelName=substr($modelName, $back_pos+1); }
                 //extract function calls and real controller name
-                $modelPath = "$directive.$modelName";
+                $modelPath = "$directive$modelName";
                 $className = (($namespace!==false) ? $namespace : $ns)."\\".$modelName;
 				if($this->exists($modelPath)) {
 					ClassManager::includeClass($className, $this->_app->getFileHandler()->systemFile($this->_app->getModelsDirectory().".$modelPath.php"));
