@@ -29,7 +29,7 @@
 				//this function will execute whatever is attached to the route
 				if(is_callable($this->_route)) {
 					//the route is a function -> so call it
-					call_user_func($this->_route, $this->_app);
+					echo call_user_func($this->_route, $this->_app);
 				} elseif(is_string($this->_route)) {
 					//the route is a string, so just echo it
 					echo $this->_route;
