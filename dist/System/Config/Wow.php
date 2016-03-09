@@ -107,15 +107,15 @@
 		//get current app
 		$wow->registerExpression(
 			$wow->rx("(@app:)(\{)(.+?)(\})","i"),
-			"<?php \$app->$3; ?>"
+			"<?php echo \$app->$3; ?>"
 		);
 		$wow->registerExpression(
 			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
-			"<?php \$app->getControllerHandler()->getController()->$2; ?>"
+			"<?php echo \$app->getControllerHandler()->getController()->$2; ?>"
 		);
 		$wow->registerExpression(
 			$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*):([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(\))?)","i"),
-			"<?php \$app->getControllerHandler()->getController(\"$2\")->$3; ?>"
+			"<?php echo \$app->getControllerHandler()->getController(\"$2\")->$3; ?>"
 		);
         $wow->registerExpression(
             $wow->rx("(@nohref)", "i"),
