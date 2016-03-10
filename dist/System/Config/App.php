@@ -4,7 +4,7 @@
 		$app=\xTend\getCurrentApp(__NAMESPACE__);
 		$app->setUrl("http://localhost:88");
 		/**
-			Development status toggles the built in sass compiler by Leafo
+			Development status toggles the development routes
 		**/
 		$app->setDevelopmentStatus(false);
 		$app->setCharset("UTF-8");
