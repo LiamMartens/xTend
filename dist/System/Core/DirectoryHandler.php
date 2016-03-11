@@ -56,13 +56,13 @@
 				//no directory exists checking here as they are only used in scan and shouldn't be called separately
 				//replace \\ with /
 				$path=str_replace("\\", "/", $path);
-				return array_merge(glob("$path/*"), glob("$path/.[!.][!.]*");
+				return array_merge(glob("$path/*"), glob("$path/.[!.][!.]*"));
 			}
 			private function scanExcludingDirectory($path) {
 				//no directory exists checking here as they are only used in scan and shouldn't be called separately
 				//replace \\ with /
 				$path=str_replace("\\", "/", $path);
-				$contents = array_merge(glob("$path/*"), glob("$path/.[!.][!.]*"); $entries=[];
+				$contents = array_merge(glob("$path/*"), glob("$path/.[!.][!.]*")); $entries=[];
 				foreach ($contents as $entry) { $entries[]=$this->getName($entry); }
 				return $entries;
 			}
