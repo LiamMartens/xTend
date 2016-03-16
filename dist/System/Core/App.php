@@ -198,6 +198,12 @@
 		}
 		//constructor
 		public function __construct($ns, $public_directory, $bootstrap_mode = false) {
+			//check variables and enter temp
+			if(!isset($_SERVER['HTTP_USER_AGENT']))
+				$_SERVER['HTTP_USER_AGENT']=sha1(uniqid().microtime());
+			if(!isset($_SERVER['REMOTE_ADDR']))
+				$_SERVER['REMOTE_ADDR']=sha1(uniqid().microtime());
+			//set namespace
 			$this->_namespace=$ns;
 			//the directives are set automatically since they are very important to the application itself
 			//set system directory
