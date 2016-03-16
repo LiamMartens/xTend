@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	/**
 		Same rules as the Session class apply here
 		There should only be one cookie class as the key on the current machine will be the

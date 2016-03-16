@@ -1,6 +1,6 @@
 <?php
-	namespace xTend;
-	class View extends BaseDataView
+	namespace xTend\Objects;
+	class View extends \xTend\Blueprints\BaseDataView
 	{
 		private $_name;
 		private $_filePath;

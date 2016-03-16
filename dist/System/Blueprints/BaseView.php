@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Blueprints;
 	class BaseView
 	{
 		protected $_app;

@@ -1,10 +1,7 @@
 <?php
 	namespace xTend\Application;
-	$app=\xTend\getCurrentApp(__NAMESPACE__);
-	$app->setUrl("http://localhost:88");
-	/**
-		Development status toggles the development routes
-	**/
+	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
+	$app->setUrl("http://localhost");
 	$app->setDevelopmentStatus(false);
 	$app->setCharset("UTF-8");
 	$app->setCompanyName("My company");

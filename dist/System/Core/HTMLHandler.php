@@ -1,5 +1,5 @@
 <?php
-	namespace xTend\HTMLHandler
+	namespace xTend\Core\HTMLHandler
 	{
 		class HTMLElement {
 			private $_name;
@@ -74,9 +74,9 @@
 			}
 		}
 	}
-	namespace xTend
+	namespace xTend\Core
 	{
-		class HTMLHandler extends \xTend\HTMLHandler\HTMLElement
+		class HTMLHandler extends HTMLHandler\HTMLElement
 		{
 			private $_app;
 			private $_documents;

@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Blueprints;
 	/**
 		The BaseDataController, requires the BaseController to be 
 		included as well

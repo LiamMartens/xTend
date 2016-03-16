@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	use \DateTime as DateTime;
 	class LogHandler
 	{

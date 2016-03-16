@@ -1,6 +1,6 @@
 <?php
     namespace Defuse\Crypto;
-    use \xTend\ClassManager as ClassManager;
+    use \xTend\Core\ClassManager as ClassManager;
     class CryptoLoader
     {
         public static function load() {

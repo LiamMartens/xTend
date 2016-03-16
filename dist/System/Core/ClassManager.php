@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	/**
 		This class needs to be exclusively static as even if there are multiple instances of App running at the same time
 		the included or required files will remain the same and may not be included twice

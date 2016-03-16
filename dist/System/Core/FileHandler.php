@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	class FileHandler
 	{
 		private $_app;

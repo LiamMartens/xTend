@@ -1,6 +1,6 @@
 <?php
 	namespace xTend\Application;
-	$app=\xTend\getCurrentApp(__NAMESPACE__);
+	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
 	$wow = $app->getWowCompiler();
 	//register expressions
 	//insert echo

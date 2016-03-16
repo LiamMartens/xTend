@@ -1,5 +1,6 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
+	use xTend\Objects\Route as Route;
 	class Router
 	{
 		private $_default;

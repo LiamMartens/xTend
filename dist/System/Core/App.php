@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	class App
 	{
 		//moved core config from sperate const class to App
@@ -7,7 +7,7 @@
 		private $_url = "http://localhost:90";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
-		private $__companyName = "My company";
+		private $_companyName = "My company";
 		private $_language = "en";
 		private $_description = "My application's description";
 		private $_keywords = "keyword 1, keyword 2";
@@ -22,7 +22,7 @@
 		public function getUrl() { return $this->_url; }
 		public function getDevelopmentStatus() { return $this->_inDevelopment; }
 		public function getCharset() { return $this->_charset; }
-		public function getCompanyName() { return $this->__companyName; }
+		public function getCompanyName() { return $this->_companyName; }
 		public function getLanguage() { return $this->_language; }
 		public function getDescription() { return $this->_description; }
 		public function getKeywords() { return $this->_keywords; }
@@ -39,7 +39,7 @@
 		public function setUrl($url) { $this->_url = $url; }
 		public function setCharset($chars) { $this->_charset = $chars; }
 		public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
-		public function setCompanyName($name) { $this->__companyName = $name; }
+		public function setCompanyName($name) { $this->_companyName = $name; }
 		public function setLanguage($lang) { $this->_language = $lang; }
 		public function setDescription($desc) { $this->_description = $desc; }
 		public function setKeywords($keyw) { $this->_keywords = $keyw; }
@@ -216,71 +216,71 @@
 			require_once($this->_dirSystem."/Core/ClassManager.php");
 			//using ClassManager include further needed classes
 			//include and initialize SettingsContainer class
-			ClassManager::includeClass("xTend\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php");
+			ClassManager::includeClass("xTend\\Core\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php");
 			$this->_settingsContainer = new SettingsContainer();
 			//include archive class
-			ClassManager::includeClass("xTend\\Archive", $this->_dirSystem."/Core/Archive.php");
+			ClassManager::includeClass("xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php");
 			//include ErrorCodeHandler
-			ClassManager::includeClass("xTend\\ErrorCodeHandler", $this->_dirSystem."/Core/ErrorCodeHandler.php");
+			ClassManager::includeClass("xTend\\Core\\ErrorCodeHandler", $this->_dirSystem."/Core/ErrorCodeHandler.php");
 			$this->_errorCodeHandler = new ErrorCodeHandler();
 			//include dir class
-			ClassManager::includeClass("xTend\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
+			ClassManager::includeClass("xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
 			$this->_directoryHandler = new DirectoryHandler($this);
 			//include file class
-			ClassManager::includeClass("xTend\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
+			ClassManager::includeClass("xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
 			$this->_fileHandler = new FileHandler($this);
 			//include LogHandler
-			ClassManager::includeClass("xTend\\LogHandler", $this->_dirSystem."/Core/LogHandler.php");
+			ClassManager::includeClass("xTend\\Core\\LogHandler", $this->_dirSystem."/Core/LogHandler.php");
 			$this->_logHandler = new LogHandler($this);
 			//include ModelHandler
-			ClassManager::includeClass("xTend\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php");
+			ClassManager::includeClass("xTend\\Core\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php");
 			$this->_modelHandler = new ModelHandler($this);
 			//include ControllerHandler
-			ClassManager::includeClass("xTend\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
+			ClassManager::includeClass("xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 			$this->_controllerHandler = new ControllerHandler($this);
 			//Include view blueprints
-			ClassManager::includeClass("xTend\\BaseView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseView.php"));
-			ClassManager::includeClass("xTend\\BaseDataView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataView.php"));
-			ClassManager::includeClass("xTend\\View",  $this->getFileHandler()->systemFile($this->_dirObjects.".View.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseView.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataView.php"));
+			ClassManager::includeClass("xTend\\Objects\\View",  $this->getFileHandler()->systemFile($this->_dirObjects.".View.php"));
 			//include ViewHandler
-			ClassManager::includeClass("xTend\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
+			ClassManager::includeClass("xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 			$this->_viewHandler = new ViewHandler($this);
 			//include UrlHandler
-			ClassManager::includeClass("xTend\\BaseDataExtension", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataExtension.php"));
-			ClassManager::includeClass("xTend\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataExtension.php"));
+			ClassManager::includeClass("xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 			$this->_UrlHandler = new UrlHandler($this);
 			//include Route Object
-			ClassManager::includeClass("xTend\\Route",  $this->getFileHandler()->systemFile($this->_dirObjects.".Route.php"));
+			ClassManager::includeClass("xTend\\Objects\\Route",  $this->getFileHandler()->systemFile($this->_dirObjects.".Route.php"));
 			//include Router
-			ClassManager::includeClass("xTend\\Router", $this->_dirSystem."/Core/Router.php");
+			ClassManager::includeClass("xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php");
 			$this->_router = new Router($this);
 			//include BackupManager
-			ClassManager::includeClass("xTend\\BackupManager", $this->_dirSystem."/Core/BackupManager.php");
+			ClassManager::includeClass("xTend\\Core\\BackupManager", $this->_dirSystem."/Core/BackupManager.php");
 			$this->_backupManager = new BackupManager($this);
 			//include crypto
 			if(ClassManager::includeClass("Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php"))
 				\Defuse\Crypto\CryptoLoader::load();
 			//include SessionHandler class
-			ClassManager::includeClass("xTend\\Session", $this->_dirSystem."/Core/Session.php");
-			ClassManager::includeClass("xTend\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php");
+			ClassManager::includeClass("xTend\\Core\\Session", $this->_dirSystem."/Core/Session.php");
+			ClassManager::includeClass("xTend\\Core\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php");
 			//include Cookies class
-			ClassManager::includeClass("xTend\\Cookie", $this->_dirSystem."/Core/Cookie.php");
+			ClassManager::includeClass("xTend\\Core\\Cookie", $this->_dirSystem."/Core/Cookie.php");
 			//include filemanager class
-			ClassManager::includeClass("xTend\\FileManager", $this->_dirSystem."/Core/FileManager.php");
+			ClassManager::includeClass("xTend\\Core\\FileManager", $this->_dirSystem."/Core/FileManager.php");
 			$this->_fileManager = new FileManager();
 			//include SortHelper
-			ClassManager::includeClass("xTend\\SortHelper", $this->_dirSystem."/Core/SortHelper.php");
+			ClassManager::includeClass("xTend\\Core\\SortHelper", $this->_dirSystem."/Core/SortHelper.php");
 			$this->_sortHelper = new SortHelper();
 			//include Wow Compiler
-			ClassManager::includeClass("xTend\\Wow", $this->_dirSystem."/Core/Wow.php");
+			ClassManager::includeClass("xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php");
 			$this->_wowCompiler = new Wow($this);
 			//include HTMLHandler
-			ClassManager::includeClass("xTend\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
+			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
 			//inlcude Controller and model bluepprints
-			ClassManager::includeClass("xTend\\BaseController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseController.php"));
-			ClassManager::includeClass("xTend\\BaseDataController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataController.php"));
-			ClassManager::includeClass("xTend\\BaseModel", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseModel.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseModel.php"));
 			//set post and pre config arrays
 			$this->_preConfigMethods = [];
 			$this->_postConfigMethods = [];

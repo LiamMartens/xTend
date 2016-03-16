@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	use \Exception as Exception;
 	class ErrorCode
 	{

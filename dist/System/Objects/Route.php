@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Objects;
 	class Route
 	{
 		private $_app;

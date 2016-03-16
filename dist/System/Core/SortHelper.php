@@ -1,5 +1,5 @@
 <?php
-	namespace xTend;
+	namespace xTend\Core;
 	class SortHelper
 	{
 		public function sortByLength(&$arr, $asc=true) {

@@ -1,6 +1,6 @@
 <?php
     namespace xTend\Application;
-    $app=\xTend\getCurrentApp(__NAMESPACE__);
+    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $app->getRouter()->restrict($app->getDevelopmentStatus(), function($app) {
         //routes which are only available during development status
         $app->getRouter()->get("codes", function($app) {
