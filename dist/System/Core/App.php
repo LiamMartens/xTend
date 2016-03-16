@@ -288,18 +288,15 @@
 		//config include
 		public function configure() {
 			//add configuration files
-			$files=$this->_directoryHandler->recursiveFiles($this->getDirectoryHandler()->systemDirectory($this->_dirConfig));
-			$this->_fileManager->includeFiles($files);
-		}
-		//libraries include
-		public function loadLibraries() {
-			$directories = $this->_directoryHandler->recursiveDirectories($this->getDirectoryHandler()->systemDirectory($this->_dirLibs)); $directories[] = $this->getDirectoryHandler()->systemDirectory($this->_dirLibs);
+			$dh=$this->getDirectoryHandler(); $fh=$this->getFileHandler(); $fm=$this->getFileManager();
+			$directories=$dh->recursiveDirectories($dh->systemDirectory($this->getConfigDirectory()));
+			$directories[]=$dh->systemDirectory($this->getConfigDirectory());
 			//sort by directory depth
-			$this->_sortHelper->sortByNumberOfSlashes($directories);
+			$this->getSortHelper()->sortByNumberOfSlashes($directories);
 			//go through directories to see whether they need to be excluded
 			$excluded_dirs=[]; $ok_dirs=[];
 			foreach ($directories as $dir) {
-				if($this->_fileHandler->exists($dir."/.exclude"))
+				if($fh->exists($dir."/.exclude"))
 					$excluded_dirs[]=$dir;
 				else {
 					//check for subdirectory of excluded directory
@@ -312,12 +309,12 @@
 			}
 			//go through all directories again now skipping the exluded directories
 			foreach ($ok_dirs as $dir) {
-				$files=$this->_directoryHandler->files($dir);
+				$files=$dh->files($dir);
 				//does ignore file exist
 				$ignore_file_pos=array_search(".ignore", $files);
 				//if found, read ignore file, unset ignore file from files array and remove all ignored files from the array
 				if($ignore_file_pos!==false) {
-					$contents=$this->_fileHandler->read("$dir/.ignore"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
+					$contents=$fh->read("$dir/.ignore"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
 					//unset ignore file itself
 					unset($files[$ignore_file_pos]);
 					//unset all ignored files
@@ -330,20 +327,78 @@
 				$order_file_pos=array_search(".order", $files);
 				//if found read order file, unset order file from files array and include all order files first and unset these from file array
 				if($order_file_pos!==false) {
-					$contents=$this->_fileHandler->read("$dir/.order"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
+					$contents=$fh->read("$dir/.order"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
 					//unset ordr file itsefl
 					unset($files[$order_file_pos]);
 					//include all order files and unset
 					foreach ($contents as $fo) {
 						$fo_pos=array_search($fo, $files);
 						if($fo_pos!==false) {
-							$this->_fileManager->includeFile("$dir/$fo");
+							$fm->includeFile("$dir/$fo");
 							unset($files[$fo_pos]); }
 					}
 				}
 				//include remaining files
 				foreach ($files as $f) {
-					$this->_fileManager->includeFile("$dir/$f");
+					$fm->includeFile("$dir/$f");
+				}
+			}
+		}
+		//libraries include
+		public function loadLibraries() {
+			$dh=$this->getDirectoryHandler(); $fh=$this->getFileHandler(); $fm=$this->getFileManager();
+			$directories=$dh->recursiveDirectories($dh->systemDirectory($this->getLibsDirectory()));
+			$directories[]=$dh->systemDirectory($this->getLibsDirectory());
+			//sort by directory depth
+			$this->getSortHelper()->sortByNumberOfSlashes($directories);
+			//go through directories to see whether they need to be excluded
+			$excluded_dirs=[]; $ok_dirs=[];
+			foreach ($directories as $dir) {
+				if($fh->exists($dir."/.exclude"))
+					$excluded_dirs[]=$dir;
+				else {
+					//check for subdirectory of excluded directory
+					$excluded=false;
+					foreach ($excluded_dirs as $exd) {
+						if(substr($dir, 0, strlen($exd)+1)==$exd."/") { $excluded_dirs[]=$dir; $excluded=true; break; } }
+					//passed -> add to ok_dirs;
+					if(!$excluded) { $ok_dirs[]=$dir; }
+				}
+			}
+			//go through all directories again now skipping the exluded directories
+			foreach ($ok_dirs as $dir) {
+				$files=$dh->files($dir);
+				//does ignore file exist
+				$ignore_file_pos=array_search(".ignore", $files);
+				//if found, read ignore file, unset ignore file from files array and remove all ignored files from the array
+				if($ignore_file_pos!==false) {
+					$contents=$fh->read("$dir/.ignore"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
+					//unset ignore file itself
+					unset($files[$ignore_file_pos]);
+					//unset all ignored files
+					foreach ($contents as $fi) {
+						$fi_pos=array_search($fi, $files);
+						if($fi_pos!==false) unset($files[$fi_pos]);
+					}
+				}
+				//does order file exist
+				$order_file_pos=array_search(".order", $files);
+				//if found read order file, unset order file from files array and include all order files first and unset these from file array
+				if($order_file_pos!==false) {
+					$contents=$fh->read("$dir/.order"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
+					//unset ordr file itsefl
+					unset($files[$order_file_pos]);
+					//include all order files and unset
+					foreach ($contents as $fo) {
+						$fo_pos=array_search($fo, $files);
+						if($fo_pos!==false) {
+							$fm->includeFile("$dir/$fo");
+							unset($files[$fo_pos]); }
+					}
+				}
+				//include remaining files
+				foreach ($files as $f) {
+					$fm->includeFile("$dir/$f");
 				}
 			}
 		}
