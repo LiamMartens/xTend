@@ -1,11 +1,9 @@
 <?php
-	namespace xTend
+	namespace xTend;
+	class BaseModel
 	{
-		class BaseModel
-		{
-			protected $_app;
-			public function __construct($app) {
-				$this->_app = $app;
-			}
+		protected $_app;
+		public function __construct($app) {
+			$this->_app = $app;
 		}
 	}
