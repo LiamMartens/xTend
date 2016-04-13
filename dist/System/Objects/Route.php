@@ -77,54 +77,60 @@
 
 		public function isMatch($request) {
 			if(is_string($this->_handle)) {
-				//ignore starting and trailing slashes
-				$ex_request = explode("/", trim($request, "/"));
-				$ex_handle = explode("/", $this->_handle);
-				//if the amount of parts dont comply just, end
-				if(count($ex_request)!=count($ex_handle)) return false;
-				//check all parts of the handle and see whether they match up  to the request
-				$ex_count=count($ex_handle); $rx_matches;
-				for($i=0;$i<$ex_count;$i++) {
-					$handle_part=$ex_handle[$i];
-					$request_part=$ex_request[$i];
-					//check {get} parameter first
-					if($i==$ex_count-1) {
-						//checking the last part of the handle
-						//+{get}
-						if(preg_match("/^(.*)(\+{get})$/i", $handle_part)) {
-							//$handle_part ends with +{get}
-							//thus get parameters are allowed
-							//get rid of +{get} in the handle
-							$handle_part=substr($handle_part, 0, strlen($handle_part)-6);
-							//get rid of anything after first question mark in the request part
-							$qm_pos = strpos($request_part, "?");
-							if($qm_pos!==false)
-								$request_part=substr($request_part, 0, $qm_pos);
+				//split handle for multi handle
+				$handles = explode("|", $this->_handle);
+				foreach($handles as $handle) {
+					$handle_matched=true;
+					//ignore starting and trailing slashes
+					$ex_request = explode("/", trim($request, "/"));
+					$ex_handle = explode("/", $handle);
+					//if the amount of parts dont comply just, end
+					if(count($ex_request)!=count($ex_handle)) continue;
+					//check all parts of the handle and see whether they match up  to the request
+					$ex_count=count($ex_handle); $rx_matches;
+					for($i=0;$i<$ex_count;$i++) {
+						$handle_part=$ex_handle[$i];
+						$request_part=$ex_request[$i];
+						//check {get} parameter first
+						if($i==$ex_count-1) {
+							//checking the last part of the handle
+							//+{get}
+							if(preg_match("/^(.*)(\+{get})$/i", $handle_part)) {
+								//$handle_part ends with +{get}
+								//thus get parameters are allowed
+								//get rid of +{get} in the handle
+								$handle_part=substr($handle_part, 0, strlen($handle_part)-6);
+								//get rid of anything after first question mark in the request part
+								$qm_pos = strpos($request_part, "?");
+								if($qm_pos!==false)
+									$request_part=substr($request_part, 0, $qm_pos);
+							}
+						}
+						//check up
+						//most complicated structure -> regexed URL variable
+						if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $handle_part, $rx_matches)&&
+							preg_match("/".$rx_matches[6]."/", $request_part)) {
+							//regex for URL variable matches and handle is a regexed variable
+							//setData on the UrlHandler to set URL parameter with name and value
+							$this->_app->getUrlHandler()->setData($rx_matches[3], $request_part);
+						} elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $handle_part, $rx_matches)) {
+							//the handle is a non regex URL variable
+							//just set whatever is in the URL to the variable
+							$this->_app->getUrlHandler()->setData($rx_matches[2], $request_part);
+						} elseif(
+							!((preg_match("/^(rx)(\{)(.*)(\})$/", $handle_part, $rx_matches)&& //its a regexed part and it matches
+							preg_match("/".$rx_matches[3]."/", $request_part)) ||
+							preg_match("/^(\*+)$/", $handle_part) || //its just a bunch of wildcards
+							($request_part==$handle_part)) /*they just equal each other*/) {
+							//if all of te above fails, return false
+							$handle_matched=false;
 						}
 					}
-					//check up
-					//most complicated structure -> regexed URL variable
-					if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $handle_part, $rx_matches)&&
-						preg_match("/".$rx_matches[6]."/", $request_part)) {
-						//regex for URL variable matches and handle is a regexed variable
-						//setData on the UrlHandler to set URL parameter with name and value
-						$this->_app->getUrlHandler()->setData($rx_matches[3], $request_part);
-					} elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $handle_part, $rx_matches)) {
-						//the handle is a non regex URL variable
-						//just set whatever is in the URL to the variable
-						$this->_app->getUrlHandler()->setData($rx_matches[2], $request_part);
-					} elseif(
-						!((preg_match("/^(rx)(\{)(.*)(\})$/", $handle_part, $rx_matches)&& //its a regexed part and it matches
-						preg_match("/".$rx_matches[3]."/", $request_part)) ||
-						preg_match("/^(\*+)$/", $handle_part) || //its just a bunch of wildcards
-						($request_part==$handle_part)) /*they just equal each other*/) {
-						//if all of te above fails, return false
-						return false;
-					}
+					if(!$handle_matched) continue;
+					//set the route on the UrlHandler
+					$this->_app->getUrlHandler()->setRoute($this);
+					return true;
 				}
-				//set the route on the UrlHandler
-				$this->_app->getUrlHandler()->setRoute($this);
-				return true;
 			}
 			return false;
 		}
