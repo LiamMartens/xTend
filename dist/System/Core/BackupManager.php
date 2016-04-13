@@ -12,6 +12,7 @@
 			$this->_app = $app;
 		}
 		private function needsBackup() {
+			$this->cleanBackups();
 			if($this->_app->getBackupInterval()!==false) {
 				$interval = strtotime($this->_app->getBackupInterval());
 				$backups = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getBackupsDirectory())); sort($backups);
@@ -25,12 +26,13 @@
 			return false;
 		}
 		private function cleanBackups() {
+			ini_set('display_errors', 1);
 			if($this->_app->getBackupLimit()!==false) {
 				$backups = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getBackupsDirectory()), true); sort($backups);
 				$to_remove = count($backups) - $this->_app->getBackupLimit();
 				if($to_remove>0) {
 					for($i=0;$i<$to_remove;$i++) {
-						$this->_app->getFileHandler()->remove($backups[$i]);
+						$backups[$i]->remove();
 					}
 				}
 			}

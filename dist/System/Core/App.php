@@ -420,8 +420,6 @@
 		public function run() {
 			//integrity check
 			$this->applicationIntegrityCheck();
-			//create backup if necessary
-			$this->_backupManager->create();
 			//start a session
 			SessionHandler::start();
 			//generate the cookie key
@@ -434,6 +432,8 @@
 			$this->configure();
 			//run post config methhods
 			foreach ($this->_postConfigMethods as $method) { $method($this); }
+			//create backup if necessary
+			$this->_backupManager->create();
 
 			//start the router
 			if(!$this->_bootstrapMode)

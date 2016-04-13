@@ -24,18 +24,17 @@
 				/.[!.][!.]* includes all hidden files but exclude entries such as . and ..
 			**/
 			private $_app;
-			private $_fileHandler;
 			public function __construct($app) {
 				//store containing app reference so the DirectoryHandler can use it's directives
 				$this->_app = $app;
-				$this->_fileHandler = $this->_app->getFileHandler();
 				$this->_app->getErrorCodeHandler()->registerErrorCode(0x0006, "directoryhandler:directory-not-writable", "A directory you are tryig to write to is not writable");
 			}
 			private function fromPathToObject($path) {
-				if($this->exists($path)) {
+				if($this->exists($path)&&is_string($path)) {
 					return new DirectoryHandler\Directory($this->_app, $path);
-				} else if($this->_fileHandler->exists($path)) {
+				} else if($this->_app->getFileHandler()->exists($path)&&is_string($path)) {
 					return new FileHandler\File($this->_app, $path); }
+				return $path;
 			}
 			private function fromPathArrayToObjects($pathArray) {
 				return array_map([ $this, 'fromPathToObject' ], $pathArray);
