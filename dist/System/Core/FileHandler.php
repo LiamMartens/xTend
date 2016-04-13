@@ -13,24 +13,24 @@
 				throw $this->_app->getErrorCodeHandler()->findError(0x0005)->getException();
 				die($path); }
 		}
-		public function systemFile($fileName) {
+		public function systemFile($fileName, $ext_count = 1) {
 			$path=$this->_app->getSystemDirectory();
 			$file_parts = explode(".", $fileName);
 			//for loop here since we need to exclude the last part of the array -> extension
-			$file_parts_count = count($file_parts)-1;
+			$file_parts_count = count($file_parts)-$ext_count;
 			for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
 			//add extension part
-			$path.=".".$file_parts[$file_parts_count];
+			for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
 			return $path;
 		}
-		public function publicFile($fileName) {
+		public function publicFile($fileName, $ext_count = 1) {
 			$path=$this->_app->getPublicDirectory();
 			$file_parts = explode(".", $fileName);
 			//for loop here since we need to exclude the last part of the array -> extension
-			$file_parts_count = count($file_parts)-1;
+			$file_parts_count = count($file_parts)-$ext_count;
 			for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
 			//add extension part
-			$path.=".".$file_parts[$file_parts_count];
+			for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
 			return $path;
 		}
 		//helper function to get the last part of the path
