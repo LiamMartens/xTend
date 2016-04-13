@@ -185,15 +185,17 @@
 			$can_write = is_writable($this->_dirSystem);
 			$integrity_success = true;
 			foreach ($directories as $dir) {
-				if(!is_dir($this->getDirectoryHandler()->systemDirectory("$dir"))) {
-					if((($can_write)&&(mkdir($this->getDirectoryHandler()->systemDirectory("$dir"))===false))||(!$can_write)) {
-						echo ("Failed to create System directory ".$$this->getDirectoryHandler()->systemDirectory("$dir")."<br>"); $integrity_success=false;
+				$dir = $this->getDirectoryHandler()->systemDirectory("$dir");
+				if(!$dir->exists()) {
+					if((($can_write)&&($dir->create()===false))||(!$can_write)) {
+						echo ("Failed to create System directory ".$dir."<br>"); $integrity_success=false;
 					}
 				}
 			}
 			foreach ($writable_system_directories as $dir) {
-				if(is_dir($this->getDirectoryHandler()->systemDirectory("$dir"))&&!is_writable($this->getDirectoryHandler()->systemDirectory("$dir"))) {
-					echo $this->getDirectoryHandler()->systemDirectory("$dir")." is not writable<br>"; $integrity_success=false;
+				$dir = $this->getDirectoryHandler()->systemDirectory("$dir");
+				if($dir->exists()&&!$dir->isWritable()) {
+					echo $dir." is not writable<br>"; $integrity_success=false;
 				}
 			}
 			if(!$integrity_success)
