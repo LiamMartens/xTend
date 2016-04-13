@@ -43,13 +43,13 @@
 				return $this->_get[$handle];
 			return false;
 		}
-        
+
         public function getPutRoute($handle) {
 			if(array_key_exists($handle, $this->_put))
 				return $this->_put[$handle];
 			return false;
         }
-        
+
         public function getDeleteRoute($handle) {
 			if(array_key_exists($handle, $this->_delete))
 				return $this->_delete[$handle];
@@ -101,7 +101,7 @@
 			//return Route object
 			return $h;
 		}
-        
+
         public function put($handle, $route=false, $alias=false) {
 			//you can either pass an actual handle as the handle
 			//or directly pass a route object as the handle
@@ -118,7 +118,7 @@
 			//return Route object
 			return $h;
         }
-        
+
         public function delete($handle, $route=false, $alias=false) {
 			//you can either pass an actual handle as the handle
 			//or directly pass a route object as the handle
@@ -233,11 +233,13 @@
 				$this->_app->getUrlHandler()->setMethod("GET");
 			} elseif($_SERVER["REQUEST_METHOD"]=="PUT") {
 				$relevant_requests = $this->_put;
-				$this->_app->getUrlHandler()->setMethod("PUT");    
+				$this->_app->getUrlHandler()->setMethod("PUT");
             } elseif($_SERVER["REQUEST_METHOD"]=="DELETE") {
 				$relevant_requests = $this->_delete;
 				$this->_app->getUrlHandler()->setMethod("DELETE");
             }
+			//execute data handler parser
+			$this->_app->getRequestDataHandler()->parse();
 			//check the releavant requests
 			foreach ($relevant_requests as $handle => $route_obj) {
 				if($route_obj->isMatch($request)) {

@@ -141,6 +141,9 @@
 		//Wow layout engine
 		private $_wowCompiler;
 		public function getWowCompiler() { return $this->_wowCompiler; }
+		//request data handler
+		private $_requestDataHandler;
+		public function getRequestDataHandler() { return $this->_requestDataHandler; }
 		//Simple HTML writer
 		private $_htmlHandler;
 		public function getHTMLHandler() { return $this->_htmlHandler; }
@@ -280,6 +283,9 @@
 			//include Wow Compiler
 			ClassManager::includeClass("xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php");
 			$this->_wowCompiler = new Wow($this);
+			//include RequestDataHandler
+			ClassManager::includeClass("xTend\\Core\\RequestDataHandler", $this->_dirSystem."/Core/RequestDataHandler.php");
+			$this->_requestDataHandler = new RequestDataHandler($this);
 			//include HTMLHandler
 			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
