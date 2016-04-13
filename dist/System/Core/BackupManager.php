@@ -12,7 +12,6 @@
 			$this->_app = $app;
 		}
 		private function needsBackup() {
-			$this->cleanBackups();
 			if($this->_app->getBackupInterval()!==false) {
 				$interval = strtotime($this->_app->getBackupInterval());
 				$backups = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getBackupsDirectory())); sort($backups);
