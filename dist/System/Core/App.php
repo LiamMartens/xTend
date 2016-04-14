@@ -48,7 +48,6 @@
 		public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
 		public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
 		public function setLogLimit($limit) { $this->_logLimit = $limit; }
-		public function setNamespace($ns) { $this->_namespace=$ns; }
 		//directory location configuration
 		private $_dirBackups = "Backups";
 		public function setBackupsDirectory($dir) { $this->_dirBackups = $dir; }

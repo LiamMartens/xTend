@@ -49,13 +49,13 @@
 				//check for controller
 				$controller_found=false;
 				if(array_key_exists("controller", $this->_route)) {
-					$this->_app->getControllerHandler()->loadController($this->_route["controller"], "xTend", $data);
+					$this->_app->getControllerHandler()->loadController($this->_route["controller"], $data);
 					$controller_found=true;
 				}
 				//check for multiple controllers
 				if(array_key_exists("controllers", $this->_route)) {
 					foreach ($this->_route["controllers"] as $controller) {
-						$this->_app->getControllerHandler()->loadController($controller, "xTend", $data);
+						$this->_app->getControllerHandler()->loadController($controller, $data);
 					}
 					$controller_found=true;
 				}

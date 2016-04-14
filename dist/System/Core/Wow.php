@@ -182,7 +182,7 @@
 				$compiled_string="";
 				if($layout!==false) {
 					//compile using a layout
-					$layout_parts=$this->compileLayout($this->_app->getFileHandler()->read($layout_path), $modules_dir);
+					$layout_parts=$this->compileLayout($layout_path->read(), $modules_dir);
 					foreach ($layout_parts as $part) {
 						//check for section request
 						$is_section=(preg_match($this->_rx_section, $part)==1) ? true : false;
