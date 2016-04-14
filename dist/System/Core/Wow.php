@@ -92,7 +92,7 @@
 				$content = preg_replace($rx, $repl, $content); }
 			return $content;
 		}
-		private function compile(&$content, $modules_dir = false) {
+		private function compile($content, $modules_dir = false) {
 			//remove @version, @compile, @layout and @section flags as these
 			//should not be repaced by anything, they should be ignored
 			$content = preg_replace($this->_rx_version, "", $content);
