@@ -147,7 +147,7 @@
 				$layout_path=($layout_dir===false) ?
 									($this->_app->getFileHandler()->systemFile("Layouts.$layout.wow.php", 2)) :
 									($this->_app->getFileHandler()->systemFile("$layout_dir.$layout.wow.php", 2));
-				if(!$this->_app->getFileHandler()->exists($layout_path)) { $layout=false; $layout_path=false; } }
+				if(!$layout_path->exists()) { $layout=false; $layout_path=false; } }
 			//get last compiled version of this view file -> sorting works descending thus most recent versions are first
 			$is_new_version = false; $one_found=false;
 			$compiled_views = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getViewOutputDirectory())); rsort($compiled_views);
@@ -197,7 +197,7 @@
 					}
 				} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file), $modules_dir); }
 				//add namespace to compiled_string
-				$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
+				$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\Core\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
 				//write view output
 				$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2), $compiled_string);
 				//update meta file

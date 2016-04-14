@@ -1,5 +1,6 @@
 <?php
 	namespace xTend\Core;
+	use \xTend\Objects\View as View;
 	class ViewHandler
 	{
 		private $_app;
