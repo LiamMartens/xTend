@@ -68,7 +68,7 @@
 		}
 		public function getController($controllerName=false) {
 			//the controller name here also does not include any @ functions
-			if(($controllerName==false)&&(count($this->_controllers)==1))
+			if(($controllerName==false)&&(count($this->_controllers)>0))
 				return $this->_controllers[array_keys($this->_controllers)[0]];
 			elseif($controllerName==false) return false;
 			if(array_key_exists($controllerName, $this->_controllers))

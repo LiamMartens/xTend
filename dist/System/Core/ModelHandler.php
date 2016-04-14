@@ -47,7 +47,7 @@
 			return false;
 		}
 		public function getModel($modelName=false) {
-			if(($modelName==false)&&(count($this->_models)==1))
+			if(($modelName==false)&&(count($this->_models)>0))
 				return $this->_models[array_keys($this->_models)[0]];
 			elseif($modelName==false) return false;
 			if(array_key_exists($modelName, $this->_models))
