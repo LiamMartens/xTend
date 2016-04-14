@@ -119,7 +119,7 @@
 			return $final_content;
 		}
 		//compile layout method
-		private function compileLayout(&$layout_c, $modules_dir = false) {
+		private function compileLayout($layout_c, $modules_dir = false) {
 			//split the layout into sections
 			$split = preg_split($this->_rx_section, $layout_c, NULL, PREG_SPLIT_DELIM_CAPTURE);
 			foreach ($split as &$part) {
