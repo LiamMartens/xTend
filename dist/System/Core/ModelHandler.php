@@ -12,7 +12,7 @@
 		public function exists($modelName) {
 			return $this->_app->getFileHandler()->exists($this->_app->getFileHandler()->systemFile($this->_app->getModelsDirectory().".$modelName.php"));
 		}
-		public function loadModel($modelName, $ns = "xTend", $createInstance = true) {
+		public function loadModel($modelName, $ns = false, $createInstance = true) {
 			//if create instance is set to false their will not be an instance of the model available
 			//any reference to this model inclusion is also lost except for the fact that the file has been required
 			//keep in mind also that the modelName also includes any directives you need to enter
@@ -21,6 +21,8 @@
             //
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
             //
+			//set namespace
+			if($ns===false) $ns=$this->_app->getNamespace();
             //extract directive
             $dot_pos = strrpos($modelName, ".");
             $directive = ($dot_pos!==false) ? substr($modelName, 0, $dot_pos) : false;

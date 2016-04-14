@@ -14,10 +14,12 @@
 			//controllerName excluding @ function call
 			return $this->_app->getFileHandler()->exists($this->_app->getFileHandler()->systemFile($this->_app->getControllersDirectory().".$controllerName.php"));
 		}
-		public function loadController($controllerName, $ns = "xTend", $data = [], $createInstance = true) {
+		public function loadController($controllerName, $ns = false, $data = [], $createInstance = true) {
             //
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
             //
+			//set default namespace
+			if($ns===false) $ns=$this->_app->getNamespace();
             //extract directive
             $dot_pos = strrpos($controllerName, ".");
             $directive = ($dot_pos!==false) ? substr($controllerName, 0, $dot_pos) : false;
