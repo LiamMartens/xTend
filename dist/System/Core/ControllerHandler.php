@@ -73,6 +73,8 @@
 			elseif($controllerName==false) return false;
 			if(array_key_exists($controllerName, $this->_controllers))
 				return $this->_controllers[$controllerName];
+			elseif(array_key_exists($this->_app->getNamespace()."\\$controllerName", $this->_controllers))
+				return $this->_controllers[$this->_app->getNamespace()."\\$controllerName"];
 			return false;
 		}
 	}

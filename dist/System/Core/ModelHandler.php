@@ -52,6 +52,8 @@
 			elseif($modelName==false) return false;
 			if(array_key_exists($modelName, $this->_models))
 				return $this->_models[$modelName];
+			elseif(array_key_exists($this->_app->getNamespace()."\\$modelName", $this->_models))
+				return $this->_models[$this->_app->getNamespace()."\\$modelName"];
 			return false;
 		}
 	}
