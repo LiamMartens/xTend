@@ -17,13 +17,13 @@
             if((count($_GET)==0)&&($this->_app->getUrlHandler()->getMethod()=="GET")) {
                 $qm_pos = strpos($this->_app->getUrlHandler()->getRequest(), "?");
                 if($qm_pos!==false) parse_str(substr($this->_app->getUrlHandler()->getRequest(), $qm_pos+1), $this->_get);
-            }
+            } else { $this->_get = $_GET; }
         }
         private function parsePost() {
             if((count($_POST)==0)&&($this->_app->getUrlHandler()->getMethod()=="POST")) {
                 //assuming its json
                 $this->_post = json_decode(file_get_contents("php://input"), true);
-            }
+            } else { $this->_post = $_POST; }
         }
         public function parse() {
             $this->parseGet();
