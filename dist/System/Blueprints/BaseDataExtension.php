@@ -17,6 +17,10 @@
 		public function getAllData() {
 			return $this->_data;
 		}
+		public function clearData() {
+			$this->_data = [];
+			return $this;
+		}
 		public function __get($name) {
 			if($this->inData($name))
 				return $this->getData($name);

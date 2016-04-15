@@ -89,6 +89,9 @@
 					//check all parts of the handle and see whether they match up  to the request
 					$ex_count=count($ex_handle); $rx_matches;
 					for($i=0;$i<$ex_count;$i++) {
+						//clear previous data
+						$this->_app->getUrlHandler()->clearData();
+						//check
 						$handle_part=$ex_handle[$i];
 						$request_part=$ex_request[$i];
 						//check {get} parameter first

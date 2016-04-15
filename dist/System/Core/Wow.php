@@ -87,7 +87,7 @@
 			$this->_app->getFileHandler()->setFileMeta($path, "last_compile", time());
 		}
 		//compile part method
-		private function compileRaw(&$content) {
+		private function compileRaw($content) {
 			foreach ($this->_expressions as $rx => $repl) {
 				$content = preg_replace($rx, $repl, $content); }
 			return $content;
@@ -121,6 +121,7 @@
 		//compile layout method
 		private function compileLayout($layout_c, $modules_dir = false) {
 			//split the layout into sections
+			$layout_c=$this->compileRaw($layout_c);
 			$split = preg_split($this->_rx_section, $layout_c, NULL, PREG_SPLIT_DELIM_CAPTURE);
 			foreach ($split as &$part) {
 				if(!preg_match($this->_rx_section, $part))
