@@ -50,7 +50,7 @@
 				} return false;
 			}
 			public function write($content) {
-				if($this->writable()) {
+				if($this->parent()->writable()) {
 					$handle = fopen($this->_path, 'w');
 					fwrite($handle, $content);
 					fclose($handle);
