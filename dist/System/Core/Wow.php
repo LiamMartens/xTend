@@ -60,7 +60,7 @@
 			//get last modification time
 			$time_last_mod=filemtime($path);
 			//get last compile times
-			$last_compile = $this->_app->getFileHandler()->getFileMeta($path, "last_compile");
+			$last_compile = $path->getMeta("last_compile");
 			//if last compile hasn't been saved -> return true
 			if($last_compile==false) return true;
 			//if the last compile time is smaller than the last compile time also return true
@@ -69,8 +69,8 @@
 			$modules=[]; preg_match_all($this->_rx_module, $view_content, $modules);
 			if(isset($modules[2])) {
 				foreach ($modules[2] as $mod_name) {
-					$file_path=$this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow.php", 2);
-					if($this->_app->getFileHandler()->exists($file_path)) {
+					$file_path=$this->_app->getFileHandler()->system("Modules.$mod_name.wow.php", 2);
+					if($file_path->exists()) {
 						//module exists -> check the change time
 						if(filemtime($file_path)>floatval($last_compile)) return true; } } }
 			//check layout compile time
@@ -84,7 +84,7 @@
 		}
 		//update meta method
 		private function update($path) {
-			$this->_app->getFileHandler()->setFileMeta($path, "last_compile", time());
+			$path->setMeta("last_compile", time());
 		}
 		//compile part method
 		private function compileRaw($content) {
@@ -110,10 +110,10 @@
 					//get module contents
 					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name)-1);
 					$mod_path=($modules_dir===false) ?
-									($this->_app->getFileHandler()->systemFile("Modules.$mod_name.wow.php", 2)) :
-									($this->_app->getFileHandler()->systemFile("$modules_dir.$mod_name.wow.php", 2));
-					if($this->_app->getFileHandler()->exists($mod_path)) {
-						$part=$this->compile($this->_app->getFileHandler()->read($mod_path), $modules_dir); } }
+									($this->_app->getFileHandler()->system("Modules.$mod_name.wow.php", 2)) :
+									($this->_app->getFileHandler()->system("$modules_dir.$mod_name.wow.php", 2));
+					if($mod_path->exists()) {
+						$part=$this->compile($mod_path->read(), $modules_dir); } }
 				$final_content.=$part; }
 			$content=$final_content;
 			return $final_content;
@@ -137,7 +137,7 @@
 			//get file name 'name'
 			$file_name=substr($file, strrpos($file, "/")+1); $file_name=substr($file_name, 0, strpos($file_name, "."));
 			//get view content
-			$view_c = $this->_app->getFileHandler()->read($file);
+			$view_c = $file->read();
 			//get view flags
 			$version=$this->version($view_c);
 			$layout=$this->layout($view_c);
@@ -146,12 +146,12 @@
 			//check for layout existance -> if it doesnt exist, ignore the layout, thus set it to false
 			if($layout!==false) {
 				$layout_path=($layout_dir===false) ?
-									($this->_app->getFileHandler()->systemFile("Layouts.$layout.wow.php", 2)) :
-									($this->_app->getFileHandler()->systemFile("$layout_dir.$layout.wow.php", 2));
+									($this->_app->getFileHandler()->system("Layouts.$layout.wow.php", 2)) :
+									($this->_app->getFileHandler()->system("$layout_dir.$layout.wow.php", 2));
 				if(!$layout_path->exists()) { $layout=false; $layout_path=false; } }
 			//get last compiled version of this view file -> sorting works descending thus most recent versions are first
 			$is_new_version = false; $one_found=false;
-			$compiled_views = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->systemDirectory($this->_app->getViewOutputDirectory())); rsort($compiled_views);
+			$compiled_views = $this->_app->getDirectoryHandler()->system($this->_app->getViewOutputDirectory())->files(); rsort($compiled_views);
 			//check for the current version in the array
 			foreach ($compiled_views as $cv) {
 				$pos=strpos($cv, ".v");
@@ -196,15 +196,15 @@
 								$compiled_string.=$this->compile($rx_matches[2], $modules_dir);
 						} else { $compiled_string.=$part; }
 					}
-				} else { $compiled_string=$this->compile($this->_app->getFileHandler()->read($file), $modules_dir); }
+				} else { $compiled_string=$this->compile($file->read(), $modules_dir); }
 				//add namespace to compiled_string
 				$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\Core\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
 				//write view output
-				$this->_app->getFileHandler()->write($this->_app->getFileHandler()->systemFile($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2), $compiled_string);
+				$this->_app->getFileHandler()->system($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2)->write($compiled_string);
 				//update meta file
 				$this->update($file);
 			}
 			//return compiled view filename
-			return ($this->_app->getFileHandler()->systemFile($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2));
+			return ($this->_app->getFileHandler()->system($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2));
 		}
 	}

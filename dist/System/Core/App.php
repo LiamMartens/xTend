@@ -184,7 +184,7 @@
 			$can_write = is_writable($this->_dirSystem);
 			$integrity_success = true;
 			foreach ($directories as $dir) {
-				$dir = $this->getDirectoryHandler()->systemDirectory("$dir");
+				$dir = $this->getDirectoryHandler()->system("$dir");
 				if(!$dir->exists()) {
 					if((($can_write)&&($dir->create()===false))||(!$can_write)) {
 						echo ("Failed to create System directory ".$dir."<br>"); $integrity_success=false;
@@ -192,8 +192,8 @@
 				}
 			}
 			foreach ($writable_system_directories as $dir) {
-				$dir = $this->getDirectoryHandler()->systemDirectory("$dir");
-				if($dir->exists()&&!$dir->isWritable()) {
+				$dir = $this->getDirectoryHandler()->system("$dir");
+				if($dir->exists()&&!$dir->writable()) {
 					echo $dir." is not writable<br>"; $integrity_success=false;
 				}
 			}
@@ -249,18 +249,18 @@
 			ClassManager::includeClass("xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 			$this->_controllerHandler = new ControllerHandler($this);
 			//Include view blueprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseView.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataView.php"));
-			ClassManager::includeClass("xTend\\Objects\\View",  $this->getFileHandler()->systemFile($this->_dirObjects.".View.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->getFileHandler()->system($this->_dirBlueprints.".BaseView.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataView.php"));
+			ClassManager::includeClass("xTend\\Objects\\View",  $this->getFileHandler()->system($this->_dirObjects.".View.php"));
 			//include ViewHandler
 			ClassManager::includeClass("xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 			$this->_viewHandler = new ViewHandler($this);
 			//include UrlHandler
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataExtension.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataExtension.php"));
 			ClassManager::includeClass("xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 			$this->_UrlHandler = new UrlHandler($this);
 			//include Route Object
-			ClassManager::includeClass("xTend\\Objects\\Route",  $this->getFileHandler()->systemFile($this->_dirObjects.".Route.php"));
+			ClassManager::includeClass("xTend\\Objects\\Route",  $this->getFileHandler()->system($this->_dirObjects.".Route.php"));
 			//include Router
 			ClassManager::includeClass("xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php");
 			$this->_router = new Router($this);
@@ -291,128 +291,95 @@
 			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
 			//inlcude Controller and model bluepprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseDataController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->getFileHandler()->systemFile($this->_dirBlueprints.".BaseModel.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->getFileHandler()->system($this->_dirBlueprints.".BaseController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->getFileHandler()->system($this->_dirBlueprints.".BaseModel.php"));
 			//set post and pre config arrays
 			$this->_preConfigMethods = [];
 			$this->_postConfigMethods = [];
 		}
 		//config include
 		public function configure() {
-			//add configuration files
-			$dh=$this->getDirectoryHandler(); $fh=$this->getFileHandler(); $fm=$this->getFileManager();
-			$directories=$dh->recursiveDirectories($dh->systemDirectory($this->getConfigDirectory()));
-			$directories[]=$dh->systemDirectory($this->getConfigDirectory());
-			//sort by directory depth
-			$this->getSortHelper()->sortByNumberOfSlashes($directories);
-			//go through directories to see whether they need to be excluded
-			$excluded_dirs=[]; $ok_dirs=[];
-			foreach ($directories as $dir) {
-				if($fh->exists($dir."/.exclude"))
-					$excluded_dirs[]=$dir;
-				else {
-					//check for subdirectory of excluded directory
-					$excluded=false;
-					foreach ($excluded_dirs as $exd) {
-						if(substr($dir, 0, strlen($exd)+1)==$exd."/") { $excluded_dirs[]=$dir; $excluded=true; break; } }
-					//passed -> add to ok_dirs;
-					if(!$excluded) { $ok_dirs[]=$dir; }
-				}
+			$filemanager = $this->getFileManager();
+			$libsdir = $this->getDirectoryHandler()->system($this->getConfigDirectory());
+			$files = $libsdir->files(true);
+			//process excludes
+			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });
+			foreach($excludes as $exclude) {
+				$parent = $exclude->parent();
+				$files = array_filter($files, function($file) use ($parent) {
+					return ($file->parent()!=$parent);
+				}); }
+			//process ignores
+			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
+			foreach($ignores as $ignore) {
+				$lines = explode('\n', str_replace('\r\n', '\n', $ignore->read()));
+				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
+				$files = array_filter($files, function($file) use ($ignore_files) {
+					return (array_search($file, $ignore_files)===false);
+				});
 			}
-			//go through all directories again now skipping the exluded directories
-			foreach ($ok_dirs as $dir) {
-				$files=$dh->files($dir);
-				//does ignore file exist
-				$ignore_file_pos=array_search(".ignore", $files);
-				//if found, read ignore file, unset ignore file from files array and remove all ignored files from the array
-				if($ignore_file_pos!==false) {
-					$contents=$fh->read("$dir/.ignore"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
-					//unset ignore file itself
-					unset($files[$ignore_file_pos]);
-					//unset all ignored files
-					foreach ($contents as $fi) {
-						$fi_pos=array_search($fi, $files);
-						if($fi_pos!==false) unset($files[$fi_pos]);
-					}
+			//process orders
+			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
+			foreach($orders as $order) {
+				$lines = explode('\n', str_replace('\r\n', '\n', $order->read()));
+				$included_files = [$order];
+				foreach($lines as $line) {
+					$order_file = new FileHandler\File($this, $order->parent()."/$line");
+					if($order_file->exists()) {
+						$included_files[] = $order_file;
+						$filemanager->includeFile($this, $order_file); }
 				}
-				//does order file exist
-				$order_file_pos=array_search(".order", $files);
-				//if found read order file, unset order file from files array and include all order files first and unset these from file array
-				if($order_file_pos!==false) {
-					$contents=$fh->read("$dir/.order"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
-					//unset ordr file itsefl
-					unset($files[$order_file_pos]);
-					//include all order files and unset
-					foreach ($contents as $fo) {
-						$fo_pos=array_search($fo, $files);
-						if($fo_pos!==false) {
-							$fm->includeFile("$dir/$fo");
-							unset($files[$fo_pos]); }
-					}
-				}
-				//include remaining files
-				foreach ($files as $f) {
-					$fm->includeFile("$dir/$f");
-				}
+				//filter out the already included ones
+				$files = array_filter($files, function($file) use ($included_files) {
+					return (array_search($file, $included_files)===false);
+				});
+			}
+			//include remaining files
+			foreach($files as $file) {
+				$filemanager->includeFile($file);
 			}
 		}
 		//libraries include
 		public function loadLibraries() {
-			$dh=$this->getDirectoryHandler(); $fh=$this->getFileHandler(); $fm=$this->getFileManager();
-			$directories=$dh->recursiveDirectories($dh->systemDirectory($this->getLibsDirectory()));
-			$directories[]=$dh->systemDirectory($this->getLibsDirectory());
-			//sort by directory depth
-			$this->getSortHelper()->sortByNumberOfSlashes($directories);
-			//go through directories to see whether they need to be excluded
-			$excluded_dirs=[]; $ok_dirs=[];
-			foreach ($directories as $dir) {
-				if($fh->exists($dir."/.exclude"))
-					$excluded_dirs[]=$dir;
-				else {
-					//check for subdirectory of excluded directory
-					$excluded=false;
-					foreach ($excluded_dirs as $exd) {
-						if(substr($dir, 0, strlen($exd)+1)==$exd."/") { $excluded_dirs[]=$dir; $excluded=true; break; } }
-					//passed -> add to ok_dirs;
-					if(!$excluded) { $ok_dirs[]=$dir; }
-				}
+			$filemanager = $this->getFileManager();
+			$libsdir = $this->getDirectoryHandler()->system($this->getLibsDirectory());
+			$files = $libsdir->files(true);
+			//process excludes
+			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });
+			foreach($excludes as $exclude) {
+				$parent = $exclude->parent();
+				$files = array_filter($files, function($file) use ($parent) {
+					return ($file->parent()!=$parent);
+				}); }
+			//process ignores
+			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
+			foreach($ignores as $ignore) {
+				$lines = explode('\n', str_replace('\r\n', '\n', $ignore->read()));
+				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
+				$files = array_filter($files, function($file) use ($ignore_files) {
+					return (array_search($file, $ignore_files)===false);
+				});
 			}
-			//go through all directories again now skipping the exluded directories
-			foreach ($ok_dirs as $dir) {
-				$files=$dh->files($dir);
-				//does ignore file exist
-				$ignore_file_pos=array_search(".ignore", $files);
-				//if found, read ignore file, unset ignore file from files array and remove all ignored files from the array
-				if($ignore_file_pos!==false) {
-					$contents=$fh->read("$dir/.ignore"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
-					//unset ignore file itself
-					unset($files[$ignore_file_pos]);
-					//unset all ignored files
-					foreach ($contents as $fi) {
-						$fi_pos=array_search($fi, $files);
-						if($fi_pos!==false) unset($files[$fi_pos]);
-					}
+			//process orders
+			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
+			foreach($orders as $order) {
+				$lines = explode('\n', str_replace('\r\n', '\n', $order->read()));
+				$included_files = [$order];
+				foreach($lines as $line) {
+					$order_file = new FileHandler\File($this, $order->parent()."/$line");
+					if($order_file->exists()) {
+						$included_files[] = $order_file;
+						$filemanager->includeFile($order_file); }
 				}
-				//does order file exist
-				$order_file_pos=array_search(".order", $files);
-				//if found read order file, unset order file from files array and include all order files first and unset these from file array
-				if($order_file_pos!==false) {
-					$contents=$fh->read("$dir/.order"); $contents=explode("\n", str_replace("\r\n", "\n", $contents));
-					//unset ordr file itsefl
-					unset($files[$order_file_pos]);
-					//include all order files and unset
-					foreach ($contents as $fo) {
-						$fo_pos=array_search($fo, $files);
-						if($fo_pos!==false) {
-							$fm->includeFile("$dir/$fo");
-							unset($files[$fo_pos]); }
-					}
-				}
-				//include remaining files
-				foreach ($files as $f) {
-					$fm->includeFile("$dir/$f");
-				}
+				//filter out the already included ones
+				$files = array_filter($files, function($file) use ($included_files) {
+					return (array_search($file, $included_files)===false);
+				});
+			}
+			//include remaining files
+			foreach($files as $file) {
+				$filemanager->includeFile($file);
 			}
 		}
 		//run function

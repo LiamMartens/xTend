@@ -17,16 +17,16 @@
 			//view construct
 			$this->_name = $view;
 			//get wow and php paths
-			$wowPath = $this->_app->getFileHandler()->systemFile($this->_app->getViewsDirectory().".$view.wow").".php";
-			$phpPath = $this->_app->getFileHandler()->systemFile($this->_app->getViewsDirectory().".$view.php");
+			$wowPath = $this->_app->getFileHandler()->system($this->_app->getViewsDirectory().".$view.wow.php", 2);
+			$phpPath = $this->_app->getFileHandler()->system($this->_app->getViewsDirectory().".$view.php");
 			//check files
-			if($this->_app->getFileHandler()->exists($wowPath)) {
+			if($wowPath->exists()) {
 				$this->_filePath = $wowPath;
-				$this->_exists = true; 
+				$this->_exists = true;
 				$this->_isWow = true;
-			} elseif($this->_app->getFileHandler()->exists($phpPath)) {
+			} elseif($phpPath->exists()) {
 				$this->_filePath = $phpPath;
-				$this->_exists = true; 
+				$this->_exists = true;
 				$this->_isWow = false;
 			} else $this->_exists = false;
 		}

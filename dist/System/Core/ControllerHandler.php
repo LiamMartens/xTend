@@ -12,7 +12,7 @@
 		}
 		public function exists($controllerName) {
 			//controllerName excluding @ function call
-			return $this->_app->getFileHandler()->exists($this->_app->getFileHandler()->systemFile($this->_app->getControllersDirectory().".$controllerName.php"));
+			return $this->_app->getFileHandler()->system($this->_app->getControllersDirectory().".$controllerName.php")->exists();
 		}
 		public function loadController($controllerName, $data = [], $ns = false, $createInstance = true) {
             //
@@ -36,7 +36,7 @@
             $controllerPath = $directive.$split[0];
 			//start inclusion
 			if($this->exists($controllerPath)) {
-				ClassManager::includeClass($controllerClassName, $this->_app->getFileHandler()->systemFile($this->_app->getControllersDirectory().".$controllerPath.php"));
+				ClassManager::includeClass($controllerClassName, $this->_app->getFileHandler()->system($this->_app->getControllersDirectory().".$controllerPath.php"));
 				if($createInstance) {
 					//create an instance in the controllers
 					//if not you'll have to instantiate it yourself

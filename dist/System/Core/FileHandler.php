@@ -1,15 +1,89 @@
 <?php
 	namespace xTend\Core\FileHandler {
 		class File {
-			private $_fileHandler;
+			private $_app;
 			private $_path;
+			private function cleanPath($path) { return trim(rtrim(str_replace('\\', '/', $path), '/')); }
+			public function setPath($path) { $this->_path = $this->cleanPath($path); }
 			public function __construct($app, $path) {
-				$this->_fileHandler = $app->getFileHandler();
-				$this->_path = $path;
+				$this->_app = $app;
+				//always use setPath in order to automatically clean the path
+				//aka replace \ with / as this is better
+				$this->setPath($path);
 			}
-			public function __call($name, $args) {
-				array_unshift($args, $this->_path);
-				return call_user_func_array([ $this->_fileHandler, $name ], $args);
+			public function exists() {
+				return is_file($this->_path);
+			}
+			public function writable() {
+				return (is_writable($this->_path)&&$this->exists());
+			}
+			public function name() {
+				//returns the name of the file
+				$sl_pos = strrpos($this->_path, '/');
+				return substr($this->_path, $sl_pos + 1);
+			}
+			public function parent() {
+				$sl_pos = strrpos($this->_path, '/');
+				return new \xTend\Core\DirectoryHandler\Directory($this->_app, substr($this->_path, 0, $sl_pos));
+			}
+			public function move($dest) {
+				//try creating parents first
+				if((new File($this->_app, $dest))->parent()->create())
+					return rename($this->_path, $dest);
+				return false;
+			}
+			public function copy($dest) {
+				//try creating parents first
+				if((new File($this->_app, $dest))->parent()->create())
+					return copy($this->_path, $dest);
+				return false;
+			}
+			public function remove() {
+				return unlink($this->_path);
+			}
+			public function read() {
+				if($this->exists()) {
+					$handle = fopen($this->_path, 'r');
+					$content = (filesize($this->_path)>0) ? fread($handle, filesize($this->_path)) : false;
+					fclose($handle);
+					return $content;
+				} return false;
+			}
+			public function write($content) {
+				if($this->writable()) {
+					$handle = fopen($this->_path, 'w');
+					fwrite($handle, $content);
+					fclose($handle);
+					return true;
+				} return false;
+			}
+			public function append($content) {
+				if($this->writable()) {
+					$handle = fopen($this->_path, 'a');
+					fwrite($handle, $content);
+					fclose($handle);
+					return true;
+				} return false;
+			}
+			public function getMeta($key, $default = false) {
+				if($this->exists()) {
+					$m_file = $this->_app->getFileHandler()->system($this->_app->getMetaDirectory().".".hash("sha256", $this->_path).".meta");
+					$meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
+					if(array_key_exists($key, $meta)) return $meta[$key];
+				}
+				return $default;
+			}
+			public function setMeta($key, $value = null) {
+				//set or remove meta
+				if($this->exists()) {
+					$m_file = $this->_app->getFileHandler()->system($this->_app->getMetaDirectory().".".hash("sha256", $this->_path).".meta");
+					$meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
+					if($value!==null) {
+						$meta[$key]=$value;
+					} elseif(array_key_exists($key, $meta)) { unset($meta[$key]); }
+					return $m_file->write(json_encode($meta));
+				}
+				return false;
 			}
 			public function __toString() {
 				return $this->_path;
@@ -23,19 +97,8 @@
 			public function __construct($app) {
 				//store containing app reference so the FileHandler can use it's directives
 				$this->_app = $app;
-				$this->_app->getErrorCodeHandler()->registerErrorCode(0x0005, "filehandler:file-not-writable", "A file you are tryig to write to is not writable");
 			}
-			//internal writableCheck with throw error
-			//isWritable for external use
-			private function writableCheck($path) {
-				if(!is_writable($path)&&is_file($path)) {
-					throw $this->_app->getErrorCodeHandler()->findError(0x0005)->getException();
-					die($path); }
-			}
-			public function isWritable($path) {
-				return (is_writable($path)&&is_file($path));
-			}
-			public function systemFile($fileName, $ext_count = 1) {
+			public function system($fileName, $ext_count = 1) {
 				$path=$this->_app->getSystemDirectory();
 				$file_parts = explode(".", $fileName);
 				//for loop here since we need to exclude the last part of the array -> extension
@@ -45,7 +108,7 @@
 				for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
 				return new FileHandler\File($this->_app, $path);
 			}
-			public function publicFile($fileName, $ext_count = 1) {
+			public function public($fileName, $ext_count = 1) {
 				$path=$this->_app->getPublicDirectory();
 				$file_parts = explode(".", $fileName);
 				//for loop here since we need to exclude the last part of the array -> extension
@@ -54,74 +117,6 @@
 				//add extension part
 				for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
 				return new FileHandler\File($this->_app, $path);
-			}
-			//helper function to get the last part of the path
-			private function getName($path) {
-				//replace \\ with /
-				$path=str_replace("\\", "/", $path);
-				$pos_back = strrpos($path, "/");
-				return ($pos_back===false) ? $path : substr($path, $pos_back);
-			}
-			public function exists($filePath) {
-				return is_file($filePath);
-			}
-			public function move($src,$dest) {
-				//renaming a file is also possible using move
-				$this->_app->getDirectoryHandler()->writableCheck($dest);
-				if($this->exists($src))
-					rename($src, $dest);
-			}
-			public function copy($src,$dest) {
-				$this->_app->getDirectoryHandler()->writableCheck($dest);
-				if($this->exists($src))
-					copy($src, $dest);
-			}
-			public function read($path) {
-				$handle = fopen($path, 'r');
-				$content = (filesize($path)>0) ? fread($handle, filesize($path)) : "";
-				fclose($handle);
-				return $content;
-			}
-			public function write($path, $content) {
-				$this->writableCheck($path);
-				$handle = fopen($path, 'w');
-				fwrite($handle, $content);
-				fclose($handle);
-			}
-			public function append($path, $content) {
-				$this->writableCheck($path);
-				$handle = fopen($path, 'a');
-				fwrite($handle, $content);
-				fclose($handle);
-			}
-			public function remove($path) {
-				if($this->exists($path)) {
-					$this->writableCheck($path);
-					unlink($path);
-					return true;
-				}
-				return false;
-			}
-			public function setFileMeta($path, $key, $value) {
-				//end func call if file doesn't exist
-				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory($this->_app->getMetaDirectory())."/".hash("sha256", $path).".meta";
-					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
-					$meta[$key]=$value;
-					$this->write($metaFile, json_encode($meta));
-					return true;
-				}
-				return false;
-			}
-			public function getFileMeta($path, $key, $default=false) {
-				if($this->exists($path)) {
-					$metaFile = $this->_app->getDirectoryHandler()->systemDirectory($this->_app->getMetaDirectory())."/".hash("sha256", $path).".meta";
-					$meta = []; if($this->exists($metaFile)) $meta=json_decode($this->read($metaFile), true);
-					if(array_key_exists($key, $meta))
-						return $meta[$key];
-					else return $default;
-				}
-				return $default;
 			}
 		}
 	}
