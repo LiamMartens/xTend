@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.7.1";
+		private $_xTendVersion = "0.7.6";
 		private $_url = "http://localhost:90";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
