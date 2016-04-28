@@ -87,6 +87,23 @@
 				//remove current directory
 				return rmdir($this->_path);
 			}
+			public function file($name, $ext_count = 1) {
+				$path=$this->_path;
+				$file_parts = explode(".", $name);
+				//for loop here since we need to exclude the last part of the array -> extension
+				$file_parts_count = count($file_parts)-$ext_count;
+				for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
+				//add extension part
+				for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
+				return new \xTend\Core\FileHandler\File($this->_app, $path);
+			}
+			public function directory($name) {
+				$path=$this->_path;
+				$dir_parts = explode(".", $name);
+				//foreach loop is possible here
+				foreach ($dir_parts as $part) { $path.="/".$part; }
+				return new Directory($this->_app, $path);
+			}
 			public function __toString() {
 				return $this->_path;
 			}

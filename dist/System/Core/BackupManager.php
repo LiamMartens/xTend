@@ -14,7 +14,7 @@
 		private function needsBackup() {
 			if($this->_app->getBackupInterval()!==false) {
 				$interval = strtotime($this->_app->getBackupInterval());
-				$backups = $this->_app->getDirectoryHandler()->system($this->_app->getBackupsDirectory())->files(); sort($backups);
+				$backups = $this->_app->getBackupsDirectory()->files(); sort($backups);
 				if(count($backups)>0) {
 					$last_backup = $backups[count($backups) - 1];
 					$last_backup_name = substr($last_backup, 0, strrpos($last_backup, "."));
@@ -27,7 +27,7 @@
 		private function cleanBackups() {
 			ini_set('display_errors', 1);
 			if($this->_app->getBackupLimit()!==false) {
-				$backups = $this->_app->getDirectoryHandler()->system($this->_app->getBackupsDirectory())->files(); sort($backups);
+				$backups = $this->_app->getBackupsDirectory()->files(); sort($backups);
 				$to_remove = count($backups) - $this->_app->getBackupLimit();
 				if($to_remove>0) {
 					for($i=0;$i<$to_remove;$i++) {
@@ -38,24 +38,23 @@
 		}
 		public function create($force=false) {
 			if((!$this->needsBackup())&&(!$force)) return false;
-			$bak = new Archive($this->_app->getFileHandler()->system($this->_app->getBackupsDirectory().".".time()."-".date("YmdHis").".zip"));
-			$systemfiles = $this->_app->getDirectoryHandler()->recursiveFiles($this->_app->getSystemDirectory());
-			$sysdir_len = strlen($this->_app->getSystemDirectory())+1;
-			$sysdir_name = substr($this->_app->getSystemDirectory(), strrpos($this->_app->getSystemDirectory(), "/")+1);
-			$bak_dir_pref = $this->_app->getDirectoryHandler()->system($this->_app->getBackupsDirectory());
-			foreach ($systemfiles as $sysfile) {
-				$sysfile_relname = substr($sysfile, $sysdir_len);
-				if(substr($sysfile_relname, 0, 8)!="$bak_dir_pref/") { $bak->addFile($sysfile, "$sysdir_name/$sysfile_relname"); }
+			$bak = new Archive($this->_app->getBackupsDirectory()->file(time()."-".date("YmdHis").".zip"));
+			//add system files
+			$bakdir = $this->_app->getBackupsDirectory();
+			$sysdir_len = strlen($this->_app->getSystemDirectory()->parent());
+			$files = $this->_app->getSystemDirectory()->files(true);
+			foreach($files as $file) {
+				if($file->parent()!=$bakdir) {
+					$bak->addFile($file, substr($file, $sysdir_len+1));
+				}
 			}
-			$publicfiles = $this->_app->getDirectoryHandler()->recursiveFiles($this->_app->getPublicDirectory());
-			$pubdir_len = strlen($this->_app->getPublicDirectory())+1;
-			$pubdir_name = substr($this->_app->getPublicDirectory(), strrpos($this->_app->getPublicDirectory(), "/")+1);
-			foreach ($publicfiles as $pubfile) {
-				$pubfile_relname = substr($pubfile, $pubdir_len);
-				$bak->addFile($pubfile, "$pubdir_name/$pubfile_relname");
+			//add public
+			$pubdir_len = strlen($this->_app->getPublicDirectory()->parent());
+			$files = $this->_app->getPublicDirectory()->files(true);
+			foreach($files as $file) {
+				$bak->addFile($file, substr($file, $pubdir_len+1));
 			}
 			$bak->save();
-			//clean backups here
 			$this->cleanBackups();
 		}
 	}

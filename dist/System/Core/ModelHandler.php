@@ -10,7 +10,7 @@
 			$this->_models = [];
 		}
 		public function exists($modelName) {
-			return $this->_app->getFileHandler()->system($this->_app->getModelsDirectory().".$modelName.php")->exists();
+			return $this->_app->getModelsDirectory()->file("$modelName.php")->exists();
 		}
 		public function loadModel($modelName, $ns = false, $createInstance = true) {
 			//if create instance is set to false their will not be an instance of the model available
@@ -36,7 +36,7 @@
             $modelPath = "$directive$modelName";
             $className = (($namespace!==false) ? $namespace : $ns)."\\".$modelName;
 			if($this->exists($modelPath)) {
-				ClassManager::includeClass($className, $this->_app->getFileHandler()->system($this->_app->getModelsDirectory().".$modelPath.php"));
+				ClassManager::includeClass($className, $this->_app->getModelsDirectory()->file("$modelPath.php"));
 				if($createInstance) {
 					//by default a reference to the app is passed as well in order to make it's directives and settings available
 					$this->_models[$className] = new $className($this->_app);

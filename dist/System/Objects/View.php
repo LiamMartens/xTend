@@ -17,8 +17,8 @@
 			//view construct
 			$this->_name = $view;
 			//get wow and php paths
-			$wowPath = $this->_app->getFileHandler()->system($this->_app->getViewsDirectory().".$view.wow.php", 2);
-			$phpPath = $this->_app->getFileHandler()->system($this->_app->getViewsDirectory().".$view.php");
+			$wowPath = $this->_app->getViewsDirectory()->file("$view.wow.php", 2);
+			$phpPath = $this->_app->getViewsDirectory()->file("$view.php");
 			//check files
 			if($wowPath->exists()) {
 				$this->_filePath = $wowPath;

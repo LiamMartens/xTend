@@ -9,22 +9,21 @@
 			$this->_app = $app;
 		}
 		public function clearLogs() {
-			$files = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->system($this->_app->getLogsDirectory()), true);
-			foreach ($files as $file) { $this->_app->getFileHandler()->remove($file); }
+			$files = $this->_app->getLogsDirectory()->files();
+			foreach ($files as $file) { $file->remove(); }
 		}
 		public function cleanLogs() {
-			$files = $this->_app->getDirectoryHandler()->files($this->_app->getDirectoryHandler()->system($this->_app->getLogsDirectory()), true); sort($files);
+			$files = $this->_app->getLogsDirectory()->files(); sort($files);
 			$files_to_remove = count($files) - $this->_app->getLogLimit();
 			if($files_to_remove>0) {
 				for($i=0;$i<$files_to_remove;$i++) {
-					$this->_app->getFileHandler()->remove($files[$i]);
+					$files[$i]->remove();
 				}
 			}
 		}
 		public function write($err, $additional = "") {
 			$dt = new DateTime();
-			$this->_app->getFileHandler()->append(
-				$this->_app->getFileHandler()->system($this->_app->getLogsDirectory().".log_".$dt->format("Y-m-d").".log"),
+			$this->_app->getLogsDirectory()->file("log_".$dt->format("Y-m-d").".log")->append(
 				$dt->format("H:i:s")."\t".$err->getError()."\t$additional\r\n"
 			);
 			$this->cleanLogs();

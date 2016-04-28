@@ -67,7 +67,7 @@
 			}
 			public function getMeta($key, $default = false) {
 				if($this->exists()) {
-					$m_file = $this->_app->getFileHandler()->system($this->_app->getMetaDirectory().".".hash("sha256", $this->_path).".meta");
+					$m_file = $this->_app->getMetaDirectory()->file(hash("sha256", $this->_path).".meta");
 					$meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
 					if(array_key_exists($key, $meta)) return $meta[$key];
 				}
@@ -76,7 +76,7 @@
 			public function setMeta($key, $value = null) {
 				//set or remove meta
 				if($this->exists()) {
-					$m_file = $this->_app->getFileHandler()->system($this->_app->getMetaDirectory().".".hash("sha256", $this->_path).".meta");
+					$m_file = $this->_app->getMetaDirectory()->file(hash("sha256", $this->_path).".meta");
 					$meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
 					if($value!==null) {
 						$meta[$key]=$value;

@@ -50,43 +50,43 @@
 		public function setLogLimit($limit) { $this->_logLimit = $limit; }
 		//directory location configuration
 		private $_dirBackups = "Backups";
-		public function setBackupsDirectory($dir) { $this->_dirBackups = $dir; }
+		public function setBackupsDirectory($dir) { $this->_dirBackups = $this->getDirectoryHandler()->system($dir); }
 		public function getBackupsDirectory() { return $this->_dirBackups; }
 		private $_dirBlueprints = "Blueprints";
-		public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $dir; }
+		public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $this->getDirectoryHandler()->system($dir); }
 		public function getBlueprintsDirectory() { return $this->_dirBlueprints; }
 		private $_dirConfig = "Config";
-		public function setConfigDirectory($dir) { $this->_dirConfig = $dir; }
+		public function setConfigDirectory($dir) { $this->_dirConfig = $this->getDirectoryHandler()->system($dir); }
 		public function getConfigDirectory() { return $this->_dirConfig; }
 		private $_dirControllers = "Controllers";
-		public function setControllersDirectory($dir) { $this->_dirControllers = $dir; }
+		public function setControllersDirectory($dir) { $this->_dirControllers = $this->getDirectoryHandler()->system($dir); }
 		public function getControllersDirectory() { return $this->_dirControllers; }
 		private $_dirLayouts = "Layouts";
-		public function setLayoutsDirectory($dir) { $this->_dirLayouts = $dir; }
+		public function setLayoutsDirectory($dir) { $this->_dirLayouts = $this->getDirectoryHandler()->system($dir); }
 		public function getLayoutsDirectory() { return $this->_dirLayouts; }
 		private $_dirLibs = "Libs";
-		public function setLibsDirectory($dir) { $this->_dirLibs = $dir; }
+		public function setLibsDirectory($dir) { $this->_dirLibs = $this->getDirectoryHandler()->system($dir); }
 		public function getLibsDirectory() { return $this->_dirLibs; }
 		private $_dirLogs = "Logs";
-		public function setLogsDirectory($dir) { $this->_dirLogs = $dir; }
+		public function setLogsDirectory($dir) { $this->_dirLogs = $this->getDirectoryHandler()->system($dir); }
 		public function getLogsDirectory() { return $this->_dirLogs; }
 		private $_dirMeta = "Meta";
-		public function setMetaDirectory($dir) { $this->_dirMeta = $dir; }
+		public function setMetaDirectory($dir) { $this->_dirMeta = $this->getDirectoryHandler()->system($dir); }
 		public function getMetaDirectory() { return $this->_dirMeta; }
 		private $_dirModels = "Models";
-		public function setModelsDirectory($dir) { $this->_dirModels = $dir; }
+		public function setModelsDirectory($dir) { $this->_dirModels = $this->getDirectoryHandler()->system($dir); }
 		public function getModelsDirectory() { return $this->_dirModels; }
 		private $_dirModules = "Modules";
-		public function setModulesDirectory($dir) { $this->_dirModules = $dir; }
+		public function setModulesDirectory($dir) { $this->_dirModules = $this->getDirectoryHandler()->system($dir); }
 		public function getModulesDirectory() { return $this->_dirModules; }
 		private $_dirObjects = "Objects";
-		public function setObjectsDirectory($dir) { $this->_dirObjects = $dir; }
+		public function setObjectsDirectory($dir) { $this->_dirObjects = $this->getDirectoryHandler()->system($dir); }
 		public function getObjectsDirectory() { return $this->_dirObjects; }
 		private $_dirViewOutput = "ViewOutput";
-		public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $dir; }
+		public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $this->getDirectoryHandler()->system($dir); }
 		public function getViewOutputDirectory() { return $this->_dirViewOutput; }
 		private $_dirViews = "Views";
-		public function setViewsDirectory($dir) { $this->_dirViews = $dir; }
+		public function setViewsDirectory($dir) { $this->_dirViews = $this->getDirectoryHandler()->system($dir); }
 		public function getViewsDirectory() { return $this->_dirViews; }
 		//Application defined variables
 		private $_dirSystem;
@@ -236,6 +236,8 @@
 			//include dir class
 			ClassManager::includeClass("xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
 			$this->_directoryHandler = new DirectoryHandler($this);
+			$this->_dirSystem = new DirectoryHandler\Directory($this, $this->_dirSystem);
+			$this->_dirPublic = new DirectoryHandler\Directory($this, $this->_dirPublic);
 			//include file class
 			ClassManager::includeClass("xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
 			$this->_fileHandler = new FileHandler($this);
@@ -301,8 +303,8 @@
 		//config include
 		public function configure() {
 			$filemanager = $this->getFileManager();
-			$libsdir = $this->getDirectoryHandler()->system($this->getConfigDirectory());
-			$files = $libsdir->files(true);
+			$confdir = $this->getConfigDirectory();
+			$files = $confdir->files(true);
 			//process excludes
 			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });
 			foreach($excludes as $exclude) {
@@ -343,7 +345,7 @@
 		//libraries include
 		public function loadLibraries() {
 			$filemanager = $this->getFileManager();
-			$libsdir = $this->getDirectoryHandler()->system($this->getLibsDirectory());
+			$libsdir = $this->getLibsDirectory();
 			$files = $libsdir->files(true);
 			//process excludes
 			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });

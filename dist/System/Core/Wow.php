@@ -69,7 +69,7 @@
 			$modules=[]; preg_match_all($this->_rx_module, $view_content, $modules);
 			if(isset($modules[2])) {
 				foreach ($modules[2] as $mod_name) {
-					$file_path=$this->_app->getFileHandler()->system("Modules.$mod_name.wow.php", 2);
+					$file_path=$this->_app->getModulesDirectory()->file("$mod_name.wow.php", 2);
 					if($file_path->exists()) {
 						//module exists -> check the change time
 						if(filemtime($file_path)>floatval($last_compile)) return true; } } }
@@ -110,8 +110,8 @@
 					//get module contents
 					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name)-1);
 					$mod_path=($modules_dir===false) ?
-									($this->_app->getFileHandler()->system("Modules.$mod_name.wow.php", 2)) :
-									($this->_app->getFileHandler()->system("$modules_dir.$mod_name.wow.php", 2));
+									($this->_app->getModulesDirectory()->file("$mod_name.wow.php", 2)) :
+									($modules_dir->file("$mod_name.wow.php", 2));
 					if($mod_path->exists()) {
 						$part=$this->compile($mod_path->read(), $modules_dir); } }
 				$final_content.=$part; }
@@ -146,12 +146,12 @@
 			//check for layout existance -> if it doesnt exist, ignore the layout, thus set it to false
 			if($layout!==false) {
 				$layout_path=($layout_dir===false) ?
-									($this->_app->getFileHandler()->system("Layouts.$layout.wow.php", 2)) :
-									($this->_app->getFileHandler()->system("$layout_dir.$layout.wow.php", 2));
+									($this->_app->getLayoutsDirectory()->file("$layout.wow.php", 2)) :
+									($layout_dir->file("$layout.wow.php", 2));
 				if(!$layout_path->exists()) { $layout=false; $layout_path=false; } }
 			//get last compiled version of this view file -> sorting works descending thus most recent versions are first
 			$is_new_version = false; $one_found=false;
-			$compiled_views = $this->_app->getDirectoryHandler()->system($this->_app->getViewOutputDirectory())->files(); rsort($compiled_views);
+			$compiled_views = $this->_app->getViewOutputDirectory()->files(); rsort($compiled_views);
 			//check for the current version in the array
 			foreach ($compiled_views as $cv) {
 				$pos=strpos($cv, ".v");
@@ -200,11 +200,11 @@
 				//add namespace to compiled_string
 				$compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\Core\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
 				//write view output
-				$this->_app->getFileHandler()->system($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2)->write($compiled_string);
+				$this->_app->getViewOutputDirectory()->file("$file_hash.v$version.php", 2)->write($compiled_string);
 				//update meta file
 				$this->update($file);
 			}
 			//return compiled view filename
-			return ($this->_app->getFileHandler()->system($this->_app->getViewOutputDirectory().".$file_hash.v$version.php", 2));
+			return ($this->_app->getViewOutputDirectory()->file("$file_hash.v$version.php", 2));
 		}
 	}

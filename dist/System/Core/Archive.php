@@ -14,11 +14,11 @@
 		}
 		public function addFile($filePath, $zipPath = false) {
 			if($zipPath===false) {
-				$this->_zip->addFile($filePath, preg_replace("/^(\.\.\/)+/", "", $filePath));
-			} else { $this->_zip->addFile($filePath, preg_replace("/^(\.\.\/)+/", "", $zipPath)); }
+				$this->_zip->addFile($filePath);
+			} else { $this->_zip->addFile($filePath, $zipPath); }
 		}
 		public function addDirectory($dirPath) {
-			$this->_zip->addEmptyDir(preg_replace("/^(\.\.\/)+/", "", $dirPath));
+			$this->_zip->addEmptyDir($dirPath);
 		}
 		public function delete($name) {
 			$this->_zip->deleteName($name);
