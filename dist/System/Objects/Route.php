@@ -105,8 +105,13 @@
 								$handle_part=substr($handle_part, 0, strlen($handle_part)-6);
 								//get rid of anything after first question mark in the request part
 								$qm_pos = strpos($request_part, "?");
-								if($qm_pos!==false)
+								if($qm_pos!==false) {
+									//GET part is allowed and existing
+									if(count($_GET)===0)
+										parse_str(substr($request_part, $qm_pos+1), $_GET);
+									//remove GET part from URL
 									$request_part=substr($request_part, 0, $qm_pos);
+								}
 							}
 						}
 						//check up
