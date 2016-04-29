@@ -1,6 +1,3 @@
-#xTend Development Branch
-Might be unstable and untested
-=======
 #Introducing xTend
 [Website](http://xtend.liammartens.com)
 
