@@ -148,6 +148,7 @@
 		public function getHTMLHandler() { return $this->_htmlHandler; }
 		//error throw
 		public function throwError($code) {
+			header("HTTP/1.0 $code");
 			$error = $this->_errorCodeHandler->findError($code);
 			if($error instanceof ErrorCode) {
 				$this->_logHandler->write($error, $_SERVER["REQUEST_URI"]."\t".$_SERVER["REMOTE_ADDR"]);
@@ -184,7 +185,6 @@
 			$can_write = is_writable($this->_dirSystem);
 			$integrity_success = true;
 			foreach ($directories as $dir) {
-				$dir = $this->getDirectoryHandler()->system("$dir");
 				if(!$dir->exists()) {
 					if((($can_write)&&($dir->create()===false))||(!$can_write)) {
 						echo ("Failed to create System directory ".$dir."<br>"); $integrity_success=false;
@@ -238,6 +238,20 @@
 			$this->_directoryHandler = new DirectoryHandler($this);
 			$this->_dirSystem = new DirectoryHandler\Directory($this, $this->_dirSystem);
 			$this->_dirPublic = new DirectoryHandler\Directory($this, $this->_dirPublic);
+			//set directory settings as they are strings by default -> can't access necessary classes yet
+			$this->setBackupsDirectory($this->getBackupsDirectory());
+			$this->setBlueprintsDirectory($this->getBlueprintsDirectory());
+			$this->setConfigDirectory($this->getConfigDirectory());
+			$this->setControllersDirectory($this->getControllersDirectory());
+			$this->setLayoutsDirectory($this->getLayoutsDirectory());
+			$this->setLibsDirectory($this->getLibsDirectory());
+			$this->setLogsDirectory($this->getLogsDirectory());
+			$this->setMetaDirectory($this->getMetaDirectory());
+			$this->setModelsDirectory($this->getModelsDirectory());
+			$this->setModulesDirectory($this->getModulesDirectory());
+			$this->setObjectsDirectory($this->getObjectsDirectory());
+			$this->setViewOutputDirectory($this->getViewOutputDirectory());
+			$this->setViewsDirectory($this->getViewsDirectory());
 			//include file class
 			ClassManager::includeClass("xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
 			$this->_fileHandler = new FileHandler($this);
@@ -251,18 +265,18 @@
 			ClassManager::includeClass("xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 			$this->_controllerHandler = new ControllerHandler($this);
 			//Include view blueprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->getFileHandler()->system($this->_dirBlueprints.".BaseView.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataView.php"));
-			ClassManager::includeClass("xTend\\Objects\\View",  $this->getFileHandler()->system($this->_dirObjects.".View.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->_dirBlueprints->file("BaseView.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->_dirBlueprints->file("BaseDataView.php"));
+			ClassManager::includeClass("xTend\\Objects\\View",  $this->_dirObjects->file("View.php"));
 			//include ViewHandler
 			ClassManager::includeClass("xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 			$this->_viewHandler = new ViewHandler($this);
 			//include UrlHandler
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataExtension.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->_dirBlueprints->file("BaseDataExtension.php"));
 			ClassManager::includeClass("xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 			$this->_UrlHandler = new UrlHandler($this);
 			//include Route Object
-			ClassManager::includeClass("xTend\\Objects\\Route",  $this->getFileHandler()->system($this->_dirObjects.".Route.php"));
+			ClassManager::includeClass("xTend\\Objects\\Route", $this->_dirObjects->file("Route.php"));
 			//include Router
 			ClassManager::includeClass("xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php");
 			$this->_router = new Router($this);
@@ -293,9 +307,9 @@
 			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
 			//inlcude Controller and model bluepprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->getFileHandler()->system($this->_dirBlueprints.".BaseController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->getFileHandler()->system($this->_dirBlueprints.".BaseDataController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->getFileHandler()->system($this->_dirBlueprints.".BaseModel.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php"));
+			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php"));
 			//set post and pre config arrays
 			$this->_preConfigMethods = [];
 			$this->_postConfigMethods = [];
