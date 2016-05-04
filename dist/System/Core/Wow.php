@@ -19,7 +19,7 @@
 			$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
 			$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
 			$this->_rx_module = $this->rx("(@module:)([\w\-\_\.]+)", "i");
-			$this->_rx_module_extract = $this->rx("(@module:)([\w\-\_\.]+)", "i");
+			$this->_rx_module_extract = $this->rx("(@module:[\w\-\_\.]+)", "i");
 
 			$this->_expressions=[];
 			$this->_app=$app;
@@ -108,7 +108,7 @@
 					$part=$this->compileRaw($part);
 				} else {
 					//get module contents
-					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name)-1);
+					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name));
 					$mod_path=($modules_dir===false) ?
 									($this->_app->getModulesDirectory()->file("$mod_name.wow.php", 2)) :
 									($modules_dir->file("$mod_name.wow.php", 2));
