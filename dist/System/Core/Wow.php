@@ -18,8 +18,8 @@
 			$this->_rx_flag = $this->rx("(\s+|^)(@)(compile)(:)(always|version|never|change|change\+version)(\s+|$)", "i");
 			$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
 			$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
-			$this->_rx_module = $this->rx("(@module\()([\w\-\_\.]+)(\))", "i");
-			$this->_rx_module_extract = $this->rx("(@module\([\w\-\_\.]+\))", "i");
+			$this->_rx_module = $this->rx("(@module:)([\w\-\_\.]+)", "i");
+			$this->_rx_module_extract = $this->rx("(@module:)([\w\-\_\.]+)", "i");
 
 			$this->_expressions=[];
 			$this->_app=$app;
