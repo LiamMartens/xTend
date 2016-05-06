@@ -4,7 +4,7 @@
 	{
 		//moved core config from sperate const class to App
 		private $_xTendVersion = "0.7.6";
-		private $_url = "http://localhost:90";
+		private $_url = "http://troosib.dev";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
 		private $_companyName = "My company";
@@ -371,7 +371,7 @@
 			//process ignores
 			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
 			foreach($ignores as $ignore) {
-				$lines = explode('\n', str_replace('\r\n', '\n', $ignore->read()));
+				$lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
 				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
 				$files = array_filter($files, function($file) use ($ignore_files) {
 					return (array_search($file, $ignore_files)===false);
@@ -380,7 +380,7 @@
 			//process orders
 			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
 			foreach($orders as $order) {
-				$lines = explode('\n', str_replace('\r\n', '\n', $order->read()));
+				$lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
 				$included_files = [$order];
 				foreach($lines as $line) {
 					$order_file = new FileHandler\File($this, $order->parent()."/$line");
