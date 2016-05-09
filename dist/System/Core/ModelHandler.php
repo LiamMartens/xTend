@@ -39,8 +39,10 @@
 				ClassManager::includeClass($className, $this->_app->getModelsDirectory()->file("$modelPath.php"));
 				if($createInstance) {
 					//by default a reference to the app is passed as well in order to make it's directives and settings available
-					$this->_models[$className] = new $className($this->_app);
-					return $this->_models[$className];
+					try {
+						$this->_models[$className] = new $className($this->_app);
+						return $this->_models[$className];
+					catch(\Exception $ex) { return true; }
 				}
 				return true;
 			}
