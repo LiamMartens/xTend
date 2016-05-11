@@ -344,7 +344,7 @@
 					$order_file = new FileHandler\File($this, $order->parent()."/$line");
 					if($order_file->exists()) {
 						$included_files[] = $order_file;
-						$filemanager->includeFile($this, $order_file); }
+						$filemanager->includeFile($order_file); }
 				}
 				//filter out the already included ones
 				$files = array_filter($files, function($file) use ($included_files) {
