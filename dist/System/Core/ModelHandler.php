@@ -42,7 +42,7 @@
 					try {
 						$this->_models[$className] = new $className($this->_app);
 						return $this->_models[$className];
-					catch(\Exception $ex) { return true; }
+					} catch(\Exception $ex) { return true; }
 				}
 				return true;
 			}
