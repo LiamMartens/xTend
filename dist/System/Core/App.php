@@ -324,7 +324,7 @@
 			foreach($excludes as $exclude) {
 				$parent = $exclude->parent();
 				$files = array_filter($files, function($file) use ($parent) {
-					return ($file->parent()!=$parent);
+					return (substr($file->parent(), 0, strlen($parent))!=$parent);
 				}); }
 			//process ignores
 			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
@@ -366,7 +366,7 @@
 			foreach($excludes as $exclude) {
 				$parent = $exclude->parent();
 				$files = array_filter($files, function($file) use ($parent) {
-					return ($file->parent()!=$parent);
+					return (substr($file->parent(), 0, strlen($parent))!=$parent);
 				}); }
 			//process ignores
 			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
