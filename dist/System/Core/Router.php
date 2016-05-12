@@ -26,6 +26,15 @@
 			$this->_aliases=[];
 		}
 
+		public function getRoutes() {
+			return array_merge([$this->_home],
+								$this->_post,
+								$this->_get,
+								$this->_delete,
+								$this->_any,
+								$this->_error);
+		}
+
 		public function getRouteByAlias($alias) {
 			if(array_key_exists($alias, $this->_aliases))
 				return $this->_aliases[$alias];

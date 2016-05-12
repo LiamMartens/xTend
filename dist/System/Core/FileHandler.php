@@ -90,6 +90,13 @@
 					$this->_app->getFileManager()->includeFile($this->_path);
 				}
 			}
+			public function extension() {
+				$index = strrpos($this->_path, ".");
+				if($index!==false) {
+					return substr($this->_path, $index+1);
+				}
+				return false;
+			}
 			public function __toString() {
 				return $this->_path;
 			}

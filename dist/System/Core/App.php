@@ -48,6 +48,13 @@
 		public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
 		public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
 		public function setLogLimit($limit) { $this->_logLimit = $limit; }
+		public function configuration($confvalues) {
+			//set directory settings using an array
+			foreach ($confvalues as $key => $value) {
+				$f_name = 'set'.$key;
+				$this->$f_name($value);
+			}
+		}
 		//directory location configuration
 		private $_dirBackups = "Backups";
 		public function setBackupsDirectory($dir) { $this->_dirBackups = $this->getDirectoryHandler()->system($dir); }
@@ -88,6 +95,13 @@
 		private $_dirViews = "Views";
 		public function setViewsDirectory($dir) { $this->_dirViews = $this->getDirectoryHandler()->system($dir); }
 		public function getViewsDirectory() { return $this->_dirViews; }
+		public function directories($dirvalues) {
+			//set directory settings using an array
+			foreach ($dirvalues as $dir => $value) {
+				$f_name = 'set'.$dir.'Directory';
+				$this->$f_name($value);
+			}
+		}
 		//Application defined variables
 		private $_dirSystem;
 		private $_dirPublic;
@@ -165,8 +179,8 @@
 		//application integrity check
 		private function applicationIntegrityCheck() {
 			//check php version
-			if(phpversion()<"5.4")
-				die("Your PHP version is lower than 5.4");
+			if(phpversion()<"7")
+				die("Your PHP version is lower than 7.0");
 			//check directories
 			$directories = [$this->_dirBackups,
                             $this->_dirBlueprints,
@@ -353,7 +367,7 @@
 			}
 			//include remaining files
 			foreach($files as $file) {
-				$filemanager->includeFile($file);
+				if($file->extension()!="json") $file->include();
 			}
 		}
 		//libraries include
@@ -395,7 +409,7 @@
 			}
 			//include remaining files
 			foreach($files as $file) {
-				$filemanager->includeFile($file);
+				if($file->extension()!="json") $file->include();
 			}
 		}
 		//run function
@@ -403,9 +417,9 @@
 			//integrity check
 			$this->applicationIntegrityCheck();
 			//start a session
+			ini_set('display_errors', 1);
+			SessionHandler::configuration(json_decode($this->_fileHandler->system("Config.Sessions.Sessions.json")->read(), true));
 			SessionHandler::start();
-			//generate the cookie key
-			Cookie::generate();
 			//run library inclusion
 			$this->loadLibraries();
 			//run preconfig methods

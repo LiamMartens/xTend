@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+    namespace xTend\Application;
+    //require files
+    require_once("System/Core/App.php");
+    require_once("System/Workbench/Workbench.php");
+    //create app
+    $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__, true);
+    $app->getFileHandler()->system("Config.App.App.php")->include();
+    //start workbench
+    $bench=\xTend\Workbench\createNewBench(__NAMESPACE__, $app, $argv);
+    $app->getFileHandler()->system("Config.Workbench.Workbench.php")->include();
+    //run app
+    $app->run();
+    $bench->run();
