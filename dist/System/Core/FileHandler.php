@@ -85,6 +85,11 @@
 				}
 				return false;
 			}
+			public function include() {
+				if($this->exists()) {
+					$this->_app->getFileManager()->includeFile($this->_path);
+				}
+			}
 			public function __toString() {
 				return $this->_path;
 			}
