@@ -4,12 +4,12 @@
     //require files
     require_once("System/Core/App.php");
     require_once("System/Workbench/Workbench.php");
-    //use workbench
-    use \xTend\Workbench\Workbench as Workbench;
     //create app
     $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__, true);
     $app->getFileHandler()->system("Config.App.App.php")->include();
     //start workbench
-    $bench = new Workbench($app);
+    $bench=\xTend\Workbench\createNewBench(__NAMESPACE__, $app, $argv);
+    $app->getFileHandler()->system("Config.Workbench.Workbench.php")->include();
     //run app
     $app->run();
+    $bench->run();
