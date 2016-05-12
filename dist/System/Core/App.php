@@ -417,9 +417,8 @@
 			//integrity check
 			$this->applicationIntegrityCheck();
 			//start a session
+			SessionHandler::configuration(json_decode($this->_fileHandler->system("Config.Sessions.Sessions.json")->read(), true));
 			SessionHandler::start();
-			//generate the cookie key
-			Cookie::generate();
 			//run library inclusion
 			$this->loadLibraries();
 			//run preconfig methods

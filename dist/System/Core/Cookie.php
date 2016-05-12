@@ -9,8 +9,8 @@
 	class Cookie
 	{
 		private static $_enckey;
-		public static function generate() {
-			self::$_enckey = sha1($_SERVER["HTTP_USER_AGENT"].$_SERVER["REMOTE_ADDR"]);
+		public static function generate($key) {
+			self::$_enckey = sha1($_SERVER["HTTP_USER_AGENT"].$_SERVER["REMOTE_ADDR"].$key);
 		}
 
 		public function set($key, $value, $time=false, $domain='/') {
