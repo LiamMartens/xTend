@@ -1,0 +1,15 @@
+{
+    "Backups": "Backups",
+    "Blueprints": "Blueprints",
+    "Config": "Config",
+    "Controllers": "Controllers",
+    "Layouts": "Layouts",
+    "Libs": "Libs",
+    "Logs": "Logs",
+    "Meta": "Meta",
+    "Models": "Models",
+    "Modules": "Modules",
+    "Objects": "Objects",
+    "ViewOutput": "ViewOutput",
+    "Views": "Views"
+}

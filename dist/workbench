@@ -8,7 +8,7 @@
     use \xTend\Workbench\Workbench as Workbench;
     //create app
     $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__, true);
-    $app->getFileHandler()->system("Config.App.php")->include();
+    $app->getFileHandler()->system("Config.App.App.php")->include();
     //start workbench
     $bench = new Workbench($app);
     //run app
