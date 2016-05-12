@@ -20,7 +20,9 @@
             echo "/".$route->getHandle()."\t".$route."\n";
         }
     });
-
+    
     $bench->registerCommand('/help/i', function() {
-        echo "xTend CLI\n\n";
+        echo "xTend CLI\n";
+        echo "init\tinitializes xTend with secure keys\n";
+        echo "routes\tdisplays the registered routes (only those NOT under a restrict)\n\n";
     }, 'help');
