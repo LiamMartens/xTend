@@ -179,8 +179,8 @@
 		//application integrity check
 		private function applicationIntegrityCheck() {
 			//check php version
-			if(phpversion()<"5.4")
-				die("Your PHP version is lower than 5.4");
+			if(phpversion()<"7")
+				die("Your PHP version is lower than 7.0");
 			//check directories
 			$directories = [$this->_dirBackups,
                             $this->_dirBlueprints,
@@ -417,6 +417,7 @@
 			//integrity check
 			$this->applicationIntegrityCheck();
 			//start a session
+			ini_set('display_errors', 1);
 			SessionHandler::configuration(json_decode($this->_fileHandler->system("Config.Sessions.Sessions.json")->read(), true));
 			SessionHandler::start();
 			//run library inclusion

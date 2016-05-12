@@ -142,4 +142,15 @@
 			}
 			return false;
 		}
+
+		public function __toString() {
+			if(is_string($this->_route)) {
+				return $this->_route;
+			} elseif(is_array($this->_route)) {
+				return json_encode($this->_route);
+			} elseif(is_callable($this->_route)) {
+				return "function";
+			}
+			return "NULL";
+		}
 	}
