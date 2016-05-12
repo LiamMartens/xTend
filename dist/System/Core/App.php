@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.7.6";
+		private $_xTendVersion = "0.7.7";
 		private $_url = "http://troosib.dev";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
