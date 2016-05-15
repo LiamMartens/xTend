@@ -1,0 +1,70 @@
+<?php
+    use xTend\Workbench\Workbench as Workbench;
+    Workbench::registerCommand('init', function($app) {
+        $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
+        $session_config = json_decode($conf->read(), true);
+        $session_config["SessionName"] = base64_encode(random_bytes(8));
+        $session_config["InitiatedKey"] = base64_encode(random_bytes(8));
+        $session_config["UserAgentKey"] = base64_encode(random_bytes(8));
+        $session_config["Salt"] = base64_encode(random_bytes(8));
+        $session_config["UserSessionsKey"] = base64_encode(random_bytes(8));
+        $session_config["UserCookiesKey"] = base64_encode(random_bytes(8));
+        $conf->write(json_encode($session_config));
+    }, 'init');
+
+    Workbench::registerCommand('routes', function($app) {
+        $routes = $app->getRouter()->getRoutes();
+        foreach($routes as $route) {
+            echo "/".$route->getHandle()."\t".$route."\n";
+        }
+    });
+
+    Workbench::registerCommand('new ([a-zA-Z0-9\.]+) (.+) (.+)', function($app, $argv) {
+        if(is_dir($argv[2])||array_key_exists($argv[2], Workbench::getConfiguration('applications'))) {
+            die("This application already exists\n");
+        }
+        //get the xTend master
+        $zip=file_get_contents('https://github.com/LiamMartens/xTend/archive/master.zip');
+        file_put_contents("master.zip", $zip);
+        $zip=new \ZipArchive;
+        $zip->open("master.zip");
+        $zip->extractTo(__DIR__);
+        //move the system directory to the new application
+        rename("xTend-master/dist/System", __DIR__."/".$argv[2]);
+        //remove zip
+        unlink('master.zip');
+        //remove xTend-master
+        $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-master");
+        $directory->remove();
+        //add to configuration
+        Workbench::addApplication($argv[2], $argv[3], $argv[4]);
+        //add to index.php
+        $file=$app->getFileHandler()->public(Workbench::getConfiguration('public').'.index.php');
+        $file->append('
+    namespace '.str_replace('.', '\\', $argv[2]).' {
+        use \xTend\Workbench\Workbench as Workbench;
+		Workbench::setNamespace(__NAMESPACE__);
+        global $matched_application;
+	    if(__NAMESPACE__==$matched_application) {
+			$app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
+		    $app->getFileHandler()->system("Config.App.App.php")->include();
+		    $app->run();
+		}
+    }
+        ');
+        //replac all xTend\Application namespaces to the new application
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2])) as $file) {
+            if(!is_file($file)) continue;
+            $contents=file_get_contents($file);
+            $contents=preg_replace('/namespace xTend\\\\Application;/',
+                                    'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                    $contents);
+            file_put_contents($file, $contents);
+        }
+    });
+
+    Workbench::registerCommand('help', function() {
+        echo "xTend CLI\n";
+        echo "init\tinitializes xTend with secure keys\n";
+        echo "routes\tdisplays the registered routes (only those NOT under a restrict)\n\n";
+    }, 'help');

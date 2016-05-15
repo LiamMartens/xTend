@@ -1,5 +1,5 @@
 <?php
-	namespace xTend\Application;
+	namespace Application;
 	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
 	//application configuration
 	$app->configuration(json_decode($app->getFileHandler()->system("Config.App.Configuration.json")->read(), true));

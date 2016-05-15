@@ -1,5 +1,5 @@
 <?php
-	namespace xTend\Application;
+	namespace Application;
 	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
 	$wow = $app->getWowCompiler();
 	//register expressions

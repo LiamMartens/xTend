@@ -25,7 +25,6 @@
 			return false;
 		}
 		private function cleanBackups() {
-			ini_set('display_errors', 1);
 			if($this->_app->getBackupLimit()!==false) {
 				$backups = $this->_app->getBackupsDirectory()->files(); sort($backups);
 				$to_remove = count($backups) - $this->_app->getBackupLimit();

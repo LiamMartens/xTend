@@ -1,8 +1,0 @@
-{
-    "SessionName": "session_name",
-    "InitiatedKey": "initiated",
-    "UserAgentKey": "useragent",
-    "Salt": "salt",
-    "UserSessionsKey": "key",
-    "UserCookiesKey": "key"
-}

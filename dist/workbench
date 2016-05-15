@@ -1,15 +1,20 @@
 #!/usr/bin/env php
 <?php
-    namespace xTend\Application;
-    //require files
-    require_once("System/Core/App.php");
-    require_once("System/Workbench/Workbench.php");
-    //create app
+    namespace Application;
+    use \xTend\Workbench\Workbench as Workbench;
+    require_once("Workbench/Workbench.php");
+    Workbench::loadConfiguration();
+    Workbench::setNamespace(__NAMESPACE__);
+    //include current
+    if(!Workbench::namespaceApplicationMatch()) { die("Current application doesn't match the workbench namespace\n"); }
+    if(!Workbench::currentApplicationExists()) { die("Application '".Workbench::getConfiguration('application')."' not found\n"); }
+    if(!Workbench::currentPublicExists()) { die("index.php not found in public directory '".Workbench::getConfiguration('public')."'\n"); }
+    //setup workbench further
+    Workbench::includeApplication();
     $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__, true);
     $app->getFileHandler()->system("Config.App.App.php")->include();
-    //start workbench
-    $bench=\xTend\Workbench\createNewBench(__NAMESPACE__, $app, $argv);
-    $app->getFileHandler()->system("Config.Workbench.Workbench.php")->include();
-    //run app
+    Workbench::setApp($app);
+    Workbench::setArgv($argv);
+    Workbench::loadCommands();
     $app->run();
-    $bench->run();
+    Workbench::run();
