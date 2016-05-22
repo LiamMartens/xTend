@@ -178,6 +178,14 @@
 		public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
 		//application integrity check
 		private function applicationIntegrityCheck() {
+			//check server user
+			$user = exec('whoami');
+			if($user=='root') {
+				die("It's a bad practice to run your webserver as root.
+					Make sure you run your webserver as a 'regular' user
+					and ensure all files would be accessible to the user
+					you will be using for the command line tool");
+			}
 			//check php version
 			if(phpversion()<"7")
 				die("Your PHP version is lower than 7.0");
