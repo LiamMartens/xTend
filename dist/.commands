@@ -102,10 +102,10 @@
 
     Workbench::registerCommand('help', function() {
         echo "xTend CLI\n";
-        echo "init\tinitializes xTend with secure keys\n";
-        echo "routes\tdisplays the registered routes (only those NOT under a restrict)\n";
-        echo "new\t[AppName]:[Host or *]:[PathRegex]\n";
-        echo "set:application [AppName]\n";
+        echo "init\t\tinitializes xTend with secure keys\n";
+        echo "routes\t\tdisplays the registered routes (only those NOT under a restrict)\n";
+        echo "new\t\t[AppName]:[Host or *]:[PathRegex]\n";
+        echo "set:application\t\t[AppName]\n";
         echo "remove [AppName]\n";
         echo "\n";
     }, 'help');
