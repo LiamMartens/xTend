@@ -140,4 +140,9 @@
             self::$_configuration['application'] = $name;
             self::saveConfiguration();
         }
+
+        public static function setPublic($public) {
+            self::$_configuration['public'] = $public;
+            self::saveConfiguration();
+        }
     }

@@ -68,16 +68,6 @@
         }
     }, 'new.application');
 
-    Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
-        Workbench::setApplication($argv[2]);
-        $contents=file_get_contents("workbench");
-        $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
-                                'namespace '.str_replace('.', '\\', $argv[2]).';',
-                                $contents);
-        file_put_contents("workbench", $contents);
-    }, 'set.application');
-
     Workbench::registerCommand('remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
         if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
         if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
@@ -101,12 +91,37 @@
         file_put_contents(Workbench::getConfiguration('public').'/index.php', $contents);
     }, 'remove.application');
 
+    //setters
+    Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        Workbench::setApplication($argv[2]);
+        $contents=file_get_contents("workbench");
+        $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
+                                'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                $contents);
+        file_put_contents("workbench", $contents);
+    }, 'set.application');
+
+    Workbench::registerCommand('set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!is_file($argv[2]."/index.php")) { die("Unable to find index.php in public directory"); }
+        Workbench::setPublic($argv[2]);
+    });
+
+
+    //===========================================//
     Workbench::registerCommand('help', function() {
+        $help = [
+            "init" => "Initializes xTend with secure keys",
+            "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",
+            "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
+            "remove [AppName]" => "Removes an application. Make sure you don't try to remove the currently selected application",
+            "set:application [AppName]" => "Selects an application",
+            "set:public [PublicDirectory]" => "Sets the public directory"
+        ];
+
         echo "xTend CLI\n";
-        echo " init\t\t\tinitializes xTend with secure keys\n";
-        echo " routes\t\t\tdisplays the registered routes (only those NOT under a restrict)\n";
-        echo " new\t\t\t[AppName]:[Host or *]:[PathRegex]\n";
-        echo " set:application\t\t[AppName]\n";
-        echo " remove\t\t\t[AppName]\n";
+        foreach($help as $cm => $info) {
+            echo "$cm\n  $info\n\n";
+        }
         echo "\n";
     }, 'help');
