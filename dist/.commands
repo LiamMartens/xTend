@@ -11,14 +11,14 @@
         $session_config["UserSessionsKey"] = Helpers::generate();
         $session_config["UserCookiesKey"] = Helpers::generate();
         $conf->write(Helpers::json($session_config));
-    }, 'init');
+    }, 'application.init');
 
     Workbench::registerCommand('routes', function($app) {
         $routes = $app->getRouter()->getRoutes();
         foreach($routes as $route) {
             echo "/".$route->getHandle()."\t".$route."\n";
         }
-    });
+    }, 'application.routes');
 
     Workbench::registerCommand('new ([a-zA-Z0-9\.]+):(.+):(.+)', function($app, $argv) {
         $args = explode(":", $argv[2]);
@@ -66,7 +66,7 @@
                                     $contents);
             file_put_contents($file, $contents);
         }
-    });
+    }, 'new.application');
 
     Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
         if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
@@ -76,7 +76,7 @@
                                 'namespace '.str_replace('.', '\\', $argv[2]).';',
                                 $contents);
         file_put_contents("workbench", $contents);
-    });
+    }, 'set.application');
 
     Workbench::registerCommand('remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
         if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
@@ -99,7 +99,7 @@
         $contents=preg_replace('/namespace '.str_replace('.', '\\\\', $argv[2]).' \{.+?\}.+?\}/s',
                                 '', $contents);
         file_put_contents(Workbench::getConfiguration('public').'/index.php', $contents);
-    });
+    }, 'remove.application');
 
     Workbench::registerCommand('help', function() {
         echo "xTend CLI\n";
