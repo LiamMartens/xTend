@@ -16,6 +16,17 @@
             return call_user_func($this->_call, $this->_app, $arguments);
         }
     }
+    class Helpers {
+        public static function generate() {
+            return base64_encode(random_bytes(8));
+        }
+        public static function json($data) {
+            if(is_string($data)) {
+                return json_decode($data, true);
+            }
+            return json_encode($data);
+        }
+    }
     class Workbench {
         private static $_ns;
         private static $_app;
