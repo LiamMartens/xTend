@@ -2,11 +2,10 @@
     "application": "Application",
     "applications": {
         "Application": {
-            "url": ".*",
+            "url": "*",
             "path": ".*"
         }
     },
     "public": "www",
     "libs": []
 }
-

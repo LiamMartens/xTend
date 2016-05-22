@@ -67,11 +67,45 @@
         }
     });
 
+    Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        Workbench::setApplication($argv[2]);
+        $contents=file_get_contents("workbench");
+        $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
+                                'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                $contents);
+        file_put_contents("workbench", $contents);
+    });
+
+    Workbench::registerCommand('remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
+        //remove app dir
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2], RecursiveDirectoryIterator::SKIP_DOTS),
+                     RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($files as $file) {
+            if ($file->isDir()){
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+        rmdir($argv[2]);
+        //remove from configuration
+        Workbench::removeApplication($argv[2]);
+        //remove from index.php
+        $contents=file_get_contents(Workbench::getConfiguration('public').'/index.php');
+        $contents=preg_replace('/namespace '.str_replace('.', '\\\\', $argv[2]).' \{.+?\}.+?\}/s',
+                                '', $contents);
+        file_put_contents(Workbench::getConfiguration('public').'/index.php', $contents);
+    });
+
     Workbench::registerCommand('help', function() {
         echo "xTend CLI\n";
         echo "init\tinitializes xTend with secure keys\n";
         echo "routes\tdisplays the registered routes (only those NOT under a restrict)\n";
-        echo "new\t[AppName]:[HostRegex]:[PathRegex]\n";
-
+        echo "new\t[AppName]:[Host or *]:[PathRegex]\n";
+        echo "set:application [AppName]\n";
+        echo "remove [AppName]\n";
         echo "\n";
     }, 'help');

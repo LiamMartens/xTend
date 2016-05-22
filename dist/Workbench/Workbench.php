@@ -91,7 +91,7 @@
             if(array_key_exists(self::namespaceApplication(),
                                 self::getConfiguration('applications'))) {
                 $rsts = self::getConfiguration('applications')[self::namespaceApplication()];
-                return (preg_match('/'.$rsts["url"].'/', $_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME'])&&
+                return ((($_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME']==trim($rsts["url"]))||($rsts["url"]=="*"))&&
                         preg_match('/'.$rsts["path"].'/', trim($_SERVER['REQUEST_URI'], '/')));
             }
             return false;
@@ -115,5 +115,18 @@
                 self::saveConfiguration();
             }
             return false;
+        }
+
+        public static function removeApplication($name) {
+            if(array_key_exists($name, self::getConfiguration('applications'))) {
+                unset(self::$_configuration['applications'][$name]);
+                self::saveConfiguration();
+            }
+            return false;
+        }
+
+        public static function setApplication($name) {
+            self::$_configuration['application'] = $name;
+            self::saveConfiguration();
         }
     }
