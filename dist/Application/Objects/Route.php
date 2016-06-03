@@ -81,6 +81,8 @@
 				$handles = explode("|", $this->_handle);
 				foreach($handles as $handle) {
 					$handle_matched=true;
+					//clear previous data
+					$this->_app->getUrlHandler()->clearData();
 					//ignore starting and trailing slashes
 					$ex_request = explode("/", trim($request, "/"));
 					$ex_handle = explode("/", $handle);
@@ -89,8 +91,6 @@
 					//check all parts of the handle and see whether they match up  to the request
 					$ex_count=count($ex_handle); $rx_matches;
 					for($i=0;$i<$ex_count;$i++) {
-						//clear previous data
-						$this->_app->getUrlHandler()->clearData();
 						//check
 						$handle_part=$ex_handle[$i];
 						$request_part=$ex_request[$i];
