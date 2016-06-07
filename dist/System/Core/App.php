@@ -4,7 +4,7 @@
 	{
 		//moved core config from sperate const class to App
 		private $_xTendVersion = "0.7.7";
-		private $_url = "http://troosib.dev";
+		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
 		private $_companyName = "My company";
@@ -179,8 +179,8 @@
 		//application integrity check
 		private function applicationIntegrityCheck() {
 			//check php version
-			if(phpversion()<"7")
-				die("Your PHP version is lower than 7.0");
+			if(phpversion()<"7") {
+				die("Your PHP version is lower than 7.0"); }
 			//check directories
 			$directories = [$this->_dirBackups,
                             $this->_dirBlueprints,
