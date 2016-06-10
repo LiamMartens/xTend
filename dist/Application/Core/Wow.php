@@ -13,13 +13,14 @@
 		private $_expressions;
 		private $_app;
 		public function __construct($app) {
-			$this->_rx_version = $this->rx("(\s*|^)(@)(version)(:)([\d\.]+)(\s*|$)", "i");
-			$this->_rx_layout = $this->rx("(\s*|^)(@)(layout)(:)([\w\-\_\.]+)(\s*|$)", "i");
-			$this->_rx_flag = $this->rx("(\s*|^)(@)(compile)(:)(change\+version|always|version|never|change)(\s*|$)", "i");
-			$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
-			$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
-			$this->_rx_module = $this->rx("(@module:)([\w\-\_\.]+)", "i");
-			$this->_rx_module_extract = $this->rx("(@module:[\w\-\_\.]+)", "i");
+			$this->_rx_version = $this->rx("\<version\s+value=\"([0-9\.]+)\"\s*\/?\>", "i");
+			$this->_rx_layout = $this->rx("\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
+			$this->_rx_flag = $this->rx("\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>", "i");
+			$this->_rx_section = $this->rx("(\<section\s+name=\"[\w\-\_]+\"\s*\/?\>)", "i");
+			$this->_rx_section_name = $this->rx("\<section\s+name=\"([\w\-\_]+)\"\s*\/?\>", "i");
+			$this->_rx_section_extract = $this->rx("\<startsection\s+name=\"%s\"\s*\>(.*?)\<\/endsection\>", "si");
+			$this->_rx_module = $this->rx("\<module\s+name=\"([\w\-\_\.]+)\"\/?\>", "i");
+			$this->_rx_module_extract = $this->rx("(\<module\s+name=\"[\w\-\_\.]+\"\/?\>)", "i");
 
 			$this->_expressions=[];
 			$this->_app=$app;
@@ -34,14 +35,14 @@
 		private function version(&$content) {
 			//must be at the beginning of a line
 			$rx_matches=[]; preg_match($this->_rx_version, $content, $rx_matches);
-			if(isset($rx_matches[5]))
-				return floatval($rx_matches[5]);
+			if(isset($rx_matches[1]))
+				return floatval($rx_matches[1]);
 			return false;
 		}
 		private function layout(&$content) {
 			$rx_matches=[]; preg_match($this->_rx_layout, $content, $rx_matches);
-			if(isset($rx_matches[5]))
-				return $rx_matches[5];
+			if(isset($rx_matches[1]))
+				return $rx_matches[1];
 			return false;
 		}
 		private function flag(&$content) {
@@ -51,8 +52,8 @@
 			//change+version -> only compile when the version changes and the content changes, this prevents
 			//data loss in the compiled outputs as you do need to manually change the version number
 			$rx_matches=[]; preg_match($this->_rx_flag, $content, $rx_matches);
-			if(isset($rx_matches[5]))
-				return $rx_matches[5];
+			if(isset($rx_matches[1]))
+				return $rx_matches[1];
 			return false;
 		}
 		//file changed
@@ -114,12 +115,13 @@
 			$final_content="";
 			$mod_split = preg_split($this->_rx_module_extract, $content, NULL, PREG_SPLIT_DELIM_CAPTURE);
 			foreach ($mod_split as $part) {
-				if(!preg_match($this->_rx_module, $part)) {
+				$module_match=[]; $module_matched = preg_match($this->_rx_module, $part, $module_match);
+				if(!$module_matched) {
 					//it is not a module
 					$part=$this->compileRaw($part, $modules_dir);
 				} else {
 					//get module contents
-					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name));
+					$mod_name=$module_match[1];
 					$mod_path=($modules_dir===false) ?
 									($this->_app->getModulesDirectory()->file("$mod_name.wow.php", 2)) :
 									($modules_dir->file("$mod_name.wow.php", 2));
@@ -161,7 +163,7 @@
 									($layout_dir->file("$layout.wow.php", 2));
 				if(!$layout_path->exists()) { $layout=false; $layout_path=false; } }
 			//get last compiled version of this view file -> sorting works descending thus most recent versions are first
-			$is_new_version = false; $one_found=false;
+			$is_new_version = true; $one_found=false;
 			$compiled_views = $this->_app->getViewOutputDirectory()->files(); rsort($compiled_views);
 			//check for the current version in the array
 			foreach ($compiled_views as $cv) {
@@ -173,8 +175,8 @@
 				$v_hash = substr($cv, $sl_pos+1, $pos-$sl_pos-1);
 				//check for hash compliance
 				if($v_hash==$file_hash) {
-					$one_found=true; if($v_num<$version) {
-						$is_new_version=true; break; } } }
+					$one_found=true; if($v_num>=$version) {
+						$is_new_version=false; break; } } }
 			//get whether the view has changed (either the view itself or the layout)
 			$has_changed=$this->changed($file, $view_c, $layout_path);
 			//check whether view needs to be compiled
@@ -190,7 +192,7 @@
 					(($flag=="change+version")&&($has_changed)&&($is_new_version))) {
 					$compile_view=true;
 				}
-			} else $compile_view=true;
+			} else {$compile_view=true;}
 			//view has to be compiled
 			if($compile_view) {
 				$compiled_string="";
@@ -199,14 +201,14 @@
 					$layout_parts=$this->compileLayout($layout_path->read(), $modules_dir);
 					foreach ($layout_parts as $part) {
 						//check for section request
-						$is_section=(preg_match($this->_rx_section, $part)==1) ? true : false;
-						if($is_section) {
-							$section_name=substr($part, 9);
+						$section_match=[]; $is_section = preg_match($this->_rx_section_name, $part, $section_match);
+						if($is_section==1) {
+							$section_name=$section_match[1];
 							//got the section name, now take the section content out of the view content
-							$rx = sprintf($this->_rx_section_extract, $section_name, $section_name);
+							$rx = sprintf($this->_rx_section_extract, $section_name);
 							$rx_matches=[]; preg_match($rx, $view_c, $rx_matches);
-							if(isset($rx_matches[2]))
-								$compiled_string.=$this->compile($rx_matches[2], $modules_dir);
+							if(isset($rx_matches[1]))
+								$compiled_string.=$this->compile($rx_matches[1], $modules_dir);
 						} else { $compiled_string.=$part; }
 					}
 				} else { $compiled_string=$this->compile($file->read(), $modules_dir); }

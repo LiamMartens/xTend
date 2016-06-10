@@ -8,115 +8,206 @@
 		$wow->rx("(@)(\()(\$.+?)(\))", "i"),
 		"<?php echo $$4; ?>"
 	);
-	//insert PHP code
+
+	//
+	//	<php>
+	//
+	//		echo 'ok';
+	//
+	//	</php>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@)(\(\{)(.+?)(\}\))", "is"),
-		"<?php $3 ?>"
+		$wow->rx("\<php\>(.+?)\<\/php\>", "is"),
+		"<?php $1 ?>"
 	);
-	//if
+
+	//
+	//	<if>
+	//		<condition>1==1</condition>
+	//
+	//		echo "1 is 1";
+	//
+	//	</if>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@if\()(.*?)(\))", "i"),
-		"<?php if($2) { ?>"
+		$wow->rx("\<if\>\s*\<condition\>(.+?)\<\/condition\>(.+?)\<\/if\>", "is"),
+		"<?php if($1) { ?>$2<?php } ?>"
 	);
-	//elseif
+
+	//
+	//	Can only be used inside an if
+	//	<elseif>
+	//		<condition>1==1</condition>
+	//
+	//		echo "1 is 1";
+	//
+	//	</elseif>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@elseif\()(.*?)(\))", "i"),
-		"<?php } elseif($2) { ?>"
+		$wow->rx("\<elseif\>\s*\<condition\>(.+?)\<\/condition\>(.+?)\<\/elseif\>", "is"),
+		"<?php } elseif($1) { ?>$2"
 	);
-	//else
+
+	//
+	//	Can only be used inside an if
+	//	<else>
+	//
+	//		echo "1 is 1";
+	//
+	//	</else>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@else)", "i"),
-		"<?php } else { ?>"
+		$wow->rx("\<else\>(.*?)\<\/else\>", "is"),
+		"<?php } else { ?>$1"
 	);
-	//for
+
+
+	//
+	//	<for>
+	//		<loop>$i=0;...$i++</loop>
+	//		<li>..</li>
+	//	</for>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@for\()(.*?)(;)(.*?)(;)(.*?)(\))", "i"),
-		"<?php for($2$3$4$5$6) { ?>"
+		$wow->rx("\<for\>\s*\<loop\>(.+?)\<\/loop\>(.+?)\<\/for\>", "is"),
+		"<?php for($1) { ?>$2<?php } ?>"
 	);
-	//foreach
+
+	//
+	//	<foreach>
+	//		<loop>$i in $b</loop>
+	//		<li>..</li>
+	//	</foreach>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@foreach\()(.*?)( )(as)( )(.*?)(\))", "i"),
-		"<?php foreach($2 as $6) { ?>"
+		$wow->rx("\<foreach\>\s*\<loop\>(.+?)\<\/loop\>(.+?)\<\/foreach\>", "is"),
+		"<?php foreach($1) { ?>$2<?php } ?>"
 	);
-	//while
+
+	//
+	//	<while>
+	//		<condition>$i < 10</condition>
+	//		<li>..</li>
+	//	</while>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@while\()(.*?)(\))", "i"),
-		"<?php while($2) { ?>"
+		$wow->rx("\<while\>\s*\<condition\>(.+?)\<\/condition\>(.+?)\<\/while\>", "is"),
+		"<?php while($1) { ?>$2<?php } ?>"
 	);
-	//end }
+
+	//
+	//	<css href="/css/style.css"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@end)","i"),
-		"<?php } ?>"
+		$wow->rx("\<css\s+href=\"(.+?)\"\s*\/\>","i"),
+		'<link rel="stylesheet" href="$1" type="text/css">'
 	);
-	//internal css
+	//
+	//	<css>/css/style.css</css>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@css:)(.*?)","i"),
-		'<link rel="stylesheet" href="<?php echo \$app->getUrl()."/$2"; ?>" type="text/css">'
+		$wow->rx("\<css\>(.+?)\<\/css\>","is"),
+		'<link rel="stylesheet" href="$1" type="text/css">'
 	);
-	//external css
+
+	//
+	//	. file notation can be used but is not necessary
+	//	<css embed="css.style.css"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@csse:)(.*?)","i"),
-		'<link rel="stylesheet" href="$2" type="text/css">'
+		$wow->rx("\<css\s+embed=\"(.+?)\"\s*\/\>","i"),
+		'<style type="text/css"><?php echo $app->getFileHandler()->public(\'$1\')->read(); ?></style>'
 	);
-	//internal script
+	//
+	//	. file notation can be used but is not necessary
+	//	<css embed>css.style.css</css>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@script:)(.*?)","i"),
-		'<script src="<?php echo \$app->getUrl()."/$2"; ?>" type="text/javascript"></script>'
+		$wow->rx("\<css\s+embed\s*\>(.+?)\<\/css\>","is"),
+		'<style type="text/css"><?php echo $app->getFileHandler()->public(\'$1\')->read(); ?></style>'
 	);
-	//external script
+
+	//
+	//	<css external-embed="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@scripte:)(.*?)","i"),
-		'<script src="$2" type="text/javascript"></script>'
+		$wow->rx("\<css\s+external-embed=\"(.+?)\"\s*\/\>","i"),
+		'<style type="text/css"><?php echo file_get_contents(\'$1\'); ?></style>'
 	);
-	//app lang
+	//
+	//	<css external-embed>...</css>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@lang)","i"),
-		"<?php echo \$app->getLanguage(); ?>"
+		$wow->rx("\<css\s+external-embed\s*\>(.+?)\<\/css\>","i"),
+		'<style type="text/css"><?php echo file_get_contents(\'$1\'); ?></style>'
 	);
-	//app charset
+
+	//
+	//	<js src="js/file.js"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@charset)","i"),
-		"<?php echo \$app->getCharset(); ?>"
+		$wow->rx("\<js\s+src=\"(.+?)\"\s*\/\>","i"),
+		'<script type="text/javascript" src="$1"></script>'
 	);
-	//app description
+	//
+	//	<js>js/file.js</js>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@description)","i"),
-		"<?php echo \$app->getDescription(); ?>"
+		$wow->rx("\<js\>(.+?)\<\/js\>","is"),
+		'<script type="text/javascript" src="$1"></script>'
 	);
-	//app keywords
+
+	//
+	//	. file notation can be used but is not necessary
+	//	<js embed="js/file.js"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@keywords)","i"),
-		"<?php echo \$app->getKeywords(); ?>"
+		$wow->rx("\<js\s+embed=\"(.+?)\"\s*\/\>","i"),
+		'<script type="text/javascript"><?php echo $app->getFileHandler()->public(\'$1\')->read(); ?></script>'
 	);
-	//app author
 	$wow->registerExpression(
-		$wow->rx("(@author)","i"),
-		"<?php echo \$app->getAuthor(); ?>"
+		$wow->rx("\<js\s+embed\s*\>(.+?)\<\/js\>","is"),
+		'<script type="text/javascript"><?php echo $app->getFileHandler()->public(\'$1\')->read(); ?></script>'
 	);
-	//app url
+
+	//
+	//	<js external-embed="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
+	//
 	$wow->registerExpression(
-		$wow->rx("(@url)","i"),
+		$wow->rx("\<js\s+external-embed=\"(.+?)\"\s*\/\>","i"),
+		'<script type="text/javascript"><?php echo file_get_contents(\'$1\'); ?></script>'
+	);
+	//
+	//	<js external-embed>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js</js>
+	//
+	$wow->registerExpression(
+		$wow->rx("\<js\s+external-embed\s*\>(.+?)\<\/js\>","is"),
+		'<script type="text/javascript"><?php echo file_get_contents(\'$1\'); ?></script>'
+	);
+
+	//
+	//	<url />
+	//
+	$wow->registerExpression(
+		$wow->rx("\<url\s*\/\>","i"),
 		"<?php echo \$app->getUrl(); ?>"
 	);
-	//app title
+
 	$wow->registerExpression(
-		$wow->rx("(@title:)(.*?)","i"),
-		"<title>$2</title>"
+		$wow->rx("\<app\>(.+?)\<\/app\>", "i"),
+		"<?php echo \$app->$1; ?>"
 	);
-	//get current app
+
+
+	//
+	//	<controller name="..." (optional)>COMMAND</controller>
+	//
+	//
 	$wow->registerExpression(
-		$wow->rx("(@app:)(\{)(.+?)(\})","i"),
-		"<?php echo \$app->$3; ?>"
+		$wow->rx("\<controller\>(.+?)\<\/controller\>","i"),
+		"<?php echo \$app->getControllerHandler()->getController()->$1; ?>"
 	);
 	$wow->registerExpression(
-		$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(.*?\))?)","i"),
-		"<?php echo \$app->getControllerHandler()->getController()->$2; ?>"
+		$wow->rx("\<controller name=\"(.+?)\"\>(.+?)\<\/controller\>","i"),
+		"<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
 	);
-	$wow->registerExpression(
-		$wow->rx("(@controller:)([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*):([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\(.*?\))?)","i"),
-		"<?php echo \$app->getControllerHandler()->getController(\"$2\")->$3; ?>"
-	);
-    $wow->registerExpression(
-        $wow->rx("(@nohref)", "i"),
-        "javascript:void(0)"
-    );
