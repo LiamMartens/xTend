@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.7.7";
+		private $_xTendVersion = "0.8.0";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_charset = "UTF-8";
@@ -187,8 +187,9 @@
 					you will be using for the command line tool");
 			}
 			//check php version
-			if(phpversion()<"7")
-				die("Your PHP version is lower than 7.0");
+			if (version_compare(phpversion(), '7.0.0', '<')) {
+			    die("You need PHP 7 to use xTend");
+			}
 			//check directories
 			$directories = [$this->_dirBackups,
                             $this->_dirBlueprints,
