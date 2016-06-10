@@ -204,20 +204,24 @@
         );
     });
 
-    Workbench::registerCommand('config:([a-zA-Z]+)', function($app, $argv) {
+    Workbench::registerCommand('config:([a-zA-Z]+) (.*)', function($app, $argv) {
+        $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
         $configuration = json_decode($conf->read(), true);
-        if(array_key_exists($argv[2], $configuration)) {
-            echo $configuration[$argv[2]];
+        if(array_key_exists($key, $configuration)) {
+            if(($argv[2]==="true")||($argv[2]==="false")) { $argv[2]=boolval($argv[2]); }
+            elseif(is_numeric($argv[2])) { $argv[2]=intval($argv[2]); }
+            $configuration[$key] = $argv[2];
+            $conf->write(json_encode($configuration));
         } else { die("Configuration key not found"); }
     });
 
-    Workbench::registerCommand('config:([a-zA-Z]+) (.*)', function($app, $argv) {
+    Workbench::registerCommand('config:([a-zA-Z]+)', function($app, $argv) {
+        $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
         $configuration = json_decode($conf->read(), true);
-        if(array_key_exists($argv[2], $configuration)) {
-            $configuration[$argv[2]] = $argv[3];
-            $conf->write(json_encode($configuration));
+        if(array_key_exists($key, $configuration)) {
+            echo $configuration[$key]."\n";
         } else { die("Configuration key not found"); }
     });
 
@@ -225,7 +229,7 @@
     Workbench::registerCommand('help', function() {
         $help = [
             "init" => "Initializes xTend with secure keys",
-            "config:[Key] [Value]" => "Sets an application configuration variable",
+            "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, Charset, CompanyName, Language, Description, Keywords, Author, Copyright, BackupInterval, BackupLimit and LogLimit",
             "config:[Key]" => "Gets an application configuration variable",
             "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",
             "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
