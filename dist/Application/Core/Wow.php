@@ -87,9 +87,11 @@
 			$path->setMeta("last_compile", time());
 		}
 		//compile part method
-		private function compileRaw($content) {
+		private function compileRaw($content, $modules_dir = false) {
 			foreach ($this->_expressions as $rx => $repl) {
-				$content = preg_replace($rx, $repl, $content); }
+				$content = preg_replace($rx, $repl, $content);
+				$content = $this->compile($content, $modules_dir);
+			}
 			return $content;
 		}
 		private function compile($content, $modules_dir = false) {
@@ -105,7 +107,7 @@
 			foreach ($mod_split as $part) {
 				if(!preg_match($this->_rx_module, $part)) {
 					//it is not a module
-					$part=$this->compileRaw($part);
+					$part=$this->compileRaw($part, $modules_dir);
 				} else {
 					//get module contents
 					$mod_name=substr($part, 8); $mod_name=substr($mod_name, 0, strlen($mod_name));
@@ -121,7 +123,7 @@
 		//compile layout method
 		private function compileLayout($layout_c, $modules_dir = false) {
 			//split the layout into sections
-			$layout_c=$this->compileRaw($layout_c);
+			$layout_c=$this->compileRaw($layout_c, $modules_dir);
 			$split = preg_split($this->_rx_section, $layout_c, NULL, PREG_SPLIT_DELIM_CAPTURE);
 			foreach ($split as &$part) {
 				if(!preg_match($this->_rx_section, $part))
