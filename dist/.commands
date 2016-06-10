@@ -107,6 +107,102 @@
         Workbench::setPublic($argv[2]);
     });
 
+    Workbench::registerCommand('new:controller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Controllers.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Controllers.'.$argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseDataController {
+        //you can retrieve the current application with \$this->_app
+        //you don't have to extend the BaseDataController
+        //the current \$app will always be passed as first argument in the contructor
+        //the data extension allows for extra data to be passed
+        //look for the BaseDataExtension in Blueprints to find out more about this
+    }
+        ");
+    });
+
+    Workbench::registerCommand('new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseModel {
+        //you can retrieve the current application with \$this->_app
+        //you don't have to extend the BaseModel
+        //the current \$app will always be passed as first argument in the
+    }"
+        );
+    });
+
+    Workbench::registerCommand('new:layout ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Layouts.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
+        $controller->write("<!DOCTYPE html>
+<html>
+    <head>
+        @section:head
+    </head>
+    <body>
+        @section:body
+    </body>
+</html>"
+        );
+    });
+
+    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.wow.php', 2);
+        $controller->write("@version:1
+@compile:change+version"
+        );
+    });
+
+    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        if(!$app->getFileHandler()->system('Views'.$argv[3].'.wow.php', 2)->exists()) { die("Layout does not exist"); }
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.php');
+        $controller->write("@version:1
+@layout:".$argv[3]."
+@compile:change+version"
+        );
+    });
 
     //===========================================//
     Workbench::registerCommand('help', function() {
@@ -116,7 +212,12 @@
             "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
             "remove [AppName]" => "Removes an application. Make sure you don't try to remove the currently selected application",
             "set:application [AppName]" => "Selects an application",
-            "set:public [PublicDirectory]" => "Sets the public directory"
+            "set:public [PublicDirectory]" => "Sets the public directory",
+            "new:controller [ControllerName]" => "Creates a new controller. Example:\n\tnew:controller Main.HomeController - will create a controller in Controllers/Main called HomeController.php",
+            "new:model [ModelName]" => "Creates a new controller. Example:\n\tnew:model Api.User - will create a model in Models/Api called User.php",
+            "new:layout [LayoutName]" => "Creates a new basic layout",
+            "new:view [ViewName]" => "Creates a new basic view",
+            "new:view [ViewName]:[LayoutName]" => "Creates a new basic view which extends a layout",
         ];
 
         echo "xTend CLI\n";
