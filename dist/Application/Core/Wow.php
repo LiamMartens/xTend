@@ -88,17 +88,17 @@
 		}
 		//compile part method
 		private function isFullyCompiled($content) {
-			if(preg_match($this->_rx_module, $content)==1) { return true; }
+			if(preg_match($this->_rx_module, $content)==1) { return false; }
 			foreach($this->_expressions as $rx => $repl) {
-				if(preg_match($rx, $content)==1) { return true; }
+				if(preg_match($rx, $content)==1) { return false; }
 			}
-			return false;
+			return true;
 		}
 		private function compileRaw($content, $modules_dir = false) {
 			foreach ($this->_expressions as $rx => $repl) {
 				$content = preg_replace($rx, $repl, $content);
 			}
-			if($this->isFullyCompiled) {
+			if(!$this->isFullyCompiled($content)) {
 				return $this->compile($content, $modules_dir);
 			}
 			return $content;
