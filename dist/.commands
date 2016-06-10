@@ -103,7 +103,7 @@
     }, 'set.application');
 
     Workbench::registerCommand('set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!is_file($argv[2]."/index.php")) { die("Unable to find index.php in public directory"); }
+        rename(Workbench::getConfiguration('public'), $argv[2]);
         Workbench::setPublic($argv[2]);
     });
 
