@@ -87,10 +87,19 @@
 			$path->setMeta("last_compile", time());
 		}
 		//compile part method
+		private function isFullyCompiled($content) {
+			if(preg_match($this->_rx_module, $content)==1) { return true; }
+			foreach($this->_expressions as $rx => $repl) {
+				if(preg_match($rx, $content)==1) { return true; }
+			}
+			return false;
+		}
 		private function compileRaw($content, $modules_dir = false) {
 			foreach ($this->_expressions as $rx => $repl) {
 				$content = preg_replace($rx, $repl, $content);
-				$content = $this->compile($content, $modules_dir);
+			}
+			if($this->isFullyCompiled) {
+				return $this->compile($content, $modules_dir);
 			}
 			return $content;
 		}
