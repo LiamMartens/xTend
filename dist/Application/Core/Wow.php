@@ -13,9 +13,9 @@
 		private $_expressions;
 		private $_app;
 		public function __construct($app) {
-			$this->_rx_version = $this->rx("(\s+|^)(@)(version)(:)([\d\.]+)(\s+|$)", "i");
-			$this->_rx_layout = $this->rx("(\s+|^)(@)(layout)(:)([\w\-\_\.]+)(\s+|$)", "i");
-			$this->_rx_flag = $this->rx("(\s+|^)(@)(compile)(:)(always|version|never|change|change\+version)(\s+|$)", "i");
+			$this->_rx_version = $this->rx("(\s*|^)(@)(version)(:)([\d\.]+)(\s*|$)", "i");
+			$this->_rx_layout = $this->rx("(\s*|^)(@)(layout)(:)([\w\-\_\.]+)(\s*|$)", "i");
+			$this->_rx_flag = $this->rx("(\s*|^)(@)(compile)(:)(change\+version|always|version|never|change)(\s*|$)", "i");
 			$this->_rx_section = $this->rx("(@section:[\w\-\_]+)", "i");
 			$this->_rx_section_extract = $this->rx("(@startsection:%s)(.*)(@endsection:%s)", "si");
 			$this->_rx_module = $this->rx("(@module:)([\w\-\_\.]+)", "i");
@@ -165,11 +165,12 @@
 			$compiled_views = $this->_app->getViewOutputDirectory()->files(); rsort($compiled_views);
 			//check for the current version in the array
 			foreach ($compiled_views as $cv) {
+				$sl_pos = strrpos($cv, '/');
 				$pos=strpos($cv, ".v");
 				//get version number
 				$v_num = floatval(trim(substr($cv, $pos+2), ".php"));
 				//get actual view name -> hash("sha256") of the view path
-				$v_hash = substr($cv, 0, $pos);
+				$v_hash = substr($cv, $sl_pos+1, $pos-$sl_pos-1);
 				//check for hash compliance
 				if($v_hash==$file_hash) {
 					$one_found=true; if($v_num<$version) {
@@ -186,8 +187,9 @@
 					(($flag!="never")&&(!$one_found))||
 					(($flag=="version")&&($is_new_version))||
 					(($flag=="change")&&($has_changed))||
-					(($flag=="change+version")&&($has_changed)&&($is_new_version)))
+					(($flag=="change+version")&&($has_changed)&&($is_new_version))) {
 					$compile_view=true;
+				}
 			} else $compile_view=true;
 			//view has to be compiled
 			if($compile_view) {
