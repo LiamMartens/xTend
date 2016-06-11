@@ -4,6 +4,7 @@
 	{
 		private $_name;
 		private $_filePath;
+		private $_version;
 		private $_exists;
 		private $_isWow;
 
@@ -12,10 +13,12 @@
 		public function getExists() { return $this->_exists; }
 		public function getIsWow() { return $this->_isWow; }
 
-		public function __construct($app, $view) {
+		public function __construct($app, $view, $version = false) {
 			parent::__construct($app);
 			//view construct
 			$this->_name = $view;
+			//version
+			$this->_version = $version;
 			//get wow and php paths
 			$wowPath = $this->_app->getViewsDirectory()->file("$view.wow.php", 2);
 			$phpPath = $this->_app->getViewsDirectory()->file("$view.php");
@@ -36,6 +39,10 @@
 			$path=$this->_filePath;
 			if($this->_isWow) {
 				$path=$this->_app->getWowCompiler()->compileView($this->_filePath, $this->_app->getLayoutsDirectory(), $this->_app->getModulesDirectory());
+				if($this->_version!==false) {
+					$dot_pos = strrpos($path, '.', -5);
+					$path = substr($path, 0, $dot_pos).'.v'.$this->_version.'.php';
+				}
 			}
 			$this->_app->getFileManager()->includeFile($path);
 		}

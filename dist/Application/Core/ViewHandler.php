@@ -17,13 +17,13 @@
 				return true;
 			return false;
 		}
-		public function loadView($view, $data = [], $viewClass = false) {
+		public function loadView($view, $data = [], $version = false, $viewClass = false) {
 			if($this->exists($view)) {
 				//by default the view object extends BaseDataView,
 				//you can define to use your own viewclass by setting the parameter
 				//this will be a name and namespace of a class to use custom view classes
 				//ex. xTend\FooBar
-				$this->_views[$view] = ($viewClass==false) ? (new View($this->_app, $view)) : (new $viewClass($this->_app, $view));
+				$this->_views[$view] = ($viewClass==false) ? (new View($this->_app, $view, $version)) : (new $viewClass($this->_app, $view, $version));
 				if(($data!=null)&&(count($data)>0)) {
 					if(method_exists($this->_views[$view], "setData")) {
 						foreach ($data as $key => $value) {

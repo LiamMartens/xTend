@@ -63,7 +63,8 @@
 				//For views, don't pass data, when a controller already has the data
 				//No need for duplicate data
 				if(array_key_exists("view", $this->_route)) {
-					$this->_app->getViewHandler()->loadView($this->_route["view"], ($controller_found) ? [] : $data);
+					$version = false; if(array_key_exists("version", $this->_route)) { $version = $this->_route["version"]; }
+					$this->_app->getViewHandler()->loadView($this->_route["view"], ($controller_found) ? [] : $data, $version);
 				}
 				//check for multiple views
 				if(array_key_exists("views", $this->_route)) {

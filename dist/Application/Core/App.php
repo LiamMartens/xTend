@@ -6,13 +6,6 @@
 		private $_xTendVersion = "0.8.0";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
-		private $_charset = "UTF-8";
-		private $_companyName = "My company";
-		private $_language = "en";
-		private $_description = "My application's description";
-		private $_keywords = "keyword 1, keyword 2";
-		private $_author = "Author Name";
-		private $_copyright = "2015";
 		private $_backupInterval = "1 week";
 		private $_backupLimit = 10;
 		private $_logLimit = 30;
@@ -21,13 +14,6 @@
 		public function getVersion() { return $this->_xTendVersion; }
 		public function getUrl() { return $this->_url; }
 		public function getDevelopmentStatus() { return $this->_inDevelopment; }
-		public function getCharset() { return $this->_charset; }
-		public function getCompanyName() { return $this->_companyName; }
-		public function getLanguage() { return $this->_language; }
-		public function getDescription() { return $this->_description; }
-		public function getKeywords() { return $this->_keywords; }
-		public function getAuthor() { return $this->_author; }
-		public function getCopyright() { return $this->_copyright; }
 		public function getBackupInterval() { return $this->_backupInterval; }
 		public function getBackupLimit() { return $this->_backupLimit; }
 		public function getLogLimit() { return $this->_logLimit; }
@@ -37,14 +23,7 @@
 			-> not for xTend version.
 		**/
 		public function setUrl($url) { $this->_url = $url; }
-		public function setCharset($chars) { $this->_charset = $chars; }
 		public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
-		public function setCompanyName($name) { $this->_companyName = $name; }
-		public function setLanguage($lang) { $this->_language = $lang; }
-		public function setDescription($desc) { $this->_description = $desc; }
-		public function setKeywords($keyw) { $this->_keywords = $keyw; }
-		public function setAuthor($author) { $this->_author = $author; }
-		public function setCopyright($notice) { $this->_copyright = $notice; }
 		public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
 		public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
 		public function setLogLimit($limit) { $this->_logLimit = $limit; }
@@ -237,8 +216,6 @@
 			$this->_dirSystem = substr(__DIR__,0,strlen(__DIR__)-5);
 			//set public directory
 			$this->_dirPublic = $public_directory;
-			//set content charset
-			header("Content-Type:text/html;charset=".$this->_charset);
 			//set default time zone to UTC
 			date_default_timezone_set("UTC");
 			//set error and exception handlers are gone here since they can't be handled using mutliple apps since they can only call one method
