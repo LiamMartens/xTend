@@ -102,8 +102,13 @@
             if(array_key_exists(self::namespaceApplication(),
                                 self::getConfiguration('applications'))) {
                 $rsts = self::getConfiguration('applications')[self::namespaceApplication()];
-                return ((($_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME']==trim($rsts["url"]))||($rsts["url"]=="*"))&&
-                        preg_match('/'.$rsts["path"].'/', trim($_SERVER['REQUEST_URI'], '/')));
+                $domain_match = (($_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME']==trim($rsts["url"]))||($rsts["url"]=="*"));
+                $request = trim($_SERVER['REQUEST_URI'], '/');
+                $path = trim($rsts["path"], '/');
+                $path_match = (($path=="*")||
+                                ((strlen($request)==strlen($path))&&($request==$path))||
+                                (substr($request, 0, strlen($path))==$path));
+                return ($domain_match&&$path_match);
             }
             return false;
         }

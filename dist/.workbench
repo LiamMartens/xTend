@@ -3,7 +3,7 @@
     "applications": {
         "Application": {
             "url": "*",
-            "path": ".*"
+            "path": "*"
         }
     },
     "public": "www"
