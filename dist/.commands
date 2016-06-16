@@ -61,7 +61,7 @@
         foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2])) as $file) {
             if(!is_file($file)) continue;
             $contents=file_get_contents($file);
-            $contents=preg_replace('/namespace xTend\\\\Application;/',
+            $contents=preg_replace('/namespace Application;/',
                                     'namespace '.str_replace('.', '\\', $argv[2]).';',
                                     $contents);
             file_put_contents($file, $contents);
