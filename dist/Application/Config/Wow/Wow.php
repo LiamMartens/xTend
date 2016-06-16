@@ -223,7 +223,7 @@
 		//
 		$wow->registerExpression(
 			$wow->rx("\<formtoken\s+name=\"(.+?)\"\s*\/\>", "i"),
-			'<input type="hidden" name="token.$1" value="<?php echo $app->getFormTokenHandler()->generate(''); ?>" />'
+			'<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->generate("$1"); ?>" />'
 		);
 	} elseif($wow->getFlavor()===Wow::AT_SIGN) {
 		//
@@ -400,6 +400,6 @@
 		//
 		$wow->registerExpression(
 			$wow->rx("@formtoken:(.+)", "i"),
-			'<input type="hidden" name="token.$1" value="<?php echo $app->getFormTokenHandler()->generate(''); ?>" />'
+			'<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->generate("$1"); ?>" />'
 		);
 	}

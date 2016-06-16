@@ -303,16 +303,16 @@ OR
 ####CSRF token
 Use the csrf (or form) token expression to add a token to your form. You can read more about the formtoken handler in a later chapter.
 ```
-    <formtoken name="form.login" />
+    <formtoken name="form-login" />
 ```
 OR
 ```
-    @formtoken:form.login
+    @formtoken:form-login
 ```
 
 These statements will be replaced by an `input` field like so:
 ```
-    <input type="hidden" name="token.form.login" value="your-token" />
+    <input type="hidden" name="token-form-login" value="your-token" />
 ```
 
 ###Creating new expressions
