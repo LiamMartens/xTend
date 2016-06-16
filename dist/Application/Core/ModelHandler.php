@@ -18,9 +18,6 @@
 			//keep in mind also that the modelName also includes any directives you need to enter
 			//so modelName Foo.Bar will be located at /System/Models/Foo/Bar.php
 			//The namespace will differ but you can set this using the parameter -> by default xTend namespace
-            //
-            //  controller => "My.Directive.My\Namespace\ControllerName@function@function
-            //
 			//set namespace
 			if($ns===false) $ns=$this->_app->getNamespace();
             //extract directive

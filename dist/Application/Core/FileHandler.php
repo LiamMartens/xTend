@@ -4,7 +4,7 @@
 			private $_app;
 			private $_path;
 			private function cleanPath($path) { return trim(rtrim(str_replace('\\', '/', $path), '/')); }
-			public function setPath($path) { $this->_path = $this->cleanPath($path); }
+			private function setPath($path) { $this->_path = $this->cleanPath($path); }
 			public function __construct($app, $path) {
 				$this->_app = $app;
 				//always use setPath in order to automatically clean the path

@@ -162,7 +162,8 @@
             }
         }
         $controller = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
-        $controller->write("<!DOCTYPE html>
+        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+            $controller->write("<!DOCTYPE html>
 <html>
     <head>
         @section:head
@@ -171,7 +172,20 @@
         @section:body
     </body>
 </html>"
-        );
+            );
+        } else {
+            if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+                $controller->write("<!DOCTYPE html>
+    <html>
+        <head>
+            <section name=\"head\" />
+        </head>
+        <body>
+            <section name=\"body\" />
+        </body>
+    </html>"
+                );
+        }
     });
 
     Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
@@ -183,9 +197,15 @@
             }
         }
         $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.wow.php', 2);
-        $controller->write("@version:1
+        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+            $controller->write("@version:1
 @compile:change+version"
-        );
+            );
+        } else {
+            $controller->write("<version value=\"1\" />
+<compile value=\"change+version\" />"
+            );
+        }
     });
 
     Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {

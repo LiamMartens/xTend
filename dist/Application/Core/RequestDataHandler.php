@@ -22,7 +22,9 @@
         private function parsePost() {
             if((count($_POST)==0)&&($this->_app->getUrlHandler()->getMethod()=="POST")) {
                 //assuming its json
-                $this->_post = json_decode(file_get_contents("php://input"), true);
+                $input = file_get_contents('php://input');
+                $data = json_decode($input, true);
+                $this->_post = ($data===null) ? $input : $data;
             } else { $this->_post = $_POST; }
         }
         public function parse() {

@@ -197,6 +197,9 @@
 			"<?php echo \$app->getUrl(); ?>"
 		);
 
+		//
+		//	<app>getDevelopmentStatus()</app>
+		//
 		$wow->registerExpression(
 			$wow->rx("\<app\>(.+?)\<\/app\>", "i"),
 			"<?php echo \$app->$1; ?>"
@@ -377,10 +380,10 @@
 		);
 
 		//
-		//	@controller_(.+?):(.+)
+		//	@controller_Pages.HomeController:method()
 		//
 		$wow->registerExpression(
-			$wow->rx("@controller:(.+?)", "i"),
+			$wow->rx("@controller_(.+?):(.+)", "i"),
 			"<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
 		);
 	}
