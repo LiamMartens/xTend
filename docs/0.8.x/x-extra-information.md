@@ -21,7 +21,7 @@ You can use the `workbench` to create a new application under a new namespace. J
 
 In this case the command will create a new application in a directory called `Application.Blog`. The application will receive the namespace `Application\Blog` and will be launched when the user browses to `blog.domain.com` (the second parameter). You can also choose to enter a `*` to not specify the domain name. The third parameter is a path to match. In this case we match all (`*`) because we want the application to match all URL's prefixed with the `blog.domain.com` domain but since we can also choose to run several applications on 1 domain, we could use the path to specify the application.
 
-*Notice should only be used when creating complex systems and they aren't very useful when you are using xTend to run a small website*
+*Notice should only be used when creating complex systems and they aren't very useful when you are using xTend to run a small website. Also don't forget to switch to your new application using the workbench's `set:application` command and then run the `init` command to initialize the app*
 
 ###Manually loading a Model
 To manually load a model you have to access the application's model handler (call `getModelHandler()` method to retrieve it). Then you can use the `loadModel()` function to load a model.  
