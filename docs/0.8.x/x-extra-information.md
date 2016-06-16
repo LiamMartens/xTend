@@ -16,10 +16,10 @@ The `namespace` statement defines what application we are  in (you can create mu
 ###Creating a new app
 You can use the `workbench` to create a new application under a new namespace. Just use the `new` command as follows
 ```
-    liam@server:/var/www/domain.com$ php workbench new Application.Blog:blog.domain.com:.*
+    liam@server:/var/www/domain.com$ php workbench new Application.Blog:blog.domain.com:*
 ```
 
-In this case the command will create a new application in a directory called `Application.Blog`. The application will receive the namespace `Application\Blog` and will be launched when the user browses to `blog.domain.com` (the second parameter). You can also choose to enter a `*` to not specify the domain name. The third parameter is a regular expression to match a path. In this case we match all (`.*`) because we want the application to match all URL's prefixed with the `blog.domain.com` domain but since we can also choose to run several applications on 1 domain and use the path to specify the application.
+In this case the command will create a new application in a directory called `Application.Blog`. The application will receive the namespace `Application\Blog` and will be launched when the user browses to `blog.domain.com` (the second parameter). You can also choose to enter a `*` to not specify the domain name. The third parameter is a path to match. In this case we match all (`*`) because we want the application to match all URL's prefixed with the `blog.domain.com` domain but since we can also choose to run several applications on 1 domain, we could use the path to specify the application.
 
 *Notice should only be used when creating complex systems and they aren't very useful when you are using xTend to run a small website*
 
