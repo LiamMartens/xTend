@@ -29,17 +29,17 @@
             die("This application already exists\n");
         }
         //get the xTend master
-        $zip=file_get_contents('https://github.com/LiamMartens/xTend/archive/master.zip');
-        file_put_contents("master.zip", $zip);
+        $zip=file_get_contents('https://xtend.liammartens.com/releases/'.$app->getVersion().'.zip');
+        file_put_contents("xtend.zip", $zip);
         $zip=new \ZipArchive;
-        $zip->open("master.zip");
+        $zip->open("xtend.zip");
         $zip->extractTo(__DIR__);
-        //move the system directory to the new application
-        rename("xTend-master/dist/System", __DIR__."/".$argv[2]);
+        //move the Application directory to the new application
+        rename("xTend/dist/Application", __DIR__."/".$argv[2]);
         //remove zip
-        unlink('master.zip');
+        unlink('xtend.zip');
         //remove xTend-master
-        $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-master");
+        $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend");
         $directory->remove();
         //add to configuration
         Workbench::addApplication($argv[2], $argv[3], $argv[4]);
