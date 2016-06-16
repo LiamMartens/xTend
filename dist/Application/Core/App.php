@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.8.1";
+		private $_xTendVersion = "0.8.2";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_backupInterval = "1 week";
@@ -139,6 +139,9 @@
 		//Simple HTML writer
 		private $_htmlHandler;
 		public function getHTMLHandler() { return $this->_htmlHandler; }
+		//FormTokenHandler
+		private $_formTokenHandler;
+		public function getFormTokenHandler() { return $this->_formTokenHandler; }
 		//error throw
 		public function throwError($code) {
 			header("HTTP/1.0 $code");
@@ -306,6 +309,9 @@
 			//include HTMLHandler
 			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
+			//include FormTokenHandler
+			ClassManager::includeClass("xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php");
+			$this->_formTokenHandler = new FormTokenHandler($this);
 			//inlcude Controller and model bluepprints
 			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php"));
 			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php"));

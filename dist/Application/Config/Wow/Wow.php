@@ -217,6 +217,14 @@
 			$wow->rx("\<controller name=\"(.+?)\"\>(.+?)\<\/controller\>","i"),
 			"<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
 		);
+
+		//
+		//	<formtoken name="..." />
+		//
+		$wow->registerExpression(
+			$wow->rx("\<formtoken\s+name=\"(.+?)\"\s*\/\>", "i"),
+			'<input type="hidden" name="token.$1" value="<?php echo $app->getFormTokenHandler()->generate(''); ?>" />'
+		);
 	} elseif($wow->getFlavor()===Wow::AT_SIGN) {
 		//
 		//	@echo:$username
@@ -385,5 +393,13 @@
 		$wow->registerExpression(
 			$wow->rx("@controller_(.+?):(.+)", "i"),
 			"<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
+		);
+
+		//
+		//	@formtoken:name
+		//
+		$wow->registerExpression(
+			$wow->rx("@formtoken:(.+)", "i"),
+			'<input type="hidden" name="token.$1" value="<?php echo $app->getFormTokenHandler()->generate(''); ?>" />'
 		);
 	}
