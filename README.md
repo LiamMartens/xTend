@@ -1,8 +1,8 @@
 #Introducing xTend
 [Website](http://xtend.liammartens.com)
 
-###What changed in 0.7.x?
-Everything did! The new version of xTend is a complete rewrite from scratch of xTend 0.6.x. It is now more than 20% faster even!  
+###What changed in 0.8.x?
+0.8.x is another huge update over 0.7.x! Added a bunch more functionality, structurized a lot of files and added a command line tool.
 <br>
 
 ###*What is xTend?*
