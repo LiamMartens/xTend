@@ -1,0 +1,7 @@
+{
+    "Url": "http://localhost",
+    "DevelopmentStatus": false,
+    "BackupInterval": "1 week",
+    "BackupLimit": 10,
+    "LogLimit": 30
+}

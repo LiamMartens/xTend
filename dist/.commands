@@ -1,0 +1,284 @@
+<?php
+    use xTend\Workbench\Workbench as Workbench;
+    use xTend\Workbench\Helpers as Helpers;
+    Workbench::registerCommand('init', function($app) {
+        $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
+        $session_config = Helpers::json($conf->read());
+        $session_config["SessionName"] = Helpers::generate();
+        $session_config["InitiatedKey"] = Helpers::generate();
+        $session_config["UserAgentKey"] = Helpers::generate();
+        $session_config["Salt"] = Helpers::generate();
+        $session_config["UserSessionsKey"] = Helpers::generate();
+        $session_config["UserCookiesKey"] = Helpers::generate();
+        $conf->write(Helpers::json($session_config));
+    }, 'application.init');
+
+    Workbench::registerCommand('routes', function($app) {
+        $routes = $app->getRouter()->getRoutes();
+        foreach($routes as $route) {
+            echo "/".$route->getHandle()."\t".$route."\n";
+        }
+    }, 'application.routes');
+
+    Workbench::registerCommand('new ([a-zA-Z0-9\.]+):(.+):(.+)', function($app, $argv) {
+        $args = explode(":", $argv[2]);
+        $argv[2]=$args[0];
+        $argv[]=$args[1];
+        $argv[]=$args[2];
+        if(is_dir($argv[2])||array_key_exists($argv[2], Workbench::getConfiguration('applications'))) {
+            die("This application already exists\n");
+        }
+        //get the xTend master
+        $zip=file_get_contents('https://xtend.liammartens.com/releases/'.$app->getVersion().'.zip');
+        file_put_contents("xtend.zip", $zip);
+        $zip=new \ZipArchive;
+        $zip->open("xtend.zip");
+        $zip->extractTo(__DIR__);
+        //move the Application directory to the new application
+        rename("xTend/dist/Application", __DIR__."/".$argv[2]);
+        //remove zip
+        unlink('xtend.zip');
+        //remove xTend-master
+        $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend");
+        $directory->remove();
+        //add to configuration
+        Workbench::addApplication($argv[2], $argv[3], $argv[4]);
+        //add to index.php
+        $file=$app->getFileHandler()->public(Workbench::getConfiguration('public').'.index.php');
+        $file->append('
+    namespace '.str_replace('.', '\\', $argv[2]).' {
+        use \xTend\Workbench\Workbench as Workbench;
+		Workbench::setNamespace(__NAMESPACE__);
+        global $matched_application;
+	    if(__NAMESPACE__==$matched_application) {
+			$app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
+		    $app->getFileHandler()->system("Config.App.App.php")->include();
+		    $app->run();
+		}
+    }
+        ');
+        //replac all xTend\Application namespaces to the new application
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2])) as $file) {
+            if(!is_file($file)) continue;
+            $contents=file_get_contents($file);
+            $contents=preg_replace('/namespace Application;/',
+                                    'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                    $contents);
+            file_put_contents($file, $contents);
+        }
+    }, 'new.application');
+
+    Workbench::registerCommand('remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
+        //remove app dir
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2], RecursiveDirectoryIterator::SKIP_DOTS),
+                     RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($files as $file) {
+            if ($file->isDir()){
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+        rmdir($argv[2]);
+        //remove from configuration
+        Workbench::removeApplication($argv[2]);
+        //remove from index.php
+        $contents=file_get_contents(Workbench::getConfiguration('public').'/index.php');
+        $contents=preg_replace('/namespace '.str_replace('.', '\\\\', $argv[2]).' \{.+?\}.+?\}/s',
+                                '', $contents);
+        file_put_contents(Workbench::getConfiguration('public').'/index.php', $contents);
+    }, 'remove.application');
+
+    //setters
+    Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        Workbench::setApplication($argv[2]);
+        $contents=file_get_contents("workbench");
+        $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
+                                'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                $contents);
+        file_put_contents("workbench", $contents);
+    }, 'set.application');
+
+    Workbench::registerCommand('set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
+        rename(Workbench::getConfiguration('public'), $argv[2]);
+        Workbench::setPublic($argv[2]);
+    });
+
+    Workbench::registerCommand('new:controller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Controllers.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Controllers.'.$argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseDataController {
+        //you can retrieve the current application with \$this->_app
+        //you don't have to extend the BaseDataController
+        //the current \$app will always be passed as first argument in the contructor
+        //the data extension allows for extra data to be passed
+        //look for the BaseDataExtension in Blueprints to find out more about this
+    }
+        ");
+    });
+
+    Workbench::registerCommand('new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseModel {
+        //you can retrieve the current application with \$this->_app
+        //you don't have to extend the BaseModel
+        //the current \$app will always be passed as first argument in the
+    }"
+        );
+    });
+
+    Workbench::registerCommand('new:layout ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Layouts.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
+        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+            $controller->write("<!DOCTYPE html>
+<html>
+    <head>
+        @section:head
+    </head>
+    <body>
+        @section:body
+    </body>
+</html>"
+            );
+        } else {
+            if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+                $controller->write("<!DOCTYPE html>
+    <html>
+        <head>
+            <section name=\"head\" />
+        </head>
+        <body>
+            <section name=\"body\" />
+        </body>
+    </html>"
+                );
+            }
+        }
+    });
+
+    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.wow.php', 2);
+        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
+            $controller->write("@version:1
+@compile:change+version"
+            );
+        } else {
+            $controller->write("<version value=\"1\" />
+<compile value=\"change+version\" />"
+            );
+        }
+    });
+
+    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        if(!$app->getFileHandler()->system('Views'.$argv[3].'.wow.php', 2)->exists()) { die("Layout does not exist"); }
+        $dot_pos = strrpos($argv[2], '.');
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+        }
+        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.php');
+        $controller->write("@version:1
+@layout:".$argv[3]."
+@compile:change+version"
+        );
+    });
+
+    Workbench::registerCommand('config:([a-zA-Z]+) (.*)', function($app, $argv) {
+        $key = explode(":", $argv[1])[1];
+        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+        $configuration = json_decode($conf->read(), true);
+        if(array_key_exists($key, $configuration)) {
+            if(($argv[2]==="true")||($argv[2]==="false")) { $argv[2]=boolval($argv[2]); }
+            elseif(is_numeric($argv[2])) { $argv[2]=intval($argv[2]); }
+            $configuration[$key] = $argv[2];
+            $conf->write(json_encode($configuration));
+        } else { die("Configuration key not found"); }
+    });
+
+    Workbench::registerCommand('config:([a-zA-Z]+)', function($app, $argv) {
+        $key = explode(":", $argv[1])[1];
+        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+        $configuration = json_decode($conf->read(), true);
+        if(array_key_exists($key, $configuration)) {
+            echo $configuration[$key]."\n";
+        } else { die("Configuration key not found"); }
+    });
+
+    Workbench::registerCommand('wow:flavor (HTML|AT_SIGN)', function($app, $argv) {
+        $file = $app->getFileHandler()->system("Config.Wow.Flavor.php");
+        $file->write('<?php
+    namespace '.Workbench::getConfiguration('application').';
+    use \xTend\Core\Wow as Wow;
+	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
+    $wow = $app->getWowCompiler();
+    $wow->setFlavor(Wow::'.$argv[2].');
+    $wow->setInternalExpressions();');
+    });
+
+    //===========================================//
+    Workbench::registerCommand('help', function() {
+        $help = [
+            "init" => "Initializes xTend with secure keys",
+            "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit and LogLimit",
+            "config:[Key]" => "Gets an application configuration variable",
+            "wow:flavor [HTML or AT_SIGN flavor]" => "Sets the flavor of the Wow templating engine",
+            "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",
+            "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
+            "remove [AppName]" => "Removes an application. Make sure you don't try to remove the currently selected application",
+            "set:application [AppName]" => "Selects an application",
+            "set:public [PublicDirectory]" => "Sets the public directory",
+            "new:controller [ControllerName]" => "Creates a new controller. Example:\n\tnew:controller Main.HomeController - will create a controller in Controllers/Main called HomeController.php",
+            "new:model [ModelName]" => "Creates a new controller. Example:\n\tnew:model Api.User - will create a model in Models/Api called User.php",
+            "new:layout [LayoutName]" => "Creates a new basic layout",
+            "new:view [ViewName]" => "Creates a new basic view",
+            "new:view [ViewName]:[LayoutName]" => "Creates a new basic view which extends a layout",
+        ];
+
+        echo "xTend CLI\n";
+        foreach($help as $cm => $info) {
+            echo "$cm\n  $info\n\n";
+        }
+        echo "\n";
+    }, 'help');
