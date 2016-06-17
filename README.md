@@ -1,27 +1,28 @@
 #Introducing xTend
-[Website](http://xtend.liammartens.com)
 
 ###What changed in 0.8.x?
 0.8.x is another huge update over 0.7.x! Added a bunch more functionality, structurized a lot of files and added a command line tool.
 <br>
 
-###*What is xTend?*
-xTend is a simple and easy to use yet powerful and very extendable PHP MVC framework  
-<br>
+###What is xTend?
+xTend is a PHP MVC framework. While other frameworks, such as Laravel, are focusing on implementing every feature or function a developer could ever want, xTend is focused on keeping it fast, adatable, extendable and non-bloated. This means there is a lot of built-in features you'll find in Laravel you will not find here, though because of the adaptable and extendable nature of xTend it is extremely easy to add a library, or your own script, to enable a certain feature.
 
-###*Why should I use it?*
-I can only give you a couple of reasons but be free to see for yourself
+###What's in it for me?
 * Clean and powerful URL's
 * Easy to understand structure (Model-View-Controller)
-* Easy to set up
-* Easy to configure
-* Easy to extend
-* Fast  
-<br>
+* Easy to setup and configure
+* Easy to adapt and extend
+* Blazing fast
+* Easily customizable templating engine
+* A lot of helper functions to keep your code clean
+* A simple CLI to do basic interactions
 
-###*Documentation*
+
+###Documentation
 [Read The Docs](http://xtend.readthedocs.org/en/latest/)  
 <br>
 
-###*Have questions?*
-Send an email to [hi@liammartens.com](mailto:hi@liammartens.com)  
+###I got some questions
+You can always send me a message on either [gitter](http://gitter.im) or using [email](mailto:hi@liammartens.com)
+<br><br>
+[Website](http://xtend.liammartens.com)
