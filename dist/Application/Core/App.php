@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.8.2";
+		private $_xTendVersion = "0.8.3";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_backupInterval = "1 week";
@@ -142,6 +142,9 @@
 		//FormTokenHandler
 		private $_formTokenHandler;
 		public function getFormTokenHandler() { return $this->_formTokenHandler; }
+		//packagist handler
+		private $_packagistHandler;
+		public function getPackagistHandler() { return $this->_packagistHandler; }
 		//error throw
 		public function throwError($code) {
 			header("HTTP/1.0 $code");
@@ -312,6 +315,11 @@
 			//include FormTokenHandler
 			ClassManager::includeClass("xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php");
 			$this->_formTokenHandler = new FormTokenHandler($this);
+			//include VersionCheck helper
+			ClassManager::includeClass("xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php");
+			//include PackagistHandler
+			ClassManager::includeClass("xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php");
+			$this->_packagistHandler = new PackagistHandler($this);
 			//inlcude Controller and model bluepprints
 			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php"));
 			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php"));

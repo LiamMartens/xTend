@@ -13,14 +13,14 @@
         $conf->write(Helpers::json($session_config));
     }, 'application.init');
 
-    Workbench::registerCommand('routes', function($app) {
+    Workbench::registerCommand('^routes', function($app) {
         $routes = $app->getRouter()->getRoutes();
         foreach($routes as $route) {
             echo "/".$route->getHandle()."\t".$route."\n";
         }
     }, 'application.routes');
 
-    Workbench::registerCommand('new ([a-zA-Z0-9\.]+):(.+):(.+)', function($app, $argv) {
+    Workbench::registerCommand('^new ([a-zA-Z0-9\.]+):(.+):(.+)', function($app, $argv) {
         $args = explode(":", $argv[2]);
         $argv[2]=$args[0];
         $argv[]=$args[1];
@@ -68,7 +68,7 @@
         }
     }, 'new.application');
 
-    Workbench::registerCommand('remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
         if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
         if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
         //remove app dir
@@ -92,7 +92,7 @@
     }, 'remove.application');
 
     //setters
-    Workbench::registerCommand('set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
         if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
         Workbench::setApplication($argv[2]);
         $contents=file_get_contents("workbench");
@@ -102,12 +102,12 @@
         file_put_contents("workbench", $contents);
     }, 'set.application');
 
-    Workbench::registerCommand('set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
         rename(Workbench::getConfiguration('public'), $argv[2]);
         Workbench::setPublic($argv[2]);
     });
 
-    Workbench::registerCommand('new:controller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^new:controller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
@@ -131,7 +131,7 @@
         ");
     });
 
-    Workbench::registerCommand('new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
@@ -153,7 +153,7 @@
         );
     });
 
-    Workbench::registerCommand('new:layout ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^new:layout ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
             $dir = $app->getDirectoryHandler()->system('Layouts.'.substr($argv[2], 0, $dot_pos));
@@ -189,7 +189,7 @@
         }
     });
 
-    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
             $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
@@ -209,7 +209,7 @@
         }
     });
 
-    Workbench::registerCommand('new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    Workbench::registerCommand('^new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         if(!$app->getFileHandler()->system('Views'.$argv[3].'.wow.php', 2)->exists()) { die("Layout does not exist"); }
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
@@ -225,7 +225,7 @@
         );
     });
 
-    Workbench::registerCommand('config:([a-zA-Z]+) (.*)', function($app, $argv) {
+    Workbench::registerCommand('^config:([a-zA-Z]+) (.*)', function($app, $argv) {
         $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
         $configuration = json_decode($conf->read(), true);
@@ -257,8 +257,42 @@
     $wow->setInternalExpressions();');
     });
 
+    Workbench::registerCommand('packagist:(install|update) ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)$', function($app, $argv) {
+        $package_name = $argv[2];
+        if($app->getPackagistHandler()->install($package_name)) {
+            die("Installed $package_name\n");
+        }
+        die("No suitable version was found for $package_name\n");
+    });
+
+    Workbench::registerCommand('packagist:install ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+) (.+)', function($app, $argv) {
+        $package_name = $argv[2];
+        $package_version = $argv[3];
+        if($app->getPackagistHandler()->install($package_name, $package_version)) {
+            die("Installed $package_name\n");
+        }
+        die("No suitable version was found for $package_name\n");
+    });
+
+    Workbench::registerCommand('^packagist:install', function($app, $argv) {
+        //to install or update all packages
+        $package_handler = $app->getPackagistHandler();
+        $packages = $app->getPackagistHandler()->getPackages();
+        foreach($packages as $package => $version) {
+            $package_handler->install($package);
+        }
+    });
+
+    Workbench::registerCommand('^packagist:remove ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)', function($app, $argv) {
+        $package_name = $argv[2];
+        if($app->getPackagistHandler()->remove($package_name)) {
+            die("Removed $package_name\n");
+        }
+        die("Couldn't remove $package_name, maybe it wasn't installed?\n");
+    });
+
     //===========================================//
-    Workbench::registerCommand('help', function() {
+    Workbench::registerCommand('^help', function() {
         $help = [
             "init" => "Initializes xTend with secure keys",
             "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit and LogLimit",
@@ -274,6 +308,10 @@
             "new:layout [LayoutName]" => "Creates a new basic layout",
             "new:view [ViewName]" => "Creates a new basic view",
             "new:view [ViewName]:[LayoutName]" => "Creates a new basic view which extends a layout",
+            "packagist:install [Vendor/Package]" => "Installs a packagist package",
+            "packagist:install [Vendor/Package] [Version]" => "Installs a packagist package of a certain version. (Supports packagist's version conditions such as ^ and ~)",
+            "packagist:remove [Vendor/Package]" => "Removes a package from your application",
+            "packagist:install" => "Automatically installs all packages in your packagist.json file"
         ];
 
         echo "xTend CLI\n";

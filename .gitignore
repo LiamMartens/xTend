@@ -5,6 +5,5 @@ dist/Application/Controllers
 dist/Application/Models
 dist/Application/Layouts
 dist/Application/Modules
-dist/Application/Libs
 dist/Application/Logs
 dist/Application/Meta

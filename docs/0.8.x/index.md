@@ -4,6 +4,7 @@ xTend is a PHP MVC framework. While other frameworks, such as Laravel, are focus
 
 ###What's in it for me?
 * Dependency free
+* Simple packagist support
 * Clean and powerful URL's
 * Easy to understand structure (Model-View-Controller)
 * Easy to setup and configure
