@@ -4,7 +4,7 @@
     "type": "project",
     "keywords": [ "framework", "php mvc framework", "xTend", "extendable" ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.0"
     },
     "authors": [
         {
