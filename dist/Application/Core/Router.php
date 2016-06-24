@@ -190,7 +190,7 @@
 
 		public function home($route) {
 			$home_handle = "";
-			$forw_pos = strpos($this->_app->getUrl(), "/", 7);
+			$forw_pos = strpos($this->_app->getUrl(), "/", 8);
 			if($forw_pos!==false) { $home_handle=substr($this->_app->getUrl(), $forw_pos+1); }
 			//the home should always be a route not a handle or route object
 			$this->_home = new Route($this->_app, $home_handle, $route, false);
