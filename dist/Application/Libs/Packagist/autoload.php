@@ -30,9 +30,14 @@
                 if(substr($type, 0, 4)==='psr-') {
                     foreach($files as $prefix => $file) {
                         if(substr($class, 0, strlen($prefix))==$prefix) {
-                            $file = $package_directory->file("$file/$class.php");
-                            if($file->exists()) {
-                                $file->include();
+                            $f = $package_directory->file("$file/$class.php");
+                            if($f->exists()) {
+                                $f->include();
+                                return true;
+                            }
+                            $f = $package_directory->file("$file/".substr($class, strlen($prefix)).".php");
+                            if($f->exists()) {
+                                $f->include();
                                 return true;
                             }
                         }
