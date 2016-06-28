@@ -11,7 +11,7 @@
             if(substr($type, 0, 4)!=='psr-') {
                 foreach($files as $file) {
                     $split = explode(".", $file);
-                    $fileHandler->system("Libs.Packagist.$package_name.$package.$file", count($split))->include();
+                    $fileHandler->system("Libs.Packagist.$package_name.$package.$file", count($split) - 1)->include();
                 }
             }
         }
