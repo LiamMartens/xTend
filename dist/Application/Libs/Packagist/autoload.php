@@ -6,11 +6,12 @@
     $autoload = $app->getPackagistHandler()->getAutoload();
     //load non psr loaders
     foreach($autoload as $package => $loader) {
-        $package_name = substr($package, 0, strrpos($package, '-'));
+        $package_name = strtolower(substr($package, 0, strrpos($package, '-')));
         foreach($loader as $type => $files) {
             if(substr($type, 0, 4)!=='psr-') {
                 foreach($files as $file) {
-                    $fileHandler->system("Libs.Packagist.$package_name.$package.$file")->include();
+                    $split = explode(".", $file);
+                    $fileHandler->system("Libs.Packagist.$package_name.$package.$file", count($split))->include();
                 }
             }
         }
@@ -24,7 +25,7 @@
         $dirHandler = $app->getDirectoryHandler();
         $autoload = $app->getPackagistHandler()->getAutoload();
         foreach($autoload as $package => $loader) {
-            $package_name = substr($package, 0, strrpos($package, '-'));
+            $package_name = strtolower(substr($package, 0, strrpos($package, '-')));
             $package_directory = $dirHandler->system("Libs.Packagist.$package_name.$package");
             foreach($loader as $type => $files) {
                 if(substr($type, 0, 4)==='psr-') {

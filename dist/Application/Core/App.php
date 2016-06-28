@@ -3,13 +3,13 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.8.3";
+		private $_xTendVersion = "0.8.4";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_backupInterval = "1 week";
 		private $_backupLimit = 10;
 		private $_logLimit = 30;
-		private $_namespace = "xTend\\Application";
+		private $_namespace = "Application";
 		//app configuration getters
 		public function getVersion() { return $this->_xTendVersion; }
 		public function getUrl() { return $this->_url; }
@@ -343,7 +343,7 @@
 			//process ignores
 			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
 			foreach($ignores as $ignore) {
-				$lines = explode('\n', str_replace('\r\n', '\n', $ignore->read()));
+				$lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
 				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
 				$files = array_filter($files, function($file) use ($ignore_files) {
 					return (array_search($file, $ignore_files)===false);
@@ -352,7 +352,7 @@
 			//process orders
 			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
 			foreach($orders as $order) {
-				$lines = explode('\n', str_replace('\r\n', '\n', $order->read()));
+				$lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
 				$included_files = [$order];
 				foreach($lines as $line) {
 					$order_file = new FileHandler\File($this, $order->parent()."/$line");

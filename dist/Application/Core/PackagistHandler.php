@@ -63,7 +63,7 @@
                     $name=substr($name, strlen('https://github.com/'));
                     $name=str_replace('/', '-', substr($name, 0, strrpos($name, '.')));
                     $id=substr($to_install["dist"]["reference"], 0, 7);
-                    $package_directory = $this->_dirHandler->system("Libs.Packagist.$name");
+                    $package_directory = $this->_dirHandler->system("Libs.Packagist.".strtolower($name));
                     $package_sub = $package_directory->directory("$name-$id");
                     if($package_sub->exists()) { die("Package version already installed\n"); }
                     if(!$package_directory->exists()) { $package_directory->create(); }

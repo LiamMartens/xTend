@@ -2,6 +2,7 @@
 	namespace xTend\Core;
 	class Wow
 	{
+		const PHP_NAME_RX = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 		const HTML = 0;
 		const AT_SIGN = 1;
 

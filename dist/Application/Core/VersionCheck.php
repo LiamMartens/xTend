@@ -3,13 +3,21 @@
     class VersionCheck {
         private $_expression;
         private $_version;
+        private $_exact;
         public function __construct($expression, $version) {
             $this->_expression = trim($expression);
-            $this->_version = trim(trim($version), 'v');
+            $version_match = []; preg_match('/((([0-9]\.)+[0-9])|([0-9]+))/', $version, $version_match);
+            if(isset($version_match[0])) {
+                $this->_version = $version_match[0];
+                if(substr($version, 0, 4)=='dev-') {
+                    $this->_version='dev-'.$this->_version;
+                }
+            } else { $this->_version = $version; }
+            $this->_exact = $version;
         }
 
         private function isExact() {
-            return ($this->_expression==$this->_version);
+            return ($this->_expression==$this->_exact);
         }
 
         private function isRange() {
