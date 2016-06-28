@@ -104,10 +104,9 @@ Use the `elseif` inside an `if` statement to add an elseif statement.
     <if>
         <condition>false</condition>
         //your if code
-        <elseif>
-            <condition>true</condition>
-            //your elseif code
-        </elseif>
+    <elseif>
+        <condition>true</condition>
+        //your elseif code
     </if>
 ```
 OR
@@ -125,9 +124,8 @@ Use `else` inside an `if` expression to include an else statement in your code
     <if>
         <condition>false</condition>
         //your if code
-        <else>
-            //your else code
-        </else>
+    <else>
+        //your else code
     </if>
 ```
 OR
@@ -277,8 +275,18 @@ OR
 ```
     @app:getUrl()
 ```
-
 *Notice you can also use PHP to retrieve the app in your view as every view is compiled in your application's namespace with a variable called `$app` containg your current application.*
+
+####app inject
+Use this to inject an app method. This will compile without opening and closing php tags and without ending semicolon (;)
+```
+    <app inject>getUrl()</app>
+```
+OR
+```
+    @iapp:getUrl()
+```
+*All inject type expressions are compiled without opening and closing php tags and without ending semicolon (;)*
 
 ####controller
 Use this to execute a controller method.
@@ -290,6 +298,16 @@ OR
     @controller:myMethod()
 ```
 
+####controller inject
+Use this to inject a controller method (for use inside an `if` statement for example)
+```
+    <controller inject>myMethod()</controller>
+```
+OR
+```
+    @icontroller:myMethod()
+```
+
 ####controller with name
 Use this to execute a specific controller's method (or retrieve a variable). This is intended to be used when loading multiple controllers.
 ```
@@ -298,6 +316,16 @@ Use this to execute a specific controller's method (or retrieve a variable). Thi
 OR
 ```
     @controlle_Pages.HomeController:myMethod()
+```
+
+####controller with name inject
+Use this to inject a controller method from a specific controller.
+```
+    <controller inject name="Pages.HomeController">myMethod()</controller>
+```
+OR
+```
+    @icontroller_Pages.HomeController:myMethod()
 ```
 
 ####CSRF token

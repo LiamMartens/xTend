@@ -45,10 +45,8 @@
 		//
 		//		echo "1 is 1";
 		//
-		//	</elseif>
-		//
 		$wow->registerExpression(
-			$wow->rx("\<elseif\>\s*\<condition\>(.+?)\<\/condition\>(.+?)\<\/elseif\>", "is"),
+			$wow->rx("\<elseif\>\s*\<condition\>(.+?)\<\/condition\>(.+?)", "is"),
 			"<?php } elseif($1) { ?>$2"
 		);
 
@@ -58,10 +56,8 @@
 		//
 		//		echo "1 is 1";
 		//
-		//	</else>
-		//
 		$wow->registerExpression(
-			$wow->rx("\<else\>(.*?)\<\/else\>", "is"),
+			$wow->rx("\<else\>(.+?)", "is"),
 			"<?php } else { ?>$1"
 		);
 
