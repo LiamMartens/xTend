@@ -2,7 +2,7 @@
 <?php
     namespace Application;
     use \xTend\Workbench\Workbench as Workbench;
-    require_once("Workbench/Workbench.php");
+    require_once("CLI/Workbench.php");
     //set http default ignore errors
     stream_context_set_default([
         'http' => [

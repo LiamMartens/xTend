@@ -13,7 +13,7 @@ You can either download a zip file on [GitHub](https://github.com/LiamMartens/xT
 ```
 
 ###Step 2: Move the files
-All the files you need are located in the `xTend/dist` directory. The `www` directory will be your public directory whereas `Application` and `Workbench` will be located in the parent of your public directory. Also make sure to copy the `.commands` and `.workbench` files.
+All the files you need are located in the `xTend/dist` directory. The `www` directory will be your public directory whereas `Application` and `CLI` will be located in the parent of your public directory. Also make sure to copy the `.commands` and `.workbench` files.
 
 *Notice: You can rename the public directory later but not just yet*
 
@@ -25,10 +25,10 @@ All the files you need are located in the `xTend/dist` directory. The `www` dire
             Config/
             Core/
             Objects/
-        Workbench/
+        CLI/
         .commands
         .workbench
-        workbench
+        bench
 ```
 
 ###Step 3 Initialize and configure xTend

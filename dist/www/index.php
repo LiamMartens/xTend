@@ -1,7 +1,7 @@
 <?php
 	namespace {
 		use \xTend\Workbench\Workbench as Workbench;
-		require_once('../Workbench/Workbench.php');
+		require_once('../CLI/Workbench.php');
 		Workbench::loadConfiguration();
 		//first match all
 		global $matched_application;
