@@ -33,7 +33,7 @@
             return $this->_fileHandler->system('Libs.Packagist.autoload.json')->write(json_encode($this->_autoload));
         }
 
-        public function install($package_name, $version_param = false) {
+        public function install($package_name, $version_param = false, $die_on_duplicate = true) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
             if(!array_key_exists("status", $package_info)) {
                 $to_install = false;
@@ -65,7 +65,14 @@
                     $id=substr($to_install["dist"]["reference"], 0, 7);
                     $package_directory = $this->_dirHandler->system("Libs.Packagist.".strtolower($name));
                     $package_sub = $package_directory->directory("$name-$id");
-                    if($package_sub->exists()) { die("Package version already installed\n"); }
+                    if($package_sub->exists()) {
+                        if($die_on_duplicate) {
+                            die("Package version already installed\n");
+                        } else {
+                            echo "Package version already installed\n";
+                            return false;
+                        }
+                    }
                     if(!$package_directory->exists()) { $package_directory->create(); }
                     //download file
                     $package_zip = (string)$this->_fileHandler->system('package.zip');

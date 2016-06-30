@@ -279,7 +279,7 @@
         $package_handler = $app->getPackagistHandler();
         $packages = $app->getPackagistHandler()->getPackages();
         foreach($packages as $package => $version) {
-            $package_handler->install($package);
+            $package_handler->install($package, $version, false);
         }
     });
 
