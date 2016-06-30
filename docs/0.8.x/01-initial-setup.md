@@ -12,6 +12,9 @@ You can either download a zip file on [GitHub](https://github.com/LiamMartens/xT
     git clone https://github.com/LiamMartens/xTend.git
 ```
 
+####Notice
+Steps 2, 3 and 4 are the configuration and installation steps. You can also use the `install.sh` file to do all the configuration and installation at once. Just run the script and pass the location where you want to install xTend as argument (if no argument is passed it will be installed in the current directory. Don't worry the script will ask for a confirmation).
+
 ###Step 2: Move the files
 All the files you need are located in the `xTend/dist` directory. The `www` directory will be your public directory whereas `Application` and `CLI` will be located in the parent of your public directory. Also make sure to copy the `.commands` and `.workbench` files.
 
