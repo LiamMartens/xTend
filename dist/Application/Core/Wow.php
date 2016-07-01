@@ -32,8 +32,8 @@
 				$this->_rx_section = $this->rx("(\<section\s+name=\"[\w\-\_]+\"\s*\/?\>)", "i");
 				$this->_rx_section_name = $this->rx("\<section\s+name=\"([\w\-\_]+)\"\s*\/?\>", "i");
 				$this->_rx_section_extract = $this->rx("\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>", "si");
-				$this->_rx_module = $this->rx("\<module\s+name=\"([\w\-\_\.]+)\"\/?\>", "i");
-				$this->_rx_module_extract = $this->rx("(\<module\s+name=\"[\w\-\_\.]+\"\/?\>)", "i");
+				$this->_rx_module = $this->rx("\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
+				$this->_rx_module_extract = $this->rx("(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>)", "i");
 			} elseif($this->_flavor==Wow::AT_SIGN) {
 				$this->_rx_version = $this->rx("@version:([0-9\.]+)", "i");
 				$this->_rx_layout = $this->rx("@layout:([\w\-\_\.]+)", "i");
