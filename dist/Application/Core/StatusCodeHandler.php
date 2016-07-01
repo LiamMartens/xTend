@@ -1,10 +1,4 @@
 <?php
-	/*
-		class ErrorCode -> class StatusCode
-		getStatus -> getError
-		isError -> isStatus
-		ErrorCodeHandler -> StatusCodeHandler
-	*/
 	namespace xTend\Core;
 	use \Exception as Exception;
 	class StatusCode
@@ -37,7 +31,7 @@
 
 		public function findStatus($key) {
 			if(is_numeric($key)&&(array_key_exists($key, $this->_statusCodes))) {
-				//provided key is numeric -> found it in error code directory itself
+				//provided key is numeric -> found it in status code directory itself
 				return $this->_statusCodes[$key];
 			} elseif(is_string($key)) {
 				foreach ($this->_statusCodes as $c) {
@@ -53,8 +47,8 @@
 		}
 
 		public function __construct() {
-			//initialize default error codes
-			$this->registerStatusCode(0x0000, "statuscodehandler:invalid-code","Error in StatusCodeHandler: Trying to register invalid error code");
-			$this->registerStatusCode(0x0001, "statuscodehandler:invalid-name","Error in StatusCodeHandler: Trying to register invalid error name");
+			//initialize default status codes
+			$this->registerStatusCode(0x0000, "statuscodehandler:invalid-code","Error in StatusCodeHandler: Trying to register invalid status code");
+			$this->registerStatusCode(0x0001, "statuscodehandler:invalid-name","Error in StatusCodeHandler: Trying to register invalid status name");
 		}
 	}

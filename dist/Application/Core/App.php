@@ -100,7 +100,7 @@
 		//application directory handler
 		private $_directoryHandler;
 		public function getDirectoryHandler() { return $this->_directoryHandler; }
-		//error code handler
+		//status code handler
 		private $_statusCodeHandler;
 		public function getStatusCodeHandler() { return $this->_statusCodeHandler; }
 		//log handler
