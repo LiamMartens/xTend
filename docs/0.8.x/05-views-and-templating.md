@@ -328,6 +328,16 @@ OR
     @icontroller_Pages.HomeController:myMethod()
 ```
 
+####Form method spoof
+Use this to spoof a form method (for use with DELETE or PUT)
+```
+    <spoof method="DELETE" />
+```
+OR
+```
+    @spoof_method:DELETE
+```
+
 ####CSRF token
 Use the csrf (or form) token expression to add a token to your form. You can read more about the formtoken handler in a later chapter.
 ```

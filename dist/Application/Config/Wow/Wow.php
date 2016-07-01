@@ -231,10 +231,18 @@
 		);
 
 		//
+		//	<spoof method="DELETE" />
+		//
+		$wow->registerExpression(
+			$wow->rx("\<spoof\s+method=\"([a-zA-Z]+)\"\s*\/?\>","i"),
+			'<input type="hidden" name="_method" value="$1" />'
+		);
+
+		//
 		//	<formtoken name="..." />
 		//
 		$wow->registerExpression(
-			$wow->rx("\<formtoken\s+name=\"(.+?)\"\s*\/\>", "i"),
+			$wow->rx("\<formtoken\s+name=\"(.+?)\"\s*\/?\>", "i"),
 			'<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->generate("$1"); ?>" />'
 		);
 	} elseif($wow->getFlavor()===Wow::AT_SIGN) {
@@ -421,6 +429,14 @@
 		$wow->registerExpression(
 			$wow->rx('@icontroller_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
 			"\$app->getControllerHandler()->getController('$1')->$2"
+		);
+
+		//
+		//	@spoof_method:DELETE
+		//
+		$wow->registerExpression(
+			$wow->rx("@spoof_method:([a-zA-Z]+)","i"),
+			'<input type="hidden" name="_method" value="$1" />'
 		);
 
 		//
