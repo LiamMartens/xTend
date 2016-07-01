@@ -39,9 +39,9 @@ Besides making your views more powerful you can also create layouts for your vie
 ####Extending the layout
 Extending your layout is as simple as adding the `<layout value="layout" />` expression to your view. To fill in your layout sections you need to use the following statements
 ```
-    <startsection name="NameOfSection">
+    <section name="NameOfSection">
         //your code
-    </endsection>
+    </section>
 ```
 
 ###Also, modules!

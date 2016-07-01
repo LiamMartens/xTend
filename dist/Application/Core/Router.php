@@ -223,6 +223,8 @@
 		public function execute() {
 			$request = trim($_SERVER["REQUEST_URI"], "/");
 			$this->_app->getUrlHandler()->setRequest($request);
+			//execute data handler parser
+			$this->_app->getRequestDataHandler()->parse();
 			//check home route
 			if(isset($this->_home)&&$this->_home->isMatch($request)) {
 				$this->_home->execute(); return true;
@@ -248,8 +250,6 @@
 				$relevant_requests = $this->_delete;
 				$this->_app->getUrlHandler()->setMethod("DELETE");
             }
-			//execute data handler parser
-			$this->_app->getRequestDataHandler()->parse();
 			//check the releavant requests
 			foreach ($relevant_requests as $handle => $route_obj) {
 				if($route_obj->isMatch($request)) {
