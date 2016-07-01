@@ -1,3 +1,5 @@
+![Banner](https://xtend.liammartens.com/img/banner.svg)
+
 #Introducing xTend
 
 ###What changed in 0.8.x?
