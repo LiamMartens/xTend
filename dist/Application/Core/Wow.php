@@ -4,7 +4,8 @@
 	{
 		const PHP_NAME_RX = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
 		const HTML = 0;
-		const AT_SIGN = 1;
+		const COMBINED = 1;
+		const AT_SIGN = 2;
 
 		private $_rx_version;
 		private $_rx_layout;
@@ -24,8 +25,11 @@
 		}
 		public function setFlavor($fl) { $this->_flavor = $fl; }
 		public function getFlavor() { return $this->_flavor; }
+		public function rx($pattern, $flags) {
+			return "/$pattern/$flags";
+		}
 		public function setInternalExpressions() {
-			if($this->_flavor==Wow::HTML) {
+			if($this->_flavor<=Wow::COMBINED) {
 				$this->_rx_version = $this->rx("\<version\s+value=\"([0-9\.]+)\"\s*\/?\>", "i");
 				$this->_rx_layout = $this->rx("\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
 				$this->_rx_flag = $this->rx("\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>", "i");
@@ -34,7 +38,8 @@
 				$this->_rx_section_extract = $this->rx("\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>", "si");
 				$this->_rx_module = $this->rx("\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
 				$this->_rx_module_extract = $this->rx("(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>)", "i");
-			} elseif($this->_flavor==Wow::AT_SIGN) {
+			}
+			if($this->_flavor>=Wow::COMBINED) {
 				$this->_rx_version = $this->rx("@version:([0-9\.]+)", "i");
 				$this->_rx_layout = $this->rx("@layout:([\w\-\_\.]+)", "i");
 				$this->_rx_flag = $this->rx("@compile:(change\+version|always|version|never|change)", "i");
@@ -46,10 +51,6 @@
 			}
 		}
 
-
-		public function rx($pattern, $flags) {
-			return "/$pattern/$flags";
-		}
 		public function registerExpression($rx, $replacement) {
 			$this->_expressions[$rx]=$replacement;
 		}

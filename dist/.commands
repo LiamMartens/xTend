@@ -253,7 +253,7 @@
         } else { die("Configuration key not found"); }
     });
 
-    Workbench::registerCommand('wow:flavor (HTML|AT_SIGN)', function($app, $argv) {
+    Workbench::registerCommand('wow:flavor (HTML|AT_SIGN|COMBINED)', function($app, $argv) {
         $file = $app->getFileHandler()->system("Config.Wow.Flavor.php");
         $file->write('<?php
     namespace '.Workbench::getConfiguration('application').';
@@ -304,7 +304,7 @@
             "init" => "Initializes xTend with secure keys",
             "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit and LogLimit",
             "config:[Key]" => "Gets an application configuration variable",
-            "wow:flavor [HTML or AT_SIGN flavor]" => "Sets the flavor of the Wow templating engine",
+            "wow:flavor [HTML, AT_SIGN or COMBINED flavor]" => "Sets the flavor of the Wow templating engine (COMBINED by default)",
             "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",
             "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
             "remove [AppName]" => "Removes an application. Make sure you don't try to remove the currently selected application",

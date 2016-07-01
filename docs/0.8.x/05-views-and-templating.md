@@ -12,7 +12,7 @@ xTend has it's own simple and extendable templating engine called `WOW`. If you 
 
 *Notice you can also use the workbench's `new:view` command to create a new WOW view*
 
-*Notice depending on your chosen WOW flavor the syntax changes. You can set the WOW flavor using the `wow:flavor` command in the workbench or you can change it manually in the `Config/Wow/Flavor.php` file. You have 2 different flavors to chose from being `HTML` (the default one) and `AT_SIGN`. When setting the flavor to `AT_SIGN`. Both the `version` and `compile` keywords will change into `@version:1` and `@compile:always` respectively.*
+*Notice depending on your chosen WOW flavor the syntax changes. You can set the WOW flavor using the `wow:flavor` command in the workbench or you can change it manually in the `Config/Wow/Flavor.php` file. You have 3 different flavors to chose from being `COMBINED` (the default one) `HTML` and `AT_SIGN`. When setting the flavor to `AT_SIGN`. Both the `version` and `compile` keywords will change into `@version:1` and `@compile:always` respectively. (The COMBINED setting allows both syntax to be used at once)*
 
 *Notice we used the `always` compile flag in the example but there is also `never`, `version`, `change` and `version+change`. `always` and `never` are self-explanatory. The `version` flag will compile when the version updates and the `change` flag will compile when the view, the layout or a module, more on that later, changes. The `change+version` flag combines the last two flags.*
 
