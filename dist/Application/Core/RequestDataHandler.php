@@ -35,10 +35,7 @@
             if($data!==false) {
                 $this->_data = json_decode($data, true);
                 //remove 1 from ttl
-                $ttl = intval(Session::get(session_id().'-xtend-ttl', 0)) - 1;
-                if($ttl<0) {
-                    Session::remove(session_id().'-xtend-data');
-                } else { Session::set(session_id().'-xtend-ttl', $ttl); }
+                Session::remove(session_id().'-xtend-data');
             }
         }
         public function parse() {

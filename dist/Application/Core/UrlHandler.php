@@ -20,8 +20,7 @@
 		}
 		public function navigate($request, $data = [], $inc_url = true) {
 			//set temp data and time to live
-			Session::set(session_id().'-xtend-data', json_encode($data));
-			Session::set(session_id().'-xtend-ttl', 1);
+			Session::set(session_id().'-xtend-data', json_encode($data
 			if(is_string($request))
 				header("Location: ".(($inc_url) ? ($this->_app->getUrl()."/") : "")."$request");
 			elseif(($request instanceof Route)&&is_string($request->getHandle()))
