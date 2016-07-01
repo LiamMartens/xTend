@@ -21,6 +21,8 @@ xTend is a PHP MVC framework. While other frameworks, such as Laravel, are focus
 * A lot of helper functions to keep your code clean
 * A simple CLI to do basic interactions
 
+###Example
+You can find an example application in the `examples` directory. It's a very simple tasklist project.
 
 ###Documentation
 [Read The Docs](http://xtend.readthedocs.org/en/latest/)  
