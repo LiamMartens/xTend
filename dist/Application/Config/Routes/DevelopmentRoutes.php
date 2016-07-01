@@ -5,7 +5,7 @@
         //routes which are only available during development status
         $app->getRouter()->get("codes", function($app) {
             $el = $app->getHTMLHandler()->createElement("table");
-            foreach ($app->getErrorCodeHandler()->getErrorCodes() as $code) {
+            foreach ($app->getStatusCodeHandler()->getStatusCodes() as $code) {
                 $row = $el->createElement("tr");
                 $row->createElement("td")->addText($code->getHexCode());
                 $row->createElement("td")->addText($code->getName());

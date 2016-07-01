@@ -35,12 +35,19 @@
         $zip->open("xtend.zip");
         $zip->extractTo(__DIR__);
         //move the Application directory to the new application
-        rename("xTend/dist/Application", __DIR__."/".$argv[2]);
+        if(is_dir("xTend")) {
+            rename("xTend/dist/Application", __DIR__."/".$argv[2]);
+        } else { rename("xTend-".$app->getVersion()."/dist/Application", __DIR__."/".$argv[2]); }
         //remove zip
         unlink('xtend.zip');
         //remove xTend-master
         $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend");
-        $directory->remove();
+        if($directory->exists()) {
+            $directory->remove();
+        } else {
+            $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-".$app->getVersion());
+            $directory->remove();
+        }
         //add to configuration
         Workbench::addApplication($argv[2], $argv[3], $argv[4]);
         //add to index.php

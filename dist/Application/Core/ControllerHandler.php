@@ -8,7 +8,6 @@
 			//keep current app reference for initializing controllers which might need the app to access app directives and settings
 			$this->_app = $app;
 			$this->_controllers = [];
-			$this->_app->getErrorCodeHandler()->registerErrorCode(0x0002, "controllerhandler:invalid-controller-definition", "Error while trying to pass data to an initialized controller. Data methods not implemented.");
 		}
 		public function exists($controllerName) {
 			//controllerName excluding @ function call
@@ -49,7 +48,7 @@
 							foreach ($data as $key => $value) {
 								$this->_controllers[$controllerClassName]->setData($key,$value);
 							}
-						} else { throw $this->_app->getErrorCodeHandler()->getError(0x0002)->getException(); }
+						} else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0002)->getException(); }
 					}
 					//execute requested @ functions
 					//Multiple methods can be called using multiple @ symboles

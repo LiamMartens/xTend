@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.8.6";
+		private $_xTendVersion = "0.8.7";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_backupInterval = "1 week";
@@ -101,8 +101,8 @@
 		private $_directoryHandler;
 		public function getDirectoryHandler() { return $this->_directoryHandler; }
 		//error code handler
-		private $_errorCodeHandler;
-		public function getErrorCodeHandler() { return $this->_errorCodeHandler; }
+		private $_statusCodeHandler;
+		public function getStatusCodeHandler() { return $this->_statusCodeHandler; }
 		//log handler
 		private $_logHandler;
 		public function getLogHandler() { return $this->_logHandler; }
@@ -148,8 +148,8 @@
 		//error throw
 		public function throwError($code) {
 			header("HTTP/1.0 $code");
-			$error = $this->_errorCodeHandler->findError($code);
-			if($error instanceof ErrorCode) {
+			$error = $this->_statusCodeHandler->findStatus($code);
+			if($error instanceof StatusCode) {
 				$this->_logHandler->write($error, $_SERVER["REQUEST_URI"]."\t".$_SERVER["REMOTE_ADDR"]);
 				return $this->_router->throwError($code);
 			}
@@ -236,9 +236,9 @@
 			$this->_settingsContainer = new SettingsContainer();
 			//include archive class
 			ClassManager::includeClass("xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php");
-			//include ErrorCodeHandler
-			ClassManager::includeClass("xTend\\Core\\ErrorCodeHandler", $this->_dirSystem."/Core/ErrorCodeHandler.php");
-			$this->_errorCodeHandler = new ErrorCodeHandler();
+			//include StatusCodeHandler
+			ClassManager::includeClass("xTend\\Core\\StatusCodeHandler", $this->_dirSystem."/Core/StatusCodeHandler.php");
+			$this->_statusCodeHandler = new StatusCodeHandler();
 			//include dir class
 			ClassManager::includeClass("xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
 			$this->_directoryHandler = new DirectoryHandler($this);

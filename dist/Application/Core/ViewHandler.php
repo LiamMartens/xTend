@@ -8,8 +8,6 @@
 		public function __construct($app) {
 			$this->_app = $app;
 			$this->_views = [];
-			$this->_app->getErrorCodeHandler()->registerErrorCode(0x0003, "viewhandler:invalid-view-definition", "Error while trying to pass data to an initialized view. Data methods not implemented.");
-			$this->_app->getErrorCodeHandler()->registerErrorCode(0x0004, "viewhandler:invalid-view-definition", "Error while trying to execute a view object. Execute method not implemented.");
 		}
 		public function exists($view) {
 			$fh = $this->_app->getFileHandler();
@@ -29,12 +27,12 @@
 						foreach ($data as $key => $value) {
 							$this->_views[$view]->setData($key, $value);
 						}
-					} else { throw $this->_app->getErrorCodeHandler()->getError(0x0003)->getException(); }
+					} else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0003)->getException(); }
 				}
 				//call view execute method
 				if(method_exists($this->_views[$view], "execute")) {
 					$this->_views[$view]->execute();
-				} else { throw $this->_app->getErrorCodeHandler()->getError(0x0004)->getException(); }
+				} else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0004)->getException(); }
 			}
 			return false;
 		}
