@@ -239,8 +239,8 @@
 			$relevant_requests;
 			//allow method spoofing
 			$post=$this->_app->getRequestDataHandler()->post();
-			if(isset($post['_method'])) {
-				$_SERVER['REQUEST_METHOD'] = $post['method']; }
+			if(array_key_exists('_method', $post)) {
+				$_SERVER['REQUEST_METHOD']=strtoupper($post['_method']); }
 			if($_SERVER["REQUEST_METHOD"]=="POST") {
 				$relevant_requests = $this->_post;
 				$this->_app->getUrlHandler()->setMethod("POST");

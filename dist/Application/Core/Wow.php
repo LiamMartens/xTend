@@ -29,7 +29,7 @@
 			return "/$pattern/$flags";
 		}
 		public function setInternalExpressions() {
-			if($this->_flavor<=Wow::COMBINED) {
+			if($this->_flavor==Wow::HTML) {
 				$this->_rx_version = $this->rx("\<version\s+value=\"([0-9\.]+)\"\s*\/?\>", "i");
 				$this->_rx_layout = $this->rx("\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
 				$this->_rx_flag = $this->rx("\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>", "i");
@@ -38,8 +38,7 @@
 				$this->_rx_section_extract = $this->rx("\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>", "si");
 				$this->_rx_module = $this->rx("\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
 				$this->_rx_module_extract = $this->rx("(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>)", "i");
-			}
-			if($this->_flavor>=Wow::COMBINED) {
+			} elseif($this->_flavor==Wow::AT_SIGN) {
 				$this->_rx_version = $this->rx("@version:([0-9\.]+)", "i");
 				$this->_rx_layout = $this->rx("@layout:([\w\-\_\.]+)", "i");
 				$this->_rx_flag = $this->rx("@compile:(change\+version|always|version|never|change)", "i");
@@ -48,6 +47,15 @@
 				$this->_rx_section_extract = $this->rx("@startsection:%s(.*?)@endsection", "si");
 				$this->_rx_module = $this->rx("@module:([\w\-\_\.]+)", "i");
 				$this->_rx_module_extract = $this->rx("(@module:[\w\-\_\.]+)", "i");
+			} else {
+				$this->_rx_version = $this->rx("(?:\<version\s+value=\"([0-9\.]+)\"\s*\/?\>)|(?:@version:([0-9\.]+))", "i");
+				$this->_rx_layout = $this->rx("(?:\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@layout:([\w\-\_\.]+))", "i");
+				$this->_rx_flag = $this->rx("(?:\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>)|(?:@compile:(change\+version|always|version|never|change))", "i");
+				$this->_rx_section = $this->rx("(?:(\<section\s+name=\"[\w\-\_]+\"\s*\/?\>))|(?:@section:[\w\-\_]+)", "i");
+				$this->_rx_section_name = $this->rx("(?:\<section\s+name=\"([\w\-\_]+)\"\s*\/?\>)|(?:@section:([\w\-\_]+))", "i");
+				$this->_rx_section_extract = $this->rx("(?:\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>)|(?:@startsection:%s(.*?)@endsection)", "si");
+				$this->_rx_module = $this->rx("(?:\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@module:([\w\-\_\.]+))", "i");
+				$this->_rx_module_extract = $this->rx("(?:(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>))|(?:(@module:[\w\-\_\.]+))", "i");
 			}
 		}
 
@@ -228,7 +236,7 @@
 						if($is_section==1) {
 							$section_name=$section_match[1];
 							//got the section name, now take the section content out of the view content
-							$rx = sprintf($this->_rx_section_extract, $section_name);
+							$rx = sprintf($this->_rx_section_extract, $section_name, $section_name);
 							$rx_matches=[]; preg_match($rx, $view_c, $rx_matches);
 							if(isset($rx_matches[1]))
 								$compiled_string.=$this->compile($rx_matches[1], $modules_dir);

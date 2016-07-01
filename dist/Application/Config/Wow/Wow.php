@@ -4,7 +4,13 @@
 	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
 	$wow = $app->getWowCompiler();
 
-	if($wow->getFlavor()===Wow::HTML) {
+	//general echo
+	$wow->registerExpression(
+		$wow->rx("{{(.+)}}", "i"),
+		"<?php echo $1; ?>"
+	);
+
+	if($wow->getFlavor()<=Wow::COMBINED) {
 		//
 		//	<echo>$username</echo>
 		//
@@ -253,7 +259,8 @@
 			$wow->rx("\<formtoken\s+persistent\s+name=\"(.+?)\"\s*\/?\>", "i"),
 			'<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->persistent("$1"); ?>" />'
 		);
-	} elseif($wow->getFlavor()===Wow::AT_SIGN) {
+	}
+	if($wow->getFlavor()>=Wow::COMBINED) {
 		//
 		//	@echo:$username
 		//

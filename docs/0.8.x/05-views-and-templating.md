@@ -58,6 +58,14 @@ OR
 ###What else can I do with WOW
 By default there's a bunch of expressions you can use in your views. As already saw the `WOW` engine comes in 2 flavors and we will go over every expression in each flavor.
 
+
+####Statment injection
+use the `{{  }}` expression, blade-like, to echo out a PHP statement or variable.
+```
+    {{ $variable }}
+```
+*Notice `{{}}` is available in both flavors*
+
 ####echo
 Use the `echo` expression to echo out a PHP statement or variable
 ```
