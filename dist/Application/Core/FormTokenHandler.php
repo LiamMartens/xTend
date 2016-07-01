@@ -20,7 +20,7 @@
         }
 
         public function persistent($name) {
-            if(isset($this->_tokens[$name])) {
+            if(!isset($this->_tokens[$name])) {
                 //generate token
                 $token = hash("sha512", random_bytes(16));
                 //generate pass hash
