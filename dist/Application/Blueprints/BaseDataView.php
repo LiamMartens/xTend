@@ -22,6 +22,11 @@
 		public function getAllData() {
 			return $this->_data;
 		}
+		public function __set($name, $value) {
+			if($name=='_data') {
+				$this->_data = $value;
+			} else { $this->setData($name, $value); }
+		}
 		public function __get($name) {
 			if($this->inData($name))
 				return $this->getData($name);
