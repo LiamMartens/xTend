@@ -353,5 +353,15 @@ These statements will be replaced by an `input` field like so:
     <input type="hidden" name="token-form-login" value="your-token" />
 ```
 
+####Persistent token
+Use this to generate a persistent CSRF token as expained in the `FormTokenHandler` documentation.
+```
+    <formtoken persistent name="form-login" />
+```
+OR
+```
+    @formtoken_persistent:form-login
+```
+
 ###Creating new expressions
 If you take a look into the application's `Config/Wow/Wow.php` file you can see how most of the expressions are registered. Creating a new expression is as simple as recreating the statements in the config file. As long as you understand regular expressions it should be as easy as pie.
