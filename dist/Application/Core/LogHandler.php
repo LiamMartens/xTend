@@ -24,7 +24,7 @@
 		public function write($err, $additional = "") {
 			$dt = new DateTime();
 			$this->_app->getLogsDirectory()->file("log_".$dt->format("Y-m-d").".log")->append(
-				$dt->format("H:i:s")."\t".$err->getError()."\t$additional\r\n"
+				$dt->format("H:i:s")."\t".$err->getStatus()."\t$additional\r\n"
 			);
 			$this->cleanLogs();
 		}
