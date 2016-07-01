@@ -6,7 +6,7 @@ if [ $# -eq 1 ]; then
 fi
 echo -n "About to install xTend files in $INSTALL_DIR, is that ok? (Y/n): ";
 read INPUT;
-if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
+if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
     if [ ! -d "$INSTALL_DIR" ]; then
         mkdir "$INSTALL_DIR";
     fi
@@ -18,7 +18,7 @@ if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
     mv "$CURRENT_DIR/dist/workbench" "$INSTALL_DIR/workbench";
     echo -n "Want to remove xTend git directory? (Y/n): ";
     read INPUT;
-    if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
+    if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
         rm -rf $CURRENT_DIR;
         echo "xTend git directory removed. Dist files have been moved to installation directory.";
     else
@@ -26,38 +26,38 @@ if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
     fi
     echo -n "Do you want to initialize xTend now? (Y/n): ";
     read INPUT;
-    if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
+    if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
         cd "$1";
         php workbench init;
         echo -n "Enter the URL you want to configure for xTend (http://localhost by default, leave empty to keep default setting): ";
         read INPUT;
-        if [ $INPUT != '' ]; then
+        if [[ $INPUT != '' ]]; then
             php workbench config:Url $INPUT;
             echo "xTend configured with `php workbench config:Url`";
         fi
         echo -n "Do you want to enable development mode? (This enables the development route with the currently registered status codes) (Y/n): ";
         read INPUT;
-        if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
+        if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
             php workbench config:DevelopmentStatus true;
         fi
         echo -n "Do you want to change the backup interval? (1 week by default, false to disable, empty to keep default): ";
         read INPUT;
-        if [ $INPUT != '' ]; then
+        if [[ $INPUT != '' ]]; then
             php workbench config:BackupInterval $INPUT;
         fi
         echo -n "Do you want to change the backup limit? (10 by default, empty to keep default): ";
         read INPUT;
-        if [ $INPUT != '' ]; then
+        if [[ $INPUT != '' ]]; then
             php workbench config:BackupLimit $INPUT;
         fi
         echo -n "Do you want to change the log limit? (30 by default, empty to keep default): ";
         read INPUT;
-        if [ $INPUT != '' ]; then
+        if [[ $INPUT != '' ]]; then
             php workbench config:LogLimit $INPUT;
         fi
         echo -n "Do you want to change the public directory? (www by default, empty to keep default): ";
         read INPUT;
-        if [ $INPUT != '' ]; then
+        if [[ $INPUT != '' ]]; then
             php workbench set:public $INPUT;
         fi
         echo "xTend is now ready";
@@ -65,4 +65,3 @@ if [ $INPUT == 'Y' ] || [ $INPUT == 'y' ]; then
 else
     echo "Installation cancelled. Nothing happened.";
 fi
-

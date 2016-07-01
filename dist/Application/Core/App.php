@@ -414,6 +414,7 @@
 		}
 		//run function
 		public function run() {
+			if($this->_inDevelopment) { ini_set('display_errors', 1); }
 			//integrity check
 			$this->applicationIntegrityCheck();
 			//start a session
@@ -429,10 +430,10 @@
 			foreach ($this->_postConfigMethods as $method) { $method($this); }
 			//create backup if necessary
 			$this->_backupManager->create();
-
 			//start the router
-			if(!$this->_bootstrapMode)
+			if(!$this->_bootstrapMode) {
 				$this->_router->execute();
+			}
 		}
 	}
 	/**
