@@ -90,8 +90,8 @@
 			if(floatval($last_compile)<$time_last_mod) return true;
 			//check for all the modules
 			$modules=[]; preg_match_all($this->_rx_module, $view_content, $modules);
-			if(isset($modules[2])) {
-				foreach ($modules[2] as $mod_name) {
+			if(isset($modules[1])) {
+				foreach ($modules[1] as $mod_name) {
 					$file_path=$this->_app->getModulesDirectory()->file("$mod_name.wow.php", 2);
 					if($file_path->exists()) {
 						//module exists -> check the change time
