@@ -36,7 +36,7 @@
 			}
 			return false;
 		}
-		public function getView($viewName) {
+		public function getView($viewName = false) {
 			//the controller name here also does not include any @ functions
 			if(($viewName==false)&&(count($this->_views)==1))
 				return $this->_views[array_keys($this->_views)[0]];
