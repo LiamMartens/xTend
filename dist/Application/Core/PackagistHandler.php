@@ -58,6 +58,16 @@
                 }
                 if($to_install!==false) {
                     echo "Downloading $package_name ".$to_install["version"]."\n";
+                    //download requires
+                    foreach($to_install["require"] as $rpackage => $version) {
+                        if($rpackage=="php") {
+                            $php_vmatch = []; preg_match('/([\>\=]+)([0-9\.]+)/', $version, $php_vmatch);
+                            if(version_compare(phpversion(), $php_vmatch[2], $php_vmatch[1])==false) {
+                                die("PHP version $version required"); }
+                        } elseif(strpos($rpackage, '/')!==false) {
+                            $this->install($rpackage, $version, false);
+                        }
+                    }
                     //get directory names and create if not existing yet
                     $name=$to_install["source"]["url"];
                     $name=substr($name, strlen('https://github.com/'));
@@ -109,7 +119,8 @@
                         echo "A previously installed version was detected and removed from the autoload.json in favor of the new version. The package files still exist in Libs/Packagist/$name/$prev_version_found\n";
                     }
                     //add autoload
-                    $this->_autoload["$name-$id"] = $to_install["autoload"];
+                    if(array_key_exists("autoload", $to_install)) {
+                        $this->_autoload["$name-$id"] = $to_install["autoload"]; }
                     $this->saveAutoload();
                     return true;
                 }
