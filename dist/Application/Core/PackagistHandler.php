@@ -122,8 +122,12 @@
                 //remove from packagist
                 unset($this->_packages[$package_name]);
                 $this->savePackages();
+                //get package info
+                $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
+                $git_name = $package_info["package"]["repository"];
+                $git_name = substr($git_name, strrpos($git_name, '/', strrpos($git_name, '/') - strlen($git_name) - 1) + 1);
                 //get all directories
-                $package_directory = $this->_dirHandler->system('Libs.Packagist.'.trim(str_replace('/', '-', $package_name)));
+                $package_directory = $this->_dirHandler->system('Libs.Packagist.'.trim(str_replace('/', '-', strtolower($git_name))));
                 $installed_versions = $package_directory->directories();
                 //remove from autoload
                 foreach($installed_versions as $version) {
