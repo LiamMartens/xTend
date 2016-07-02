@@ -318,7 +318,9 @@
             "packagist:install [Vendor/Package]" => "Installs a packagist package",
             "packagist:install [Vendor/Package] [Version]" => "Installs a packagist package of a certain version. (Supports packagist's version conditions such as ^ and ~)",
             "packagist:remove [Vendor/Package]" => "Removes a package from your application",
-            "packagist:install" => "Automatically installs all packages in your packagist.json file"
+            "packagist:install" => "Automatically installs all packages in your packagist.json file",
+            "packagist:autoremove [Vendor/Package]" => "Automatically removes 'require' packages",
+            "packagist:autoremove [Vendor/Package] [Version]" => "Automatically removes 'require' packages"
         ];
 
         echo "xTend CLI\n";

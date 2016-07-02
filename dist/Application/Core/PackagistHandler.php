@@ -130,6 +130,7 @@
 
         public function remove($package_name) {
             if(array_key_exists($package_name, $this->_packages)) {
+                $version_installed = $this->_packages[$package_name];
                 //remove from packagist
                 unset($this->_packages[$package_name]);
                 $this->savePackages();
@@ -151,8 +152,54 @@
                 $this->saveAutoload();
                 //remove remaining directory
                 $package_directory->remove();
+                //show packages
+                $to_install = false;
+                foreach($package_info["package"]["versions"] as $pack_v => $information) {
+                    if((new VersionCheck($version_installed, $pack_v))->isMatch()==true) {
+                        $to_install = $information;
+                        break;
+                    } elseif(substr($version, 0, 4)!=="dev-") {
+                        $to_install = $information;
+                        break;
+                    }
+                }
+
+                $notice = "";
+                foreach($to_install["require"] as $p => $v) {
+                    if(strpos($p, '/')!==false) {
+                        $notice .= "$p : $v\n";
+                    }
+                }
+                if($notice!="") {
+                    echo "Don't forget, following packags were required by $package_name but might not be needed anymore\n(You can run 'autoremove $package_name $version_installed' or 'autoremove $package_name' to remove them automatically\n";
+                    echo $notice;
+                }
                 return true;
             }
             return false;
+        }
+
+        public function autoremove($package_name, $package_version = false) {
+            $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
+            //get to_install
+            $to_install = false;
+            foreach($package_info["package"]["versions"] as $version => $information) {
+                if(($package_version!==false)&&((new VersionCheck($package_version, $version))->isMatch()==true)) {
+                    $to_install = $information;
+                    break;
+                } elseif((substr($version, 0, 4)!=="dev-")&&($package_version===false)) {
+                    $to_install = $information;
+                    break;
+                }
+            }
+            //run through require and remove whats possible
+            if($to_install!==false) {
+                $to_install["require"] = array_reverse($to_install["require"]);
+                foreach($to_install["require"] as $p => $v) {
+                    if(strpos($p, '/')!==false) {
+                        $this->remove($p);
+                    }
+                }
+            }
         }
     }
