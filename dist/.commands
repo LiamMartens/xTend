@@ -29,7 +29,8 @@
             die("This application already exists\n");
         }
         //get the xTend master
-        $zip=file_get_contents('https://xtend.liammartens.com/releases/'.$app->getVersion().'.zip');
+        $latest = file_get_contents('https://xtend.liammartens.com/releases/latest.release');
+        $zip=file_get_contents('https://xtend.liammartens.com/releases/'.$latest.'.zip');
         file_put_contents("xtend.zip", $zip);
         $zip=new \ZipArchive;
         $zip->open("xtend.zip");
@@ -37,7 +38,7 @@
         //move the Application directory to the new application
         if(is_dir("xTend")) {
             rename("xTend/dist/Application", __DIR__."/".$argv[2]);
-        } else { rename("xTend-".$app->getVersion()."/dist/Application", __DIR__."/".$argv[2]); }
+        } else { rename("xTend-".$latest."/dist/Application", __DIR__."/".$argv[2]); }
         //remove zip
         unlink('xtend.zip');
         //remove xTend-master
@@ -45,7 +46,7 @@
         if($directory->exists()) {
             $directory->remove();
         } else {
-            $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-".$app->getVersion());
+            $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-".$latest);
             $directory->remove();
         }
         //add to configuration
