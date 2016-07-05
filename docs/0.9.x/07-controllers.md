@@ -1,6 +1,9 @@
 #Controllers
 Controllers should be used to handle the data coming from your model as well as handling user requests. In xTend controllers are very simple and have almost no footprint to them just like the models.
 
+###Controller data
+In the section about `views and templating` you can read how to retrieve data from your view. If your data has been passed to the controller however you can retrieve it in a similar way. Just retrieve your controller and call `getData()` or use the arrow pointer.
+
 ###Creating a Controller
 To create a controller you can use the workbench's `new:controller` command or you can manually create the file. The process practically identical to creating a model. By default your controller will look somethng like this
 ```

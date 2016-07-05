@@ -3,6 +3,9 @@
 ###Views
 Creating a view is as simple as creating a `.php` file in your application's `Views` directory or in a subdirectory of it.
 
+###View data
+As mentioned before you can pass data to either your view or your controller. To retrieve data you can fetch the view object, `$app->getViewHandler()->getView('optional name')`, and use `getData('key', 'default value')` or just use the arrow pointer (a `__set` magic method is set to retrieve data).
+
 ###Templating
 xTend has it's own simple and extendable templating engine called `WOW`. If you want your views to be compiled using the engine you have to create your files with a double extension being `.wow.php`. Furthermore you have to tell the engine when to compile the view and what version it is. (this is where the `version` option in the `Array of options` comes in). To do this we have to add following `WOW` expressions to the view
 ```
@@ -323,7 +326,7 @@ Use this to execute a specific controller's method (or retrieve a variable). Thi
 ```
 OR
 ```
-    @controlle_Pages.HomeController:myMethod()
+    @controller_Pages.HomeController:myMethod()
 ```
 
 ####controller with name inject
@@ -334,6 +337,43 @@ Use this to inject a controller method from a specific controller.
 OR
 ```
     @icontroller_Pages.HomeController:myMethod()
+```
+
+####view
+Use this to access the view object.
+```
+    <view>my_data</view>
+```
+OR
+```
+    @view:my_data
+```
+
+###view inject
+```
+    <view inject>my_data</view>
+```
+OR
+```
+    @iview:my_data
+```
+
+###view with name
+```
+    <view name="index">my_data</view>
+```
+OR
+```
+    @view_index:my_data
+```
+
+###view injet with name
+```
+    <view inject name="index">my_data</view>
+```
+OR
+```
+    @iview_index:my_data
 ```
 
 ####Form method spoof

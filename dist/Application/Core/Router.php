@@ -142,6 +142,7 @@
 
 		public function match($methods, $handle, $route=false, $alias=false) {
 			foreach ($methods as $method) {
+                $method=strtolower($method);
 				$this->$method($handle, $route, $alias);
 			}
 		}

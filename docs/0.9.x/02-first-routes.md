@@ -28,8 +28,13 @@ The last parameter, being the alias, can be used to easily retrieve routes. The 
 
 *Notice: you can also store the router in it's separate variable if you don't like continuously calling `getRouter()`*
 
-###POST, PUT, DELETE and ANY routes
-Setting `POST`, `PUT`, `DELETE` and `ANY` routes, `any` will catch any request, is analog to the setting a `GET` route. Just use `post()`, `put()`, `delete()` or `any()` instead.
+###POST, PUT, PATCH, OPTIONS, DELETE, any and match routes
+Analog to registering `GET` routes you can also register other HTTP verbs such as `POST`, `PUT`, `PATCH`, `OPTIONS` and `DELETE`. Secondly you can also register an `any` route to bind to all HTTP verbs and lastly you can use the `match` command to bind to specific HTTP verbs.
+
+####match example
+```
+    $app->getRouter()->match([ 'get', 'post' ], 'url', $options);
+```
 
 *Notice: aside from simple url's such as `/contact` or `/services/webdesign` we can also set some pretty complicated url's but more on that in the a following chapter*
 
