@@ -9,6 +9,8 @@
 		private $_get;
         private $_put;
         private $_delete;
+		private $_patch;
+		private $_options;
 		private $_any;
 		private $_error;
 		private $_aliases;
@@ -21,6 +23,8 @@
 			$this->_get=[];
             $this->_put=[];
             $this->_delete=[];
+			$this->_patch=[];
+			$this->_options=[];
 			$this->_any=[];
 			$this->_error=[];
 			$this->_aliases=[];
@@ -65,6 +69,20 @@
 			return false;
         }
 
+		public function getPatchRoute($handle) {
+			if(array_key_exists($handle, $this->_patch)) {
+				return $this->_patch[$handle];
+			}
+			return false;
+		}
+
+		public function getOptionsRoute($handle) {
+			if(array_key_exists($handle, $this->_options)) {
+				return $this->_options[$handle];
+			}
+			return false;
+		}
+
 		public function getAnyRoute($handle) {
 			if(array_key_exists($handle, $this->_any))
 				return $this->_any[$handle];
@@ -77,7 +95,7 @@
 			return false;
 		}
 
-		public function post($handle, $route=false, $alias=false) {
+		private function add(&$routes, $handle, $route=false, $alias=false) {
 			//you can either pass an actual handle as the handle
 			//or directly pass a route object as the handle
 			//ignoring the route and alias parameters completely
@@ -85,81 +103,47 @@
 				$h = new Route($this->_app, $handle, $route, $alias);
 			} elseif($handle instanceof Route) { $h=$handle; }
 			//add route to the post
-			$this->_post[$h->getHandle()]=$h;
+			$routes[$h->getHandle()]=$h;
 			//add to aliases if there is any
 			if($h->getAlias()!==false) {
 				$this->_aliases[$h->getAlias()]=$h;
 			}
 			//return Route object
 			return $h;
+		}
+
+		public function post($handle, $route=false, $alias=false) {
+			return $this->add($this->_post, $handle, $route, $alias);
 		}
 
 		public function get($handle, $route=false, $alias=false) {
-			//you can either pass an actual handle as the handle
-			//or directly pass a route object as the handle
-			//ignoring the route and alias parameters completely
-			$h; if(is_string($handle)&&($route!==false)) {
-				$h = new Route($this->_app, $handle, $route, $alias);
-			} elseif($handle instanceof Route) { $h=$handle; }
-			//add route to the get
-			$this->_get[$h->getHandle()]=$h;
-			//add to aliases if there is any
-			if($h->getAlias()!==false) {
-				$this->_aliases[$h->getAlias()]=$h;
-			}
-			//return Route object
-			return $h;
+			return $this->add($this->_get, $handle, $route, $alias);
 		}
 
         public function put($handle, $route=false, $alias=false) {
-			//you can either pass an actual handle as the handle
-			//or directly pass a route object as the handle
-			//ignoring the route and alias parameters completely
-			$h; if(is_string($handle)&&($route!==false)) {
-				$h = new Route($this->_app, $handle, $route, $alias);
-			} elseif($handle instanceof Route) { $h=$handle; }
-			//add route to the put
-			$this->_put[$h->getHandle()]=$h;
-			//add to aliases if there is any
-			if($h->getAlias()!==false) {
-				$this->_aliases[$h->getAlias()]=$h;
-			}
-			//return Route object
-			return $h;
+			return $this->add($this->_put, $handle, $route, $alias);
         }
 
         public function delete($handle, $route=false, $alias=false) {
-			//you can either pass an actual handle as the handle
-			//or directly pass a route object as the handle
-			//ignoring the route and alias parameters completely
-			$h; if(is_string($handle)&&($route!==false)) {
-				$h = new Route($this->_app, $handle, $route, $alias);
-			} elseif($handle instanceof Route) { $h=$handle; }
-			//add route to the delete
-			$this->_delete[$h->getHandle()]=$h;
-			//add to aliases if there is any
-			if($h->getAlias()!==false) {
-				$this->_aliases[$h->getAlias()]=$h;
-			}
-			//return Route object
-			return $h;
+			return $this->add($this->_delete, $handle, $route, $alias);
         }
 
+		public function patch($handle, $route=false, $alias=false) {
+			return $this->add($this->_patch, $handle, $route, $alias);
+		}
+
+		public function options($handle, $route=false, $alias=false) {
+			return $this->add($this->_options, $handle, $route, $alias);
+		}
+
 		public function any($handle, $route=false, $alias=false) {
-			//you can either pass an actual handle as the handle
-			//or directly pass a route object as the handle
-			//ignoring the route and alias parameters completely
-			$h; if(is_string($handle)&&($route!==false)) {
-				$h = new Route($this->_app, $handle, $route, $alias);
-			} elseif($handle instanceof Route) { $h=$handle; }
-			//add route to the any
-			$this->_any[$h->getHandle()]=$h;
-			//add to aliases if there is any
-			if($h->getAlias()!==false) {
-				$this->_aliases[$h->getAlias()]=$h;
+			return $this->add($this->_any, $handle, $route, $alias);
+		}
+
+		public function match($methods, $handle, $route=false, $alias=false) {
+			foreach ($methods as $method) {
+				$this->$method($handle, $route, $alias);
 			}
-			//return Route object
-			return $h;
 		}
 
 		public function error($handle, $route=false, $alias=false) {
@@ -253,7 +237,13 @@
             } elseif($_SERVER["REQUEST_METHOD"]=="DELETE") {
 				$relevant_requests = $this->_delete;
 				$this->_app->getUrlHandler()->setMethod("DELETE");
-            }
+            } elseif($_SERVER["REQUEST_METHOD"]=="PATCH") {
+				$relevant_requests = $this->_patch;
+				$this->_app->getUrlHandler()->setMethod("PATCH");
+			} elseif($_SERVER["REQUEST_METHOD"]=="OPTIONS") {
+				$relevant_requests = $this->_options;
+				$this->_app->getUrlHandler()->setMethod("OPTIONS");
+			}
 			//check the releavant requests
 			foreach ($relevant_requests as $handle => $route_obj) {
 				if($route_obj->isMatch($request)) {
