@@ -19,7 +19,8 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
     echo -n "Want to remove xTend git directory? (Y/n): ";
     read INPUT;
     if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
-        rm -rf $CURRENT_DIR;
+        cd "$1";
+        rm -rfR $CURRENT_DIR;
         echo "xTend git directory removed. Dist files have been moved to installation directory.";
     else
         echo "xTend git directory kept. Dist files have been moved to installation directory.";

@@ -246,11 +246,11 @@
 			$wow->rx("\<view\s+name=\"(.+?)\"\s*\>(.+?)\<\/view\>", "i"),
 			"<?php echo \$app->getViewHandler()->getView('$1')->$2; ?>"
 		);
-		$wow->regiserExpression(
+		$wow->registerExpression(
 			$wow->rx("\<view\s+inject\s*\>(.+?)\<\/view\>"),
 			"\$app->getViewHandler()->getView()->$1"
 		);
-		$wow->regiserExpression(
+		$wow->registerExpression(
 			$wow->rx("\<view\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/view\>"),
 			"\$app->getViewHandler()->getView('$1')->$2"
 		);
