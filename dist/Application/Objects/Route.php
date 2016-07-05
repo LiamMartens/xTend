@@ -118,7 +118,7 @@
 						//check up
 						//most complicated structure -> regexed URL variable
 						if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $handle_part, $rx_matches)&&
-							preg_match("/".$rx_matches[6]."/", $request_part)) {
+							preg_match("/^".$rx_matches[6]."$/", $request_part)) {
 							//regex for URL variable matches and handle is a regexed variable
 							//setData on the UrlHandler to set URL parameter with name and value
 							$this->_app->getUrlHandler()->setData($rx_matches[3], $request_part);
