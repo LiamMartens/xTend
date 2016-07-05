@@ -247,11 +247,11 @@
 			"<?php echo \$app->getViewHandler()->getView('$1')->$2; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<view\s+inject\s*\>(.+?)\<\/view\>"),
+			$wow->rx("\<view\s+inject\s*\>(.+?)\<\/view\>", "i"),
 			"\$app->getViewHandler()->getView()->$1"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<view\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/view\>"),
+			$wow->rx("\<view\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/view\>", "i"),
 			"\$app->getViewHandler()->getView('$1')->$2"
 		);
 
