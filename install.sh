@@ -28,7 +28,6 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
     echo -n "Do you want to initialize xTend now? (Y/n): ";
     read INPUT;
     if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
-        cd "$1";
         php workbench init;
         echo -n "Enter the URL you want to configure for xTend (http://localhost by default, leave empty to keep default setting): ";
         read INPUT;
