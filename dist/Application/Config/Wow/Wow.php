@@ -199,7 +199,7 @@
 			"<?php echo \$app->getUrl(); ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<url inject\s*\/\>","i"),
+			$wow->rx("\<url\s+inject\s*\/\>","i"),
 			"\$app->getUrl()"
 		);
 
@@ -211,29 +211,48 @@
 			"<?php echo \$app->$1; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<app inject\>(.+?)\<\/app\>", "i"),
+			$wow->rx("\<app\s+inject\s*\>(.+?)\<\/app\>", "i"),
 			"\$app->$1"
 		);
 
 		//
 		//	<controller name="..." (optional)>COMMAND</controller>
 		//
-		//
 		$wow->registerExpression(
 			$wow->rx("\<controller\>(.+?)\<\/controller\>","i"),
 			"<?php echo \$app->getControllerHandler()->getController()->$1; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<controller name=\"(.+?)\"\>(.+?)\<\/controller\>","i"),
+			$wow->rx("\<controller\s+name=\"(.+?)\"\s*\>(.+?)\<\/controller\>","i"),
 			"<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<controller inject\>(.+?)\<\/controller\>","i"),
+			$wow->rx("\<controller\s+inject\s*\>(.+?)\<\/controller\>","i"),
 			"\$app->getControllerHandler()->getController()->$1"
 		);
 		$wow->registerExpression(
-			$wow->rx("\<controller inject name=\"(.+?)\"\>(.+?)\<\/controller\>","i"),
+			$wow->rx("\<controller\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/controller\>","i"),
 			"\$app->getControllerHandler()->getController('$1')->$2"
+		);
+
+		//
+		// <view name=".." (optional)>COMMAND</view>
+		//
+		$wow->registerExpression(
+			$wow->rx("\<view\>(.+?)\<\/view\>", "i"),
+			"<?php echo \$app->getViewHandler()->getView()->$1; ?>"
+		);
+		$wow->registerExpression(
+			$wow->rx("\<view\s+name=\"(.+?)\"\s*\>(.+?)\<\/view\>", "i"),
+			"<?php echo \$app->getViewHandler()->getView('$1')->$2; ?>"
+		);
+		$wow->regiserExpression(
+			$wow->rx("\<view\s+inject\s*\>(.+?)\<\/view\>"),
+			"\$app->getViewHandler()->getView()->$1"
+		);
+		$wow->regiserExpression(
+			$wow->rx("\<view\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/view\>"),
+			"\$app->getViewHandler()->getView('$1')->$2"
 		);
 
 		//
@@ -256,7 +275,7 @@
 		//	<formtoken name="..." />
 		//
 		$wow->registerExpression(
-			$wow->rx("\<formtoken\s+persistent\s+name=\"(.+?)\"\s*\/?\>", "i"),
+			$wow->rx("\<formtoken\s+(?:(?:persistent\s+name=\"(.+?)\")|(?:name=\"(.+?)\")\s+persistent)\s*\/?\>", "i"),
 			'<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->persistent("$1"); ?>" />'
 		);
 	}
@@ -444,6 +463,30 @@
 		$wow->registerExpression(
 			$wow->rx('@icontroller_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
 			"\$app->getControllerHandler()->getController('$1')->$2"
+		);
+
+		//
+		//	@view:method()
+		//
+		$wow->registerExpression(
+			$wow->rx('@view:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+			"<?php echo \$app->getViewHandler()->getView()->$1; ?>"
+		);
+		$wow->registerExpression(
+			$wow->rx('@iview:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+			"\$app->getViewHandler()->getView()->$1"
+		);
+
+		//
+		//	@view_index:method()
+		//
+		$wow->registerExpression(
+			$wow->rx('@view_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+			"<?php echo \$app->getViewHandler()->getView('$1')->$2; ?>"
+		);
+		$wow->registerExpression(
+			$wow->rx('@iview_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+			"\$app->getViewHandler()->getView('$1')->$2"
 		);
 
 		//

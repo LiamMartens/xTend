@@ -3,7 +3,7 @@
 	class App
 	{
 		//moved core config from sperate const class to App
-		private $_xTendVersion = "0.9.2";
+		private $_xTendVersion = "0.9.3";
 		private $_url = "http://localhost";
 		private $_inDevelopment = false;
 		private $_backupInterval = "1 week";
