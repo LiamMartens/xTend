@@ -5,14 +5,14 @@
     {
         public static function load() {
             //include ex classes
-            ClassManager::includeClass(__DIR__."/Exception/CryptoException.php");
-            ClassManager::includeClass(__DIR__."/Exception/CryptoTestFailedException.php");
-            ClassManager::includeClass(__DIR__."/Exception/CannotPerformOperationException.php");
-            ClassManager::includeClass(__DIR__."/Exception/InvalidCiphertextException.php");
+            ClassManager::includeClass("Defuse\\Crypto\\Exception\\CryptoException", __DIR__."/Exception/CryptoException.php");
+            ClassManager::includeClass("Defuse\\Crypto\\Exception\\CryptoTestFailedException", __DIR__."/Exception/CryptoTestFailedException.php");
+            ClassManager::includeClass("Defuse\\Crypto\\Exception\\CannotPerformOperationException", __DIR__."/Exception/CannotPerformOperationException.php");
+            ClassManager::includeClass("Defuse\\Crypto\\Exception\\InvalidCiphertextException", __DIR__."/Exception/InvalidCiphertextException.php");
             //include handler
-            ClassManager::includeClass(__DIR__."/ExceptionHandler.php");
+            ClassManager::includeClass("Defuse\\Crypto\\ExceptionHandler", __DIR__."/ExceptionHandler.php");
             //include crypto self
-            ClassManager::includeClass(__DIR__."/Crypto.php");
+            ClassManager::includeClass("Defuse\\Crypto\\Crypto", __DIR__."/Crypto.php");
             //set ex handler
             $crypto_exception_handler_object_dont_touch_me = new ExceptionHandler;
         }

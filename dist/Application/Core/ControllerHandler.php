@@ -35,7 +35,7 @@
             $controllerPath = $directive.$split[0];
 			//start inclusion
 			if($this->exists($controllerPath)) {
-				ClassManager::includeClass($this->_app->getControllersDirectory()->file("$controllerPath.php"));
+				ClassManager::includeClass($controllerClassName, $this->_app->getControllersDirectory()->file("$controllerPath.php"));
 				if($createInstance) {
 					//create an instance in the controllers
 					//if not you'll have to instantiate it yourself
