@@ -224,15 +224,15 @@
 			require_once($this->_dirSystem."/Core/ClassManager.php");
 			//using ClassManager include further needed classes
 			//include and initialize SettingsContainer class
-			ClassManager::includeClass("xTend\\Core\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php");
+            ClassManager::includeClasses([
+                [ "xTend\\Core\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php" ],
+                [ "xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php" ],
+                [ "xTend\\Core\\StatusCodeHandler", $this->_dirSystem."/Core/StatusCodeHandler.php" ],
+                [ "xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php" ],
+                [ "xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php" ]
+            ]);
 			$this->_settingsContainer = new SettingsContainer();
-			//include archive class
-			ClassManager::includeClass("xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php");
-			//include StatusCodeHandler
-			ClassManager::includeClass("xTend\\Core\\StatusCodeHandler", $this->_dirSystem."/Core/StatusCodeHandler.php");
 			$this->_statusCodeHandler = new StatusCodeHandler();
-			//include dir class
-			ClassManager::includeClass("xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php");
 			$this->_directoryHandler = new DirectoryHandler($this);
 			$this->_dirSystem = new DirectoryHandler\Directory($this, $this->_dirSystem);
 			$this->_dirPublic = new DirectoryHandler\Directory($this, $this->_dirPublic);
@@ -250,72 +250,51 @@
 			$this->setObjectsDirectory($this->getObjectsDirectory());
 			$this->setViewOutputDirectory($this->getViewOutputDirectory());
 			$this->setViewsDirectory($this->getViewsDirectory());
-			//include file class
-			ClassManager::includeClass("xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php");
+            ClassManager::includeClasses([
+                [ "xTend\\Core\\LogHandler", $this->_dirSystem."/Core/LogHandler.php" ],
+                [ "xTend\\Core\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php" ],
+                [ "xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php" ],
+                [ "xTend\\Blueprints\\BaseView", $this->_dirBlueprints->file("BaseView.php") ],
+                [ "xTend\\Blueprints\\BaseDataView", $this->_dirBlueprints->file("BaseDataView.php") ],
+                [ "xTend\\Objects\\View",  $this->_dirObjects->file("View.php") ],
+                [ "xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php" ],
+                [ "xTend\\Blueprints\\BaseDataExtension", $this->_dirBlueprints->file("BaseDataExtension.php") ],
+                [ "xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php" ],
+                [ "xTend\\Objects\\Route", $this->_dirObjects->file("Route.php") ],
+                [ "xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php" ],
+                [ "xTend\\Core\\BackupManager", $this->_dirSystem."/Core/BackupManager.php" ],
+                [ "Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php" ],
+                [ "xTend\\Core\\Session", $this->_dirSystem."/Core/Session.php" ],
+                [ "xTend\\Core\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php" ],
+                [ "xTend\\Core\\Cookie", $this->_dirSystem."/Core/Cookie.php" ],
+                [ "xTend\\Core\\FileManager", $this->_dirSystem."/Core/FileManager.php" ],
+                [ "xTend\\Core\\SortHelper", $this->_dirSystem."/Core/SortHelper.php" ],
+                [ "xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php" ],
+                [ "xTend\\Core\\RequestDataHandler", $this->_dirSystem."/Core/RequestDataHandler.php" ],
+                [ "xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php" ],
+                [ "xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php" ],
+                [ "xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php" ],
+                [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
+                [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
+                [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
+                [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ]
+            ]);
 			$this->_fileHandler = new FileHandler($this);
-			//include LogHandler
-			ClassManager::includeClass("xTend\\Core\\LogHandler", $this->_dirSystem."/Core/LogHandler.php");
 			$this->_logHandler = new LogHandler($this);
-			//include ModelHandler
-			ClassManager::includeClass("xTend\\Core\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php");
 			$this->_modelHandler = new ModelHandler($this);
-			//include ControllerHandler
-			ClassManager::includeClass("xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php");
 			$this->_controllerHandler = new ControllerHandler($this);
-			//Include view blueprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseView", $this->_dirBlueprints->file("BaseView.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataView", $this->_dirBlueprints->file("BaseDataView.php"));
-			ClassManager::includeClass("xTend\\Objects\\View",  $this->_dirObjects->file("View.php"));
-			//include ViewHandler
-			ClassManager::includeClass("xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php");
 			$this->_viewHandler = new ViewHandler($this);
-			//include UrlHandler
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataExtension", $this->_dirBlueprints->file("BaseDataExtension.php"));
-			ClassManager::includeClass("xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php");
 			$this->_UrlHandler = new UrlHandler($this);
-			//include Route Object
-			ClassManager::includeClass("xTend\\Objects\\Route", $this->_dirObjects->file("Route.php"));
-			//include Router
-			ClassManager::includeClass("xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php");
 			$this->_router = new Router($this);
-			//include BackupManager
-			ClassManager::includeClass("xTend\\Core\\BackupManager", $this->_dirSystem."/Core/BackupManager.php");
 			$this->_backupManager = new BackupManager($this);
-			//include crypto
-			if(ClassManager::includeClass("Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php"))
-				\Defuse\Crypto\CryptoLoader::load();
-			//include SessionHandler class
-			ClassManager::includeClass("xTend\\Core\\Session", $this->_dirSystem."/Core/Session.php");
-			ClassManager::includeClass("xTend\\Core\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php");
-			//include Cookies class
-			ClassManager::includeClass("xTend\\Core\\Cookie", $this->_dirSystem."/Core/Cookie.php");
-			//include filemanager class
-			ClassManager::includeClass("xTend\\Core\\FileManager", $this->_dirSystem."/Core/FileManager.php");
+			\Defuse\Crypto\CryptoLoader::load();
 			$this->_fileManager = new FileManager();
-			//include SortHelper
-			ClassManager::includeClass("xTend\\Core\\SortHelper", $this->_dirSystem."/Core/SortHelper.php");
 			$this->_sortHelper = new SortHelper();
-			//include Wow Compiler
-			ClassManager::includeClass("xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php");
 			$this->_wowCompiler = new Wow($this);
-			//include RequestDataHandler
-			ClassManager::includeClass("xTend\\Core\\RequestDataHandler", $this->_dirSystem."/Core/RequestDataHandler.php");
 			$this->_requestDataHandler = new RequestDataHandler($this);
-			//include HTMLHandler
-			ClassManager::includeClass("xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php");
 			$this->_htmlHandler = new HTMLHandler($this);
-			//include FormTokenHandler
-			ClassManager::includeClass("xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php");
 			$this->_formTokenHandler = new FormTokenHandler($this);
-			//include VersionCheck helper
-			ClassManager::includeClass("xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php");
-			//include PackagistHandler
-			ClassManager::includeClass("xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php");
 			$this->_packagistHandler = new PackagistHandler($this);
-			//inlcude Controller and model bluepprints
-			ClassManager::includeClass("xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php"));
-			ClassManager::includeClass("xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php"));
 			//set post and pre config arrays
 			$this->_preConfigMethods = [];
 			$this->_postConfigMethods = [];
@@ -325,24 +304,44 @@
 			$filemanager = $this->getFileManager();
 			$confdir = $this->getConfigDirectory();
 			$files = $confdir->files(true);
-			//process excludes
-			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });
+            //check .exclude files
+            $excludes=[]; foreach($files as $key => $file) {
+                if($file->name()=='.exclude') {
+                    $excludes[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($excludes as $exclude) {
 				$parent = $exclude->parent();
-				$files = array_filter($files, function($file) use ($parent) {
-					return (substr($file->parent(), 0, strlen($parent))!=$parent);
-				}); }
-			//process ignores
-			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
+                foreach($files as $key => $file) {
+                    if(substr($file->parent(), 0, strlen($parent))==$parent) {
+                        unset($files[$key]);
+                    }
+                }
+            }
+			//check .ignore files
+			$ignores=[]; foreach($files as $key => $file) {
+                if($file->name()=='.ignore') {
+                    $ignores[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($ignores as $ignore) {
 				$lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
 				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
-				$files = array_filter($files, function($file) use ($ignore_files) {
-					return (array_search($file, $ignore_files)===false);
-				});
+                foreach($files as $key => $file) {
+                    if(array_search($file, $ignore_files)!==false) {
+                        unset($files[$key]);
+                    }
+                }
 			}
-			//process orders
-			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
+			//check .order files
+            $orders=[]; foreach($files as $key => $file) {
+                if($file->name()=='.order') {
+                    $orders[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($orders as $order) {
 				$lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
 				$included_files = [$order];
@@ -353,13 +352,15 @@
 						$filemanager->includeFile($order_file); }
 				}
 				//filter out the already included ones
-				$files = array_filter($files, function($file) use ($included_files) {
-					return (array_search($file, $included_files)===false);
-				});
+                foreach($files as $key => $file) {
+                    if(array_search($file, $included_files)!==false) {
+                        unset($files[$key]);
+                    }
+                }
 			}
 			//include remaining files
 			foreach($files as $file) {
-				if($file->extension()!="json") $file->include();
+				if($file->extension()=='php') { $file->include(); }
 			}
 		}
 		//libraries include
@@ -367,24 +368,44 @@
 			$filemanager = $this->getFileManager();
 			$libsdir = $this->getLibsDirectory();
 			$files = $libsdir->files(true);
-			//process excludes
-			$excludes = array_filter($files, function($file) { return ($file->name()=='.exclude'); });
+            //check .exclude files
+            $excludes=[]; foreach($files as $key => $file) {
+                if($file->name()=='.exclude') {
+                    $excludes[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($excludes as $exclude) {
 				$parent = $exclude->parent();
-				$files = array_filter($files, function($file) use ($parent) {
-					return (substr($file->parent(), 0, strlen($parent))!=$parent);
-				}); }
-			//process ignores
-			$ignores = array_filter($files, function($file) { return ($file->name()=='.ignore'); });
+                foreach($files as $key => $file) {
+                    if(substr($file->parent(), 0, strlen($parent))==$parent) {
+                        unset($files[$key]);
+                    }
+                }
+            }
+			//check .ignore files
+			$ignores=[]; foreach($files as $key => $file) {
+                if($file->name()=='.ignore') {
+                    $ignores[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($ignores as $ignore) {
 				$lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
 				$ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
-				$files = array_filter($files, function($file) use ($ignore_files) {
-					return (array_search($file, $ignore_files)===false);
-				});
+                foreach($files as $key => $file) {
+                    if(array_search($file, $ignore_files)!==false) {
+                        unset($files[$key]);
+                    }
+                }
 			}
-			//process orders
-			$orders = array_filter($files, function($file) { return ($file->Name()=='.order'); });
+			//check .order files
+            $orders=[]; foreach($files as $key => $file) {
+                if($file->name()=='.order') {
+                    $orders[]=$file;
+                    unset($files[$key]);
+                }
+            }
 			foreach($orders as $order) {
 				$lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
 				$included_files = [$order];
@@ -395,13 +416,15 @@
 						$filemanager->includeFile($order_file); }
 				}
 				//filter out the already included ones
-				$files = array_filter($files, function($file) use ($included_files) {
-					return (array_search($file, $included_files)===false);
-				});
+                foreach($files as $key => $file) {
+                    if(array_search($file, $included_files)!==false) {
+                        unset($files[$key]);
+                    }
+                }
 			}
 			//include remaining files
 			foreach($files as $file) {
-				if($file->extension()!="json") $file->include();
+				if($file->extension()=='php') { $file->include(); }
 			}
 		}
 		//run function
