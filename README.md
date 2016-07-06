@@ -17,6 +17,8 @@ xTend is a PHP MVC framework. While other frameworks, such as Laravel, are focus
 * A lot of helper functions to keep your code clean
 * A simple CLI to do basic interactions
 
+*Notice I ran some benchmarks using the `ab -c 10 -t 3` command and I average at around 650 rps on Lighttpd with PHP-CGI*
+
 ###Example
 You can find an example application in the `examples` directory. It's a very simple tasklist project. (Don't forget to set the app url when you run it)   
 <br>
