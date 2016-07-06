@@ -6,16 +6,12 @@
 	**/
 	class ClassManager
 	{
-		public static function includeClass($className, $classPath) {
-			if(!class_exists($className)) {
-				require($classPath);
-				return true;
-			}
-			return false;
+		public static function includeClass($classPath) {
+            return require_once($classPath);
 		}
 		public static function includeClasses($classes) {
 			foreach ($classes as $class) {
-				self::includeClass($class[0], $class[1]);
+				require_once($class);
 			}
 		}
 	}

@@ -225,11 +225,11 @@
 			//using ClassManager include further needed classes
 			//include and initialize SettingsContainer class
             ClassManager::includeClasses([
-                [ "xTend\\Core\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php" ],
-                [ "xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php" ],
-                [ "xTend\\Core\\StatusCodeHandler", $this->_dirSystem."/Core/StatusCodeHandler.php" ],
-                [ "xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php" ],
-                [ "xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php" ]
+                $this->_dirSystem."/Core/SettingsContainer.php",
+                $this->_dirSystem."/Core/Archive.php",
+                $this->_dirSystem."/Core/StatusCodeHandler.php",
+                $this->_dirSystem."/Core/FileHandler.php",
+                $this->_dirSystem."/Core/DirectoryHandler.php"
             ]);
 			$this->_settingsContainer = new SettingsContainer();
 			$this->_statusCodeHandler = new StatusCodeHandler();
@@ -251,33 +251,33 @@
 			$this->setViewOutputDirectory($this->getViewOutputDirectory());
 			$this->setViewsDirectory($this->getViewsDirectory());
             ClassManager::includeClasses([
-                [ "xTend\\Core\\LogHandler", $this->_dirSystem."/Core/LogHandler.php" ],
-                [ "xTend\\Core\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php" ],
-                [ "xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php" ],
-                [ "xTend\\Blueprints\\BaseView", $this->_dirBlueprints->file("BaseView.php") ],
-                [ "xTend\\Blueprints\\BaseDataView", $this->_dirBlueprints->file("BaseDataView.php") ],
-                [ "xTend\\Objects\\View",  $this->_dirObjects->file("View.php") ],
-                [ "xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php" ],
-                [ "xTend\\Blueprints\\BaseDataExtension", $this->_dirBlueprints->file("BaseDataExtension.php") ],
-                [ "xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php" ],
-                [ "xTend\\Objects\\Route", $this->_dirObjects->file("Route.php") ],
-                [ "xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php" ],
-                [ "xTend\\Core\\BackupManager", $this->_dirSystem."/Core/BackupManager.php" ],
-                [ "Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php" ],
-                [ "xTend\\Core\\Session", $this->_dirSystem."/Core/Session.php" ],
-                [ "xTend\\Core\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php" ],
-                [ "xTend\\Core\\Cookie", $this->_dirSystem."/Core/Cookie.php" ],
-                [ "xTend\\Core\\FileManager", $this->_dirSystem."/Core/FileManager.php" ],
-                [ "xTend\\Core\\SortHelper", $this->_dirSystem."/Core/SortHelper.php" ],
-                [ "xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php" ],
-                [ "xTend\\Core\\RequestDataHandler", $this->_dirSystem."/Core/RequestDataHandler.php" ],
-                [ "xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php" ],
-                [ "xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php" ],
-                [ "xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php" ],
-                [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
-                [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
-                [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
-                [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ]
+                $this->_dirSystem."/Core/LogHandler.php",
+                $this->_dirSystem."/Core/ModelHandler.php",
+                $this->_dirSystem."/Core/ControllerHandler.php",
+                $this->_dirBlueprints->file("BaseView.php"),
+                $this->_dirBlueprints->file("BaseDataView.php"),
+                $this->_dirObjects->file("View.php"),
+                $this->_dirSystem."/Core/ViewHandler.php",
+                $this->_dirBlueprints->file("BaseDataExtension.php"),
+                $this->_dirSystem."/Core/UrlHandler.php",
+                $this->_dirObjects->file("Route.php"),
+                $this->_dirSystem."/Core/Router.php",
+                $this->_dirSystem."/Core/BackupManager.php",
+                $this->_dirSystem."/Core/Crypto/CryptoLoader.php",
+                $this->_dirSystem."/Core/Session.php",
+                $this->_dirSystem."/Core/SessionHandler.php",
+                $this->_dirSystem."/Core/Cookie.php",
+                $this->_dirSystem."/Core/FileManager.php",
+                $this->_dirSystem."/Core/SortHelper.php",
+                $this->_dirSystem."/Core/Wow.php",
+                $this->_dirSystem."/Core/RequestDataHandler.php",
+                $this->_dirSystem."/Core/HTMLHandler.php",
+                $this->_dirSystem."/Core/FormTokenHandler.php",
+                $this->_dirSystem."/Core/VersionCheck.php",
+                $this->_dirSystem."/Core/PackagistHandler.php",
+                $this->_dirBlueprints->file("BaseController.php"),
+                $this->_dirBlueprints->file("BaseDataController.php"),
+                $this->_dirBlueprints->file("BaseModel.php")
             ]);
 			$this->_fileHandler = new FileHandler($this);
 			$this->_logHandler = new LogHandler($this);
