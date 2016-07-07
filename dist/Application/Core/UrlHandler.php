@@ -6,27 +6,13 @@
 		public function getRoute() { return $this->_route; }
 		public function setRoute($route) { $this->_route=$route; }
 
-		private $_request;
+		/*private $_request;
 		public function getRequest() { return $this->_request; }
 		public function setRequest($request) { $this->_request=trim($request, "/"); }
 
 		private $_method;
 		public function getMethod() { return $this->_method; }
-		public function setMethod($method) { $this->_method=$method; }
-
-        private $_contentType;
-        protected $_contentTypes = [];
-        public function registerContentType($ext, $type) { $this->_contentType[$ext] = $type; }
-        public function getContentType() { return $this->_contentType; }
-        public function setContentType($type) {
-            $ct = $type;
-            if(isset($this->_contentType[$type])) {
-                $ct=$this->_contentType[$ct];
-            }
-            $this->_contentType = $ct;
-            header("Content-Type: $ct");
-            return $ct;
-        }
+		public function setMethod($method) { $this->_method=$method; }*/
 
 		private $_app;
 		public function __construct($app) {

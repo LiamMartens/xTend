@@ -17,17 +17,18 @@
         public function data() { return $this->_data; }
 
         private function parseGet() {
-            if((count($_GET)==0)&&($this->_app->getUrlHandler()->getMethod()=="GET")) {
-                $qm_pos = strpos($this->_app->getUrlHandler()->getRequest(), "?");
-                if($qm_pos!==false) parse_str(substr($this->_app->getUrlHandler()->getRequest(), $qm_pos+1), $this->_get);
+            if(count($_GET)==0) {
+                $request = $_SERVER["REQUEST_URI"];
+                $qm_pos = strpos($request, "?");
+                if($qm_pos!==false) parse_str(substr($request, $qm_pos+1), $this->_get);
             } else { $this->_get = $_GET; }
         }
         private function parsePost() {
-            if((count($_POST)==0)&&($this->_app->getUrlHandler()->getMethod()=="POST")) {
+            if(count($_POST)==0) {
                 //assuming its json
                 $input = file_get_contents('php://input');
                 $data = json_decode($input, true);
-                $this->_post = ($data===null) ? $input : $data;
+                $this->_post = ($data===null) ? ($input=='' ? [] : $input) : $data;
             } else { $this->_post = $_POST; }
         }
         private function parseData() {

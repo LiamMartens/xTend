@@ -207,9 +207,13 @@
 
 		public function execute() {
 			$request = trim($_SERVER["REQUEST_URI"], "/");
-			$this->_app->getUrlHandler()->setRequest($request);
 			//execute data handler parser
 			$this->_app->getRequestDataHandler()->parse();
+            //allow method spoofing
+			$post=$this->_app->getRequestDataHandler()->post();
+			if(array_key_exists('_method', $post)) {
+				$_SERVER['REQUEST_METHOD']=strtoupper($post['_method']); }
+            $this->_app->getRequestHandler()->initialize($_SERVER["REQUEST_METHOD"], $request);
 			//check home route
 			if(isset($this->_home)&&$this->_home->isMatch($request)) {
 				$this->_home->execute(); return true;
@@ -222,28 +226,18 @@
 			}
 			//check for method routes | POST or GET
 			$relevant_requests;
-			//allow method spoofing
-			$post=$this->_app->getRequestDataHandler()->post();
-			if(array_key_exists('_method', $post)) {
-				$_SERVER['REQUEST_METHOD']=strtoupper($post['_method']); }
 			if($_SERVER["REQUEST_METHOD"]=="POST") {
 				$relevant_requests = $this->_post;
-				$this->_app->getUrlHandler()->setMethod("POST");
 			} elseif($_SERVER["REQUEST_METHOD"]=="GET") {
 				$relevant_requests = $this->_get;
-				$this->_app->getUrlHandler()->setMethod("GET");
 			} elseif($_SERVER["REQUEST_METHOD"]=="PUT") {
 				$relevant_requests = $this->_put;
-				$this->_app->getUrlHandler()->setMethod("PUT");
             } elseif($_SERVER["REQUEST_METHOD"]=="DELETE") {
 				$relevant_requests = $this->_delete;
-				$this->_app->getUrlHandler()->setMethod("DELETE");
             } elseif($_SERVER["REQUEST_METHOD"]=="PATCH") {
 				$relevant_requests = $this->_patch;
-				$this->_app->getUrlHandler()->setMethod("PATCH");
 			} elseif($_SERVER["REQUEST_METHOD"]=="OPTIONS") {
 				$relevant_requests = $this->_options;
-				$this->_app->getUrlHandler()->setMethod("OPTIONS");
 			}
 			//check the releavant requests
 			foreach ($relevant_requests as $handle => $route_obj) {

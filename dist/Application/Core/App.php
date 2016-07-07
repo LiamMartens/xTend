@@ -145,6 +145,9 @@
         //packagist handler
         private $_packagistHandler;
         public function getPackagistHandler() { return $this->_packagistHandler; }
+        //request handler
+        private $_requestHandler;
+        public function getRequestHandler() { return $this->_requestHandler; }
         //error throw
         public function throwError($code) {
             header("HTTP/1.0 $code");
@@ -275,10 +278,12 @@
                 [ "xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php" ],
                 [ "xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php" ],
                 [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
+                [ "xTend\\Core\\RequestHandler", $this->_dirSystem."/Core/RequestHandler.php" ],
                 [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
                 [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
                 [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ],
-                [ "xTend\\Blueprints\\BaseRespondController", $this->_dirBlueprints->file("BaseRespondController.php") ]
+                [ "xTend\\Blueprints\\BaseRespondController", $this->_dirBlueprints->file("BaseRespondController.php") ],
+                [ "xTend\\Objects\\Request", $this->_dirObjects->file("Request.php") ]
             ]);
             $this->_fileHandler = new FileHandler($this);
             $this->_logHandler = new LogHandler($this);
@@ -296,6 +301,7 @@
             $this->_htmlHandler = new HTMLHandler($this);
             $this->_formTokenHandler = new FormTokenHandler($this);
             $this->_packagistHandler = new PackagistHandler($this);
+            $this->_requestHandler = new RequestHandler($this);
             //set post and pre config arrays
             $this->_preConfigMethods = [];
             $this->_postConfigMethods = [];
