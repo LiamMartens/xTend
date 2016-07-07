@@ -7,3 +7,4 @@ dist/Application/Layouts
 dist/Application/Modules
 dist/Application/Logs
 dist/Application/Meta
+.idea/*
