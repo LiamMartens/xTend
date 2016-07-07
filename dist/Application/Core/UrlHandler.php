@@ -1,6 +1,7 @@
 <?php
 	namespace xTend\Core;
-	class UrlHandler extends \xTend\Blueprints\BaseDataExtension
+	use \xTend\Blueprints\BaseDataExtension;
+	class UrlHandler extends BaseDataExtension
 	{
 		private $_route;
 		public function getRoute() { return $this->_route; }
