@@ -336,6 +336,7 @@
             "set:application [AppName]" => "Selects an application",
             "set:public [PublicDirectory]" => "Sets the public directory",
             "new:controller [ControllerName]" => "Creates a new controller. Example:\n\tnew:controller Main.HomeController - will create a controller in Controllers/Main called HomeController.php",
+            "new:respondcontroller [ControllerName]" => "Creates a new controller which extends the BaseRespondController. Can be useful for creating an API controller",
             "new:model [ModelName]" => "Creates a new controller. Example:\n\tnew:model Api.User - will create a model in Models/Api called User.php",
             "new:layout [LayoutName]" => "Creates a new basic layout",
             "new:view [ViewName]" => "Creates a new basic view",

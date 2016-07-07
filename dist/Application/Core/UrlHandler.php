@@ -15,17 +15,8 @@
 		public function setMethod($method) { $this->_method=$method; }
 
         private $_contentType;
-        protected $_contentTypes = [
-            'json' => 'application/json',
-            'jpg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-            'xml' => 'application/xml',
-            'py' => 'text/x-script.phyton',
-            'cpp' => 'text/x-c',
-            'html' => 'text/html',
-            'css' => 'text/css'
-        ];
+        protected $_contentTypes = [];
+        public function registerContentType($ext, $type) { $this->_contentType[$ext] = $type; }
         public function getContentType() { return $this->_contentType; }
         public function setContentType($type) {
             $ct = $type;
