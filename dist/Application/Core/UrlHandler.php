@@ -14,6 +14,29 @@
 		public function getMethod() { return $this->_method; }
 		public function setMethod($method) { $this->_method=$method; }
 
+        private $_contentType;
+        protected $_contentTypes = [
+            'json' => 'application/json',
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'xml' => 'application/xml',
+            'py' => 'text/x-script.phyton',
+            'cpp' => 'text/x-c',
+            'html' => 'text/html',
+            'css' => 'text/css'
+        ];
+        public function getContentType() { return $this->_contentType; }
+        public function setContentType($type) {
+            $ct = $type;
+            if(isset($this->_contentType[$type])) {
+                $ct=$this->_contentType[$ct];
+            }
+            $this->_contentType = $ct;
+            header("Content-Type: $ct");
+            return $ct;
+        }
+
 		private $_app;
 		public function __construct($app) {
 			$this->_app = $app;
@@ -34,11 +57,11 @@
 				$match=[];
 				if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $part, $match)) {
 					if(array_key_exists($match[3], $parameters)) {
-						$url.='/'.$parameters[$match[3]];	
+						$url.='/'.$parameters[$match[3]];
 					}
 				} elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $part, $match)) {
 					if(array_key_exists($match[2], $parameters)) {
-						$url.='/'.$parameters[$match[2]];	
+						$url.='/'.$parameters[$match[2]];
 					}
 				} else { $url.="/$part"; }
 			}

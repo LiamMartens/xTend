@@ -3,6 +3,7 @@
 	class BaseRespondController extends BaseDataController
 	{
         protected function respond($success, $status = false, $data = false) {
+            $this->_app->getUrlHandler()->setContentType('json');
             $reply=[ 'success' => $success ];
             $reply['multiple']=false;
             $reply['status']=[];
