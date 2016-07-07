@@ -139,6 +139,30 @@
         ");
     });
 
+    Workbench::registerCommand('^new:respondcontroller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Controllers.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Controllers.'.$argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseRespondController {
+        //The BaseRespondController adds a protected method called respond
+        //which you can use to return JSON data with a success parameter (boolean)
+        //a status parameter with a code, hex code, status name and status message
+        //and a data parameter which you can use to pass extra data
+        //all info about the BaseRespondController can be found in the documentation
+    }
+        ");
+    });
+
     Workbench::registerCommand('^new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
