@@ -3,7 +3,7 @@
     class App
     {
         //moved core config from sperate const class to App
-        private $_xTendVersion = "0.9.5";
+        private $_xTendVersion = "0.9.6";
         private $_url = "http://localhost";
         private $_inDevelopment = false;
         private $_backupInterval = "1 week";
@@ -277,7 +277,8 @@
                 [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
                 [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
                 [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
-                [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ]
+                [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ],
+                [ "xTend\\Blueprints\\BaseRespondController", $this->_dirBlueprints->file("BaseRespondController.php") ]
             ]);
             $this->_fileHandler = new FileHandler($this);
             $this->_logHandler = new LogHandler($this);

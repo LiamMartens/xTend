@@ -56,8 +56,9 @@
 					$totalclassparts = count($split);
 					for($i=1;$i<$totalclassparts;$i++) {
 						if(method_exists($this->_controllers[$controllerClassName], $split[$i])) {
-							$this->_controllers[$controllerClassName]->{$split[$i]}();
-						}
+							$return_data = $this->_controllers[$controllerClassName]->{$split[$i]}();
+                            if(is_array($return_data)) { echo json_encode($return_data); }
+                        }
 					}
 					return $this->_controllers[$controllerClassName];
 				}
