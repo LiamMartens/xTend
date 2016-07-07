@@ -1,7 +1,7 @@
 <?php
-	namespace xTend\Blueprints;
-	class BaseRespondController extends BaseDataController
-	{
+    namespace xTend\Blueprints;
+    class BaseRespondController extends BaseDataController
+    {
         protected function respond($success, $status = false, $data = false) {
             $this->_app->getRequestHandler()->getRequest()->setContentType('json');
             $reply=[ 'success' => $success ];

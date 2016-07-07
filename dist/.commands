@@ -56,13 +56,13 @@
         $file->append('
     namespace '.str_replace('.', '\\', $argv[2]).' {
         use \xTend\Workbench\Workbench as Workbench;
-		Workbench::setNamespace(__NAMESPACE__);
+        Workbench::setNamespace(__NAMESPACE__);
         global $matched_application;
-	    if(__NAMESPACE__==$matched_application) {
-			$app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
-		    $app->getFileHandler()->system("Config.App.App.php")->include();
-		    $app->run();
-		}
+        if(__NAMESPACE__==$matched_application) {
+            $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
+            $app->getFileHandler()->system("Config.App.App.php")->include();
+            $app->run();
+        }
     }
         ');
         //replac all xTend\Application namespaces to the new application
@@ -283,7 +283,7 @@
         $file->write('<?php
     namespace '.Workbench::getConfiguration('application').';
     use \xTend\Core\Wow as Wow;
-	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
+    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $wow = $app->getWowCompiler();
     $wow->setFlavor(Wow::'.$argv[2].');
     $wow->setInternalExpressions();');

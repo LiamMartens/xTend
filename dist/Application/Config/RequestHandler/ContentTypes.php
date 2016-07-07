@@ -1,6 +1,6 @@
 <?php
-	namespace Application;
-	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
+    namespace Application;
+    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $requestHandler = $app->getRequestHandler();
     $requestHandler->registerContentType('json', 'application/json');
     $requestHandler->registerContentType('jpg', 'image/jpeg');
