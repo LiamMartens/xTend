@@ -6,7 +6,7 @@
         private $_post;
         private $_data;
 
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -16,21 +16,21 @@
             $this->_data = [];
         }
 
-        /*
+        /**
         * Returns parsed GET data
         *
         * @return array
         */
         public function get() { return $this->_get; }
 
-        /*
+        /**
         * Returns parsed POST data
         *
         * @return array
         */
         public function post() { return $this->_post; }
 
-        /*
+        /**
         * Returns passed navigation data
         *
         * @return array

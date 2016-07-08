@@ -7,7 +7,7 @@
             $this->_settings = [];
         }
 
-        /*
+        /**
         * Sets a settings entry
         *
         * @param mixed $key
@@ -17,7 +17,7 @@
             $this->_settings[$key] = $value;
         }
 
-        /*
+        /**
         * Returns a settings entry
         *
         * @param mixed $key

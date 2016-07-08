@@ -7,7 +7,7 @@
             $this->_files=[];
         }
 
-        /*
+        /**
         * Includes a file if it hasn't been included yet
         *
         * @param string $fullPath
@@ -20,7 +20,7 @@
             }
         }
 
-        /*
+        /**
         * Includes mulitple files
         *
         * @param array $filePaths

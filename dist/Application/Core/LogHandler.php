@@ -4,7 +4,7 @@
     class LogHandler
     {
         private $_app;
-        /*
+        /**
         * @param xTend\Core\App $app
         */
         public function __construct($app) {
@@ -26,7 +26,7 @@
             }
         }
 
-        /*
+        /**
         * Writes a log
         *
         * @param StatusCode $err

@@ -4,7 +4,7 @@
         private $_app;
         private $_method;
         private $_path;
-        /*
+        /**
         * @param xTend\Core\App $app
         * @param string $method
         * @param string $path
@@ -14,14 +14,14 @@
             $this->_method = $method;
             $this->_path = $path;
         }
-        /*
+        /**
         * Returns the current method, GET POST OPTIONS PATCH DELETE
         */
         public function getMethod() {
             return $this->_method;
         }
 
-        /*
+        /**
         * Returns the scheme (http - https)
         */
         public function getScheme() {
@@ -47,7 +47,7 @@
             return $this->_path;
         }
 
-        /*
+        /**
         * Sets the content type
         *
         * @param string $type

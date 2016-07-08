@@ -1,6 +1,6 @@
 <?php
     namespace xTend\Core;
-    /**
+    /***
         Same rules as the Session class apply here
         There should only be one cookie class as the key on the current machine will be the
         same anyways
@@ -9,7 +9,7 @@
     class Cookie
     {
         private static $_enckey;
-        /*
+        /**
         * Generates a Cookie encryption key
         *
         * @param string $key
@@ -18,7 +18,7 @@
             self::$_enckey = sha1($_SERVER["HTTP_USER_AGENT"].$_SERVER["REMOTE_ADDR"].$key);
         }
 
-        /*
+        /**
         * Sets a cookie, while hashing the name and encrypting the value using the key
         *
         * @param mixed $key
@@ -33,7 +33,7 @@
             } catch(\Exception $e) { self::remove($key, $domain); }
         }
 
-        /*
+        /**
         * Returns a cookie value thus also decrypting it
         *
         * @param mixed $key
@@ -51,7 +51,7 @@
             return $default;
         }
 
-        /*
+        /**
         * Removes a cookie value
         *
         * @param mixed $key

@@ -4,7 +4,7 @@
         private $_app;
         private $_tokens;
 
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -12,7 +12,7 @@
             $this->_tokens = [];
         }
 
-        /*
+        /**
         * Generates a form token with name
         *
         * @param string $name
@@ -30,7 +30,7 @@
             return $token;
         }
 
-        /*
+        /**
         * Generates persistent token with name
         *
         * @param string $name
@@ -50,7 +50,7 @@
             return $this->_tokens[$name];
         }
 
-        /*
+        /**
         * Checks whether formtokens match
         *
         * @param string $name

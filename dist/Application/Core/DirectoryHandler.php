@@ -5,7 +5,7 @@
             private $_app;
             private $_path;
 
-            /*
+            /**
             * Cleans a path from starting and ending slashes + replaces backlashes with forward slashes
             *
             * @param string $path
@@ -14,14 +14,14 @@
             */
             private function cleanPath($path) { return trim(rtrim(str_replace('\\', '/', $path), '/')); }
 
-            /*
+            /**
             * Sets the path of the Directory object
             *
             * @param string $path
             */
             private function setPath($path) { $this->_path = $this->cleanPath($path); }
 
-            /*
+            /**
             * @param xTend\Core\App $app
             * @param string $path
             */
@@ -32,7 +32,7 @@
                 $this->setPath($path);
             }
 
-            /*
+            /**
             * Returns whether the directory exists and is a directory
             *
             * @return boolean
@@ -41,7 +41,7 @@
                 return is_dir($this->_path);
             }
 
-            /*
+            /**
             * Returns whether the directory is writable
             *
             * @return boolean
@@ -50,7 +50,7 @@
                 return (is_writable($this->_path)&&$this->exists());
             }
 
-            /*
+            /**
             * Returns the name of the Directory
             *
             * @return string
@@ -60,7 +60,7 @@
                 return substr($this->_path, $sl_pos + 1);
             }
 
-            /*
+            /**
             * Returns the parent directory
             *
             * @return xTend\Core\DirectoryHandler\Directory
@@ -70,7 +70,7 @@
                 return new Directory($this->_app, substr($this->_path, 0, $sl_pos));
             }
 
-            /*
+            /**
             * Scans the directory either recursively or not
             *
             * @param boolean $recursive
@@ -87,7 +87,7 @@
                                 \RecursiveIteratorIterator::SELF_FIRST) as $file) {
                         $entries[] = $file;
                     }
-                } else { $entries = array_merge(glob($this->_path."/*"), glob($this->_path."/.[!.][!.]*")); }
+                } else { $entries = array_merge(glob($this->_path."/**"), glob($this->_path."/.[!.][!.]*")); }
                 //run map on entries for class creation
                 return array_map(function($entry) {
                     if(is_file($entry)) {
@@ -96,7 +96,7 @@
                 }, $entries);
             }
 
-            /*
+            /**
             * Returns all files in the directory either recursively or not
             *
             * @param boolean $recursive
@@ -110,7 +110,7 @@
                 });
             }
 
-            /*
+            /**
             * Returns all directories in the directory either recursively or not
             *
             * @param boolean $recursive
@@ -124,7 +124,7 @@
                 });
             }
 
-            /*
+            /**
             * Creates the directory
             *
             * @return boolean
@@ -133,7 +133,7 @@
                 return mkdir($this->_path, 0777, true);
             }
 
-            /*
+            /**
             * Moves a directory
             *
             * @return boolean
@@ -145,7 +145,7 @@
                 return false;
             }
 
-            /*
+            /**
             * Copies a directory recursively
             *
             * @return boolean|null
@@ -164,7 +164,7 @@
                 return false;
             }
 
-            /*
+            /**
             * Removes a directory recursively
             *
             * @return boolean
@@ -180,7 +180,7 @@
                 return rmdir($this->_path);
             }
 
-            /*
+            /**
             * Gets a file from the directory
             *
             * @param string $name
@@ -199,7 +199,7 @@
                 return new File($this->_app, $path);
             }
 
-            /*
+            /**
             * Gets a directory from the directory
             *
             * @param string name
@@ -214,7 +214,7 @@
                 return new Directory($this->_app, $path);
             }
 
-            /*
+            /**
             * @return string
             */
             public function __toString() {
@@ -226,7 +226,7 @@
         class DirectoryHandler
         {
             private $_app;
-            /*
+            /**
             * @param xTend\Core\App $app
             */
             public function __construct($app) {
@@ -234,7 +234,7 @@
                 $this->_app = $app;
             }
 
-            /*
+            /**
             * Gets a directory from the application directory
             *
             * @param string $dirName
@@ -249,7 +249,7 @@
                 return new DirectoryHandler\Directory($this->_app, $path);
             }
 
-            /*
+            /**
             * Gets a directory from the public directory
             *
             * @param string $dirName

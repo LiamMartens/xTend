@@ -9,7 +9,7 @@
             $this->_controllers = [];
         }
 
-        /*
+        /**
         * Checks whether a controller exists
         *
         * @param string $controllerName
@@ -21,7 +21,7 @@
             return $this->_app->getControllersDirectory()->file("$controllerName.php")->exists();
         }
 
-        /*
+        /**
         * Loads a controller
         *
         * @param string $controllerName
@@ -85,7 +85,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a controller by name or the first one
         *
         * @param string|boolean $controllerName

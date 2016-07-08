@@ -5,7 +5,7 @@
     {
         private $_app;
         private $_views;
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -13,7 +13,7 @@
             $this->_views = [];
         }
 
-        /*
+        /**
         * Checks whether the view exists
         *
         * @param string $view
@@ -27,7 +27,7 @@
             return false;
         }
 
-        /*
+        /**
         * Loads a new view
         *
         * @param string $view
@@ -59,7 +59,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns the loaded view by name or the first one
         *
         * @param string|boolean $viewName

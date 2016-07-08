@@ -2,7 +2,7 @@
     namespace xTend\Core;
     class SortHelper
     {
-        /*
+        /**
         * Sorts objects by length
         *
         * @param array reference $arr
@@ -14,7 +14,7 @@
             else usort($arr, function($a, $b) { return strlen($b)-strlen($a); });
         }
 
-        /*
+        /**
         * Sorts strings by the number of slashes
         *
         * @param array reference $arr

@@ -6,7 +6,7 @@
         private $_dirHandler;
 
         private $_packages;
-        /*
+        /**
         * @return array
         */
         public function getPackages() {
@@ -14,14 +14,14 @@
         }
 
         private $_autoload;
-        /*
+        /**
         * @return array
         */
         public function getAutoload() {
             return $this->_autoload;
         }
 
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -34,21 +34,21 @@
             $this->_autoload = json_decode($this->_fileHandler->system('Libs.Packagist.autoload.json')->read(), true);
         }
 
-        /*
+        /**
         * @return boolean
         */
         private function savePackages() {
             return $this->_fileHandler->system('packagist.json')->write(json_encode($this->_packages));
         }
 
-        /*
+        /**
         * @return boolean
         */
         private function saveAutoload() {
             return $this->_fileHandler->system('Libs.Packagist.autoload.json')->write(json_encode($this->_autoload));
         }
 
-        /*
+        /**
         * Installs a packagist package
         *
         * @param string $package_name
@@ -152,7 +152,7 @@
             return false;
         }
 
-        /*
+        /**
         * Removes a packagist package
         *
         * @param string $^package_name
@@ -210,7 +210,7 @@
             return false;
         }
 
-        /*
+        /**
         * Removes a packagist's dependencies
         *
         * @param string $package_name

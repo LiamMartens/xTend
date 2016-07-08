@@ -1,5 +1,9 @@
 <?php
     namespace xTend\Blueprints;
+    /*
+    * The BaseRespondController is the most 'complicated'
+    * controller to extend from
+    */
     class BaseRespondController extends BaseDataController
     {
         protected function respond($success, $status = false, $data = false) {

@@ -1,6 +1,6 @@
 <?php
     namespace xTend\Core;
-    /**
+    /***
         The session class is also static as there should only be 1
         interaction class active on a single domain / page otherwise you'll create
         inaccessible data -> make sure to check when running multiple xTend App instances

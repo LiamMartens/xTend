@@ -9,27 +9,27 @@
         private $_exists;
         private $_isWow;
 
-        /*
+        /**
         * @return string
         */
         public function getName() { return $this->_name; }
 
-        /*
+        /**
         * @return string
         */
         public function getFilePath() { return $this->_filePath; }
 
-        /*
+        /**
         * @return boolean
         */
         public function getExists() { return $this->_exists; }
 
-        /*
+        /**
         * @return boolean
         */
         public function getIsWow() { return $this->_isWow; }
 
-        /*
+        /**
         * @param xTend\Core\App $app
         * @param string $view
         * @param string|boolean $version

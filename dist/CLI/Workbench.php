@@ -4,7 +4,7 @@
         private $_app;
         private $_rx;
         private $_call;
-        /*
+        /**
         * @param xTend\Core\App $app
         * @param string $rx
         * @param function $call
@@ -15,7 +15,7 @@
             $this->_call = $call;
         }
 
-        /*
+        /**
         * Checks whether the command is a match
         *
         * @param string reference $command
@@ -26,7 +26,7 @@
             return preg_match($this->_rx, $command);
         }
 
-        /*
+        /**
         * Executes a command
         *
         * @param array reference $arguments
@@ -38,7 +38,7 @@
         }
     }
     class Helpers {
-        /*
+        /**
         * Generates a key
         *
         * @return string
@@ -47,7 +47,7 @@
             return base64_encode(random_bytes(8));
         }
 
-        /*
+        /**
         * json encodes or decodes
         *
         * @param string|array $data
@@ -69,7 +69,7 @@
         private static $_commands;
         private static $_configuration;
 
-        /*
+        /**
         * Sets the workbench namespace
         *
         * @param string $ns
@@ -78,7 +78,7 @@
             self::$_ns = $ns;
         }
 
-        /*
+        /**
         * Sets the workbench application
         *
         * @param xTend\Core\App $app
@@ -87,7 +87,7 @@
             self::$_app=$app;
         }
 
-        /*
+        /**
         * Sets the workbench arguments
         *
         * @param array $argv
@@ -114,7 +114,7 @@
             require_once(__DIR__."/../.commands");
         }
 
-        /*
+        /**
         * Registers a command
         *
         * @param string $rx
@@ -127,7 +127,7 @@
             } else { self::$_commands[$name] = new Command(self::$_app, $rx, $call); }
         }
 
-        /*
+        /**
         * @param mixed $key
         *
         * @return mixed
@@ -139,14 +139,14 @@
             return false;
         }
 
-        /*
+        /**
         * @return string
         */
         public static function namespaceApplication() {
             return str_replace('\\', '.', self::$_ns);
         }
 
-        /*
+        /**
         * Checks whether the namespac is a match
         *
         * @return boolean
@@ -155,7 +155,7 @@
             return (self::$_configuration["application"]==self::namespaceApplication());
         }
 
-        /*
+        /**
         * Checks whether the application exists
         *
         * @return boolean
@@ -164,7 +164,7 @@
             return is_file(__DIR__.'/../'.self::getConfiguration('application').'/Core/App.php');
         }
 
-        /*
+        /**
         * Checks whether the public directory exists
         *
         * @return boolean
@@ -177,7 +177,7 @@
             require_once(__DIR__.'/../'.self::getConfiguration('application').'/Core/App.php');
         }
 
-        /*
+        /**
         * Checks whether an app match
         *
         * @return boolean
@@ -197,7 +197,7 @@
             return false;
         }
 
-        /*
+        /**
         * Runs the workbench
         *
         * @return mixed
@@ -211,7 +211,7 @@
             self::$_commands['help']->execute(self::$_argv);
         }
 
-        /*
+        /**
         * Adds a new application to the workbench
         *
         * @param string $name
@@ -232,7 +232,7 @@
             return false;
         }
 
-        /*
+        /**
         * Removes an application
         *
         * @param string $name
@@ -248,7 +248,7 @@
             return false;
         }
 
-        /*
+        /**
         * Sets the application
         *
         * @param string $name
@@ -258,7 +258,7 @@
             self::saveConfiguration();
         }
 
-        /*
+        /**
         * Sets the public directory
         *
         * @param string $name

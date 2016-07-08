@@ -5,7 +5,7 @@
         private $_app;
         public $_models;
 
-        /*
+        /**
         * @param xTend\Core\App $app
         */
         public function __construct($app) {
@@ -14,7 +14,7 @@
             $this->_models = [];
         }
 
-        /*
+        /**
         * Checks whether a model exists
         *
         * @param string $modelName
@@ -25,7 +25,7 @@
             return $this->_app->getModelsDirectory()->file("$modelName.php")->exists();
         }
 
-        /*
+        /**
         * Loads a model
         *
         * @param string $modelName
@@ -68,7 +68,7 @@
             return false;
         }
 
-        /*
+        /**
         * Gets a model by name or gets the first model
         *
         * @param boolean|string $modelName

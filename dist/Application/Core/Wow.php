@@ -18,7 +18,7 @@
         private $_flavor;
         private $_expressions;
         private $_app;
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -27,21 +27,21 @@
             $this->_app=$app;
         }
 
-        /*
+        /**
         * Sets the Wow templating engine flavor
         *
         * @param integer $fl
         */
         public function setFlavor($fl) { $this->_flavor = $fl; }
 
-        /*
+        /**
         * Returns the currently set wow flavor
         *
         * @return integer
         */
         public function getFlavor() { return $this->_flavor; }
 
-        /*
+        /**
         * Creates a regex
         *
         * @param string $pattern
@@ -84,7 +84,7 @@
             }
         }
 
-        /*
+        /**
         * Register a new expression
         *
         * @param string $rx
@@ -94,7 +94,7 @@
             $this->_expressions[$rx]=$replacement;
         }
 
-        /*
+        /**
         * Checks the version of the view out of content
         *
         * @param string reference $content
@@ -109,7 +109,7 @@
             return false;
         }
 
-        /*
+        /**
         * Gets the layout name out of a view's content
         *
         * @param string reference $content
@@ -123,7 +123,7 @@
             return false;
         }
 
-        /*
+        /**
         * Gets the compile flag out of a view's content
         *
         * @param string reference $content
@@ -142,7 +142,7 @@
             return false;
         }
 
-        /*
+        /**
         * Checks whether the view was changed
         *
         * @param string $path
@@ -178,7 +178,7 @@
             return false;
         }
 
-        /*
+        /**
         * Sets the last_compile time of a path
         *
         * @param string $path
@@ -187,7 +187,7 @@
             $path->setMeta("last_compile", time());
         }
 
-        /*
+        /**
         * Checks whether a part has been fully compiled and contains more expressions
         *
         * @param string $content
@@ -202,7 +202,7 @@
             return true;
         }
 
-        /*
+        /**
         * Compiles a section with the registered expressions (non internal)
         *
         * @param string $content
@@ -220,7 +220,7 @@
             return $content;
         }
 
-        /*
+        /**
         * Compiles a view content
         *
         * @param string $content
@@ -256,7 +256,7 @@
             return $final_content;
         }
 
-        /*
+        /**
         * Compiles a layout
         *
         * @param string $layout_c
@@ -276,7 +276,7 @@
             return $split;
         }
 
-        /*
+        /**
         * Starts a view compilation
         *
         * @param string $file

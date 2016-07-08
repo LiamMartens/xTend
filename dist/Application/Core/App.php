@@ -9,79 +9,79 @@
         private $_backupLimit = 10;
         private $_logLimit = 30;
         private $_namespace = "Application";
-        /*
+        /**
         * Returns the current xTend version
         *
         * @return string
         */
         public function getVersion() { return $this->_xTendVersion; }
-        /*
+        /**
         * Returns the application's url
         *
         * @return string
         */
         public function getUrl() { return $this->_url; }
-        /*
+        /**
         * Returns the application's development status
         *
         * @return boolean
         */
         public function getDevelopmentStatus() { return $this->_inDevelopment; }
-        /*
+        /**
         * Returns the backup interval
         *
         * @return string
         */
         public function getBackupInterval() { return $this->_backupInterval; }
-        /*
+        /**
         * Returns the limit of number of backups
         *
         * @return integer
         */
         public function getBackupLimit() { return $this->_backupLimit; }
-        /*
+        /**
         * Returns the limit of number of logs
         *
         * @return integer
         */
         public function getLogLimit() { return $this->_logLimit; }
-        /*
+        /**
         * Returns the namespace of the application
         *
         * @return string
         */
         public function getNamespace() { return $this->_namespace; }
-        /*
+        /**
         * Sets the url of the application
         *
         * @param string $url
         */
         public function setUrl($url) { $this->_url = $url; }
-        /*
+        /**
         * Sets the development status of the application
         *
         * @param boolean $status
         */
         public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
-        /*
+        /**
         * Sets the interval of backups
         *
         * @param string $interval
         */
         public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
-        /*
+        /**
         * Sets the limit of number of backups
         *
         * @param integer $limit
         */
         public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
-        /*
+        /**
         * Sets the limit of number of logs
         *
         * @param integer $limit
         */
         public function setLogLimit($limit) { $this->_logLimit = $limit; }
-        /*
+        /**
         * Sets application configuration values
         *
         * @param array $confvalues
@@ -95,13 +95,13 @@
         }
 
         private $_dirBackups = "Backups";
-        /*
+        /**
         * Sets the backup directory of the application
         *
         * @param string $dir
         */
         public function setBackupsDirectory($dir) { $this->_dirBackups = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Gets the current backup directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -109,13 +109,13 @@
         public function getBackupsDirectory() { return $this->_dirBackups; }
 
         private $_dirBlueprints = "Blueprints";
-        /*
+        /**
         * Sets the blueprints directory
         *
         * @param string $dir
         */
         public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the current blueprints directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -123,13 +123,13 @@
         public function getBlueprintsDirectory() { return $this->_dirBlueprints; }
 
         private $_dirConfig = "Config";
-        /*
+        /**
         * Sets the application's config directory
         *
         * @param string $dir
         */
         public function setConfigDirectory($dir) { $this->_dirConfig = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's config directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -137,13 +137,13 @@
         public function getConfigDirectory() { return $this->_dirConfig; }
 
         private $_dirControllers = "Controllers";
-        /*
+        /**
         * Sets the application's controler directory
         *
         * @param string $dir
         */
         public function setControllersDirectory($dir) { $this->_dirControllers = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's config directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -151,13 +151,13 @@
         public function getControllersDirectory() { return $this->_dirControllers; }
 
         private $_dirLayouts = "Layouts";
-        /*
+        /**
         * Sets the application's layouts directory
         *
         * @param string $dir
         */
         public function setLayoutsDirectory($dir) { $this->_dirLayouts = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's layouts directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -165,13 +165,13 @@
         public function getLayoutsDirectory() { return $this->_dirLayouts; }
 
         private $_dirLibs = "Libs";
-        /*
+        /**
         * Sets the application's libs directory
         *
         * @param string $dir
         */
         public function setLibsDirectory($dir) { $this->_dirLibs = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's libs directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -179,13 +179,13 @@
         public function getLibsDirectory() { return $this->_dirLibs; }
 
         private $_dirLogs = "Logs";
-        /*
+        /**
         * Sets the application's logs directory
         *
         * @param string $dir
         */
         public function setLogsDirectory($dir) { $this->_dirLogs = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's logs directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -193,13 +193,13 @@
         public function getLogsDirectory() { return $this->_dirLogs; }
 
         private $_dirMeta = "Meta";
-        /*
+        /**
         * Sets the application's meta directory
         *
         * @param string $dir
         */
         public function setMetaDirectory($dir) { $this->_dirMeta = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's meta directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -207,13 +207,13 @@
         public function getMetaDirectory() { return $this->_dirMeta; }
 
         private $_dirModels = "Models";
-        /*
+        /**
         * Sets the application's models directory
         *
         * @param string $dir
         */
         public function setModelsDirectory($dir) { $this->_dirModels = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's models directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -221,13 +221,13 @@
         public function getModelsDirectory() { return $this->_dirModels; }
 
         private $_dirModules = "Modules";
-        /*
+        /**
         * Sets the application's modules directory
         *
         * @param string $dir
         */
         public function setModulesDirectory($dir) { $this->_dirModules = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's modules directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -235,13 +235,13 @@
         public function getModulesDirectory() { return $this->_dirModules; }
 
         private $_dirObjects = "Objects";
-        /*
+        /**
         * Sets the application's objects directory
         *
         * @param string $dir
         */
         public function setObjectsDirectory($dir) { $this->_dirObjects = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's objects directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -249,13 +249,13 @@
         public function getObjectsDirectory() { return $this->_dirObjects; }
 
         private $_dirViewOutput = "ViewOutput";
-        /*
+        /**
         * Sets the application's ViewOutput directory
         *
         * @param string $dir
         */
         public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's ViewOutput directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -263,20 +263,20 @@
         public function getViewOutputDirectory() { return $this->_dirViewOutput; }
 
         private $_dirViews = "Views";
-        /*
+        /**
         * Sets the application's views directory
         *
         * @param string $dir
         */
         public function setViewsDirectory($dir) { $this->_dirViews = $this->getDirectoryHandler()->system($dir); }
-        /*
+        /**
         * Returns the application's views directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
         */
         public function getViewsDirectory() { return $this->_dirViews; }
 
-        /*
+        /**
         * Set directory settings using an array
         *
         * @param array $dirvalues
@@ -291,13 +291,13 @@
         private $_dirSystem;
         private $_dirPublic;
 
-        /*
+        /**
         * Returns the current application directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
         */
         public function getSystemDirectory() { return $this->_dirSystem;}
-        /*
+        /**
         * Returns the current public directory
         *
         * @return xTend\Core\DirectoryHandler\Directory
@@ -305,7 +305,7 @@
         public function getPublicDirectory() { return $this->_dirPublic;}
 
         private $_bootstrapMode;
-        /*
+        /**
         * Returns the status of the bootstrap mode
         *
         * @return boolean
@@ -313,7 +313,7 @@
         public function getBootstrapMode() { return $this->_bootstrapMode; }
 
         private $_settingsContainer;
-        /*
+        /**
         * Returns the application's SettingsContainer
         *
         * @return xTend\Core\SettingsContainer
@@ -321,7 +321,7 @@
         public function getSettingsContainer() { return $this->_settingsContainer; }
 
         private $_fileHandler;
-        /*
+        /**
         * Returns the application's FileHandler
         *
         * @return xTend\Core\FileHandler
@@ -329,7 +329,7 @@
         public function getFileHandler() { return $this->_fileHandler; }
 
         private $_directoryHandler;
-        /*
+        /**
         * Returns the application's DirectoryHandler
         *
         * @return xTend\Core\DirectoryHandler
@@ -337,7 +337,7 @@
         public function getDirectoryHandler() { return $this->_directoryHandler; }
 
         private $_statusCodeHandler;
-        /*
+        /**
         * Returns the application's StatusCodeHandler
         *
         * @return xTend\Core\StatusCodeHandler
@@ -345,7 +345,7 @@
         public function getStatusCodeHandler() { return $this->_statusCodeHandler; }
 
         private $_logHandler;
-        /*
+        /**
         * Returns the application's LogHandler
         *
         * @return xTend\Core\LogHandler
@@ -353,7 +353,7 @@
         public function getLogHandler() { return $this->_logHandler; }
 
         private $_modelHandler;
-        /*
+        /**
         * Returns the application's ModelHandler
         *
         * @return xTend\Core\ModelHandler
@@ -361,7 +361,7 @@
         public function getModelHandler() { return $this->_modelHandler; }
 
         private $_controllerHandler;
-        /*
+        /**
         * Returns the application's ControllerHandler
         *
         * @return xTend\Core\ControllerHandler
@@ -369,7 +369,7 @@
         public function getControllerHandler() { return $this->_controllerHandler; }
 
         private $_viewHandler;
-        /*
+        /**
         * Returns the application's ViewHandler
         *
         * @return xTend\Core\ViewHandler
@@ -377,7 +377,7 @@
         public function getViewHandler() { return $this->_viewHandler; }
 
         private $_UrlHandler;
-        /*
+        /**
         * Returns the application's UrlHandler
         *
         * @return xTend\Core\UrlHandler
@@ -385,7 +385,7 @@
         public function getUrlHandler() { return $this->_UrlHandler; }
 
         private $_router;
-        /*
+        /**
         * Returns the application's Router
         *
         * @return xTend\Core\Router
@@ -393,7 +393,7 @@
         public function getRouter() { return $this->_router; }
 
         private $_backupManager;
-        /*
+        /**
         * Returns the application's BackupManager
         *
         * @return xTend\Core\BackupManager
@@ -401,7 +401,7 @@
         public function getBackupManager() { return $this->_backupManager; }
 
         private $_fileManager;
-        /*
+        /**
         * Returns the application's FileManager
         *
         * @return xTend\Core\FileManager
@@ -409,7 +409,7 @@
         public function getFileManager() { return $this->_fileManager; }
 
         private $_sortHelper;
-        /*
+        /**
         * Returns the application's SortHelper
         *
         * @return xTend\Core\SortHelper
@@ -417,7 +417,7 @@
         public function getSortHelper() { return $this->_sortHelper; }
 
         private $_wowCompiler;
-        /*
+        /**
         * Returns the application's Wow templating engine
         *
         * @return xTend\Core\Wow
@@ -425,7 +425,7 @@
         public function getWowCompiler() { return $this->_wowCompiler; }
 
         private $_requestDataHandler;
-        /*
+        /**
         * Returns the application's RequestDataHandler
         *
         * @return xTend\Core\RequestDataHandler
@@ -433,7 +433,7 @@
         public function getRequestDataHandler() { return $this->_requestDataHandler; }
 
         private $_htmlHandler;
-        /*
+        /**
         * Returns the application's HTMLHandler
         *
         * @return xTend\Core\HTMLHandler
@@ -441,7 +441,7 @@
         public function getHTMLHandler() { return $this->_htmlHandler; }
 
         private $_formTokenHandler;
-        /*
+        /**
         * Returns the application's FormTokenHandler
         *
         * @return xTend\Core\FormTokenHandler
@@ -449,7 +449,7 @@
         public function getFormTokenHandler() { return $this->_formTokenHandler; }
 
         private $_packagistHandler;
-        /*
+        /**
         * Returns the application's PackagistHandler
         *
         * @return xTend\Core\PackagistHandler
@@ -457,14 +457,14 @@
         public function getPackagistHandler() { return $this->_packagistHandler; }
 
         private $_requestHandler;
-        /*
+        /**
         * Returns the application's RequestHandler
         *
         * @return xTend\Core\RequestHandler
         */
         public function getRequestHandler() { return $this->_requestHandler; }
 
-        /*
+        /**
         * Throws an application error and sets an HTTP code
         *
         * @param integer $code
@@ -482,7 +482,7 @@
         }
 
         private $_preConfigMethods;
-        /*
+        /**
         * Adds a pre configuration method
         *
         * @param function $fn
@@ -490,14 +490,14 @@
         public function addPreconfigurationMethod($fn) {$this->_preConfigMethods[]=$fn; }
 
         private $_postConfigMethods;
-        /*
+        /**
         * Adds a post configuration method
         *
         * @param function $fn
         */
         public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
 
-        /*
+        /**
         * Runs directory checks and PHP version
         */
         private function applicationIntegrityCheck() {
@@ -539,7 +539,7 @@
                 die("<br>Integrity check failed");
         }
 
-        /*
+        /**
         * @param string $ns
         * @param string $public_directory
         * @param boolean $bootstrap_mode
@@ -647,7 +647,7 @@
             $this->_postConfigMethods = [];
         }
 
-        /*
+        /**
         * Includes configuration files
         */
         public function configure() {
@@ -714,7 +714,7 @@
             }
         }
 
-        /*
+        /**
         * Includes library files
         */
         public function loadLibraries() {
@@ -781,7 +781,7 @@
             }
         }
 
-        /*
+        /**
         * Runs the whole application
         */
         public function run() {
@@ -809,7 +809,7 @@
     }
 
     if(!function_exists("getCurrentApp")) {
-        /*
+        /**
         * Returns an application by namespace
         *
         * @param string $ns
@@ -825,7 +825,7 @@
         }
     }
     if(!function_exists("createNewApp")) {
-        /*
+        /**
         * Creates a new application by namespace
         *
         * @param string $ns

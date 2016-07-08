@@ -7,7 +7,7 @@
             $this->_app = $app;
         }
 
-        /*
+        /**
         * Checks whether the application's backup interval has been exceeded
         *
         * @return boolean
@@ -26,7 +26,7 @@
             return false;
         }
 
-        /*
+        /**
         * Cleans backups when there are too many backup files (backuplimit exceed)
         */
         private function cleanBackups() {
@@ -41,7 +41,7 @@
             }
         }
 
-        /*
+        /**
         * Creates a backup if needed or forced
         *
         * @param boolean $force

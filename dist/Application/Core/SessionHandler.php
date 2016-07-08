@@ -2,7 +2,7 @@
     namespace xTend\Core;
     class SessionHandler
     {
-        /**
+        /***
             The SessionHandler is solely static since there can only be one session
             at a time on a single domain
         **/

@@ -5,7 +5,7 @@
         private $_version;
         private $_exact;
 
-        /*
+        /**
         * @param string $expression
         * @param string $version
         */
@@ -21,7 +21,7 @@
             $this->_exact = $version;
         }
 
-        /*
+        /**
         * Checks whether the versions are exact matches
         *
         * @return boolean
@@ -30,7 +30,7 @@
             return ($this->_expression==$this->_exact);
         }
 
-        /*
+        /**
         * Checks whether the versions are a range match
         *
         * @return boolean
@@ -55,7 +55,7 @@
             return false;
         }
 
-        /*
+        /**
         * Checks whether the versions are a hyphen match
         *
         * @return boolean
@@ -71,7 +71,7 @@
 
         }
 
-        /*
+        /**
         * Checks whether the versions are a wildcard match
         *
         * @return boolean
@@ -85,7 +85,7 @@
                 &&version_compare($this->_version, trim($version_end), '<'));
         }
 
-        /*
+        /**
         * Checks whether the versions are a tilde match
         *
         * @return boolean
@@ -100,7 +100,7 @@
                     &&version_compare($this->_version, trim($version_end), '<'));
         }
 
-        /*
+        /**
         * Checks whether the versions are a caret match
         *
         * @return boolean
@@ -115,7 +115,7 @@
                     &&version_compare($this->_version, trim($version_end), '<'));
         }
 
-        /*
+        /**
         * @return boolean
         */
         public function isMatch() {

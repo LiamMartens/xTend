@@ -11,7 +11,7 @@
         public function getRoute() { return $this->_route; }
         public function getAlias() { return $this->_alias; }
 
-        /*
+        /**
         * @param xTend\Core\App $app
         * @param string $handle
         * @param mixed $route
@@ -24,7 +24,7 @@
             $this->_alias = $alias;
         }
 
-        /*
+        /**
         * @param array $data
         * @param boolean $inc_url
         */
@@ -35,7 +35,7 @@
             return false;
         }
 
-        /*
+        /**
         * @param array $parameters
         * @param array $data
         *
@@ -45,7 +45,7 @@
             return $this->_app->getUrlHandler()->to($this->_handle, $parameters, $data);
         }
 
-        /*
+        /**
         * Executes the route
         *
         * @return boolean
@@ -102,7 +102,7 @@
             return true;
         }
 
-        /*
+        /**
         * Checks whether the request uri is a match
         *
         * @param string $request
@@ -163,7 +163,7 @@
                             !((preg_match("/^(rx)(\{)(.*)(\})$/", $handle_part, $rx_matches)&& //its a regexed part and it matches
                             preg_match("/".$rx_matches[3]."/", $request_part)) ||
                             preg_match("/^(\*+)$/", $handle_part) || //its just a bunch of wildcards
-                            ($request_part==$handle_part)) /*they just equal each other*/) {
+                            ($request_part==$handle_part)) /**they just equal each other*/) {
                             //if all of te above fails, return false
                             $handle_matched=false;
                         }

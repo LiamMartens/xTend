@@ -5,7 +5,7 @@
             private $_app;
             private $_path;
 
-            /*
+            /**
             * Cleans a path from starting and ending slashes + replaces backlashes with forward slashes
             *
             * @param string $path
@@ -14,14 +14,14 @@
             */
             private function cleanPath($path) { return trim(rtrim(str_replace('\\', '/', $path), '/')); }
 
-            /*
+            /**
             * Sets the path of the File object
             *
             * @param string $path
             */
             private function setPath($path) { $this->_path = $this->cleanPath($path); }
 
-            /*
+            /**
             * @param xTend\Core\App $app
             * @param string $path
             */
@@ -32,7 +32,7 @@
                 $this->setPath($path);
             }
 
-            /*
+            /**
             * Returns whether the file exists and is a actually a file
             *
             * @return boolean
@@ -41,7 +41,7 @@
                 return is_file($this->_path);
             }
 
-            /*
+            /**
             * Returns whether the file is writable
             *
             * @return boolean
@@ -50,7 +50,7 @@
                 return (is_writable($this->_path)&&$this->exists());
             }
 
-            /*
+            /**
             * Returns the name of the File
             *
             * @return string
@@ -61,7 +61,7 @@
                 return substr($this->_path, $sl_pos + 1);
             }
 
-            /*
+            /**
             * Returns the parent directory
             *
             * @return xTend\Core\DirectoryHandler\Directory
@@ -71,7 +71,7 @@
                 return new Directory($this->_app, substr($this->_path, 0, $sl_pos));
             }
 
-            /*
+            /**
             * Move the file
             *
             * @param string $dest
@@ -85,7 +85,7 @@
                 return false;
             }
 
-            /*
+            /**
             * Copies a file
             *
             * @param string $dest
@@ -99,7 +99,7 @@
                 return false;
             }
 
-            /*
+            /**
             * Removes a file
             *
             * @return boolean
@@ -108,7 +108,7 @@
                 return unlink($this->_path);
             }
 
-            /*
+            /**
             * Reads the file
             *
             * @return mixed|boolean
@@ -122,7 +122,7 @@
                 } return false;
             }
 
-            /*
+            /**
             * Writes to the file
             *
             * @param mixed $content
@@ -138,7 +138,7 @@
                 } return false;
             }
 
-            /*
+            /**
             * Appends to the file
             *
             * @param mixed $content
@@ -154,7 +154,7 @@
                 } return false;
             }
 
-            /*
+            /**
             * Gets file meta data
             *
             * @param mixed $key
@@ -171,7 +171,7 @@
                 return $default;
             }
 
-            /*
+            /**
             * Sets file meta data
             *
             * @param mixed $key
@@ -192,7 +192,7 @@
                 return false;
             }
 
-            /*
+            /**
             * Includes the file
             */
             public function include() {
@@ -201,7 +201,7 @@
                 }
             }
 
-            /*
+            /**
             * Gets the extension of the file (excluding the .)
             *
             * @return string|boolean
@@ -214,7 +214,7 @@
                 return false;
             }
 
-            /*
+            /**
             * @return string
             */
             public function __toString() {
@@ -226,7 +226,7 @@
         class FileHandler
         {
             private $_app;
-            /*
+            /**
             * @param xTend\Core\App $app
             */
             public function __construct($app) {
@@ -234,7 +234,7 @@
                 $this->_app = $app;
             }
 
-            /*
+            /**
             * Gets a file from the application directory
             *
             * @param string $fileName
@@ -253,7 +253,7 @@
                 return new FileHandler\File($this->_app, $path);
             }
 
-            /*
+            /**
             * Gets a file from the public directory
             *
             * @param string $fileName

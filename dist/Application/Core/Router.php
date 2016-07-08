@@ -16,7 +16,7 @@
         private $_aliases;
 
         private $_app;
-        /*
+        /**
         * @param xTend\Core\App
         */
         public function __construct($app) {
@@ -33,7 +33,7 @@
             $this->_aliases=[];
         }
 
-        /*
+        /**
         * Returns all registered routes
         *
         * @return array
@@ -47,7 +47,7 @@
                                 $this->_error);
         }
 
-        /*
+        /**
         * @param string $alias
         *
         * @return xTend\Objects\Route | boolean
@@ -58,7 +58,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered POST route
         *
         * @param string $handle
@@ -71,7 +71,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered GET route
         *
         * @param string $handle
@@ -84,7 +84,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered PUT route
         *
         * @param string $handle
@@ -97,7 +97,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered DELETE route
         *
         * @param string $handle
@@ -110,7 +110,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered PATCH route
         *
         * @param string $handle
@@ -124,7 +124,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered OPTIONS route
         *
         * @param string $handle
@@ -138,7 +138,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered any route
         *
         * @param string $handle
@@ -151,7 +151,7 @@
             return false;
         }
 
-        /*
+        /**
         * Returns a registered error route
         *
         * @param string $handle
@@ -164,7 +164,7 @@
             return false;
         }
 
-        /*
+        /**
         * Registers a new route
         *
         * @param array reference $routes
@@ -191,7 +191,7 @@
             return $h;
         }
 
-        /*
+        /**
         * Registers a new POST route
         *
         * @param string|xTend\Objects\Route
@@ -204,7 +204,7 @@
             return $this->add($this->_post, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new GET route
         *
         * @param string|xTend\Objects\Route
@@ -217,7 +217,7 @@
             return $this->add($this->_get, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new PUT route
         *
         * @param string|xTend\Objects\Route
@@ -230,7 +230,7 @@
             return $this->add($this->_put, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new DELETE route
         *
         * @param string|xTend\Objects\Route
@@ -243,7 +243,7 @@
             return $this->add($this->_delete, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new PATCH route
         *
         * @param string|xTend\Objects\Route
@@ -256,7 +256,7 @@
             return $this->add($this->_patch, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new OPTIONS route
         *
         * @param string|xTend\Objects\Route
@@ -269,7 +269,7 @@
             return $this->add($this->_options, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers a new any route
         *
         * @param string|xTend\Objects\Route
@@ -282,7 +282,7 @@
             return $this->add($this->_any, $handle, $route, $alias);
         }
 
-        /*
+        /**
         * Registers new routes according to the methods
         *
         * @param array $methods
@@ -297,7 +297,7 @@
             }
         }
 
-        /*
+        /**
         * Registers error routes
         *
         * @param string|xTend\Objects\Route
@@ -326,7 +326,7 @@
             return $h;
         }
 
-        /*
+        /**
         * Registers a default route
         *
         * @param mixed $route
@@ -339,7 +339,7 @@
             return $this->_default;
         }
 
-        /*
+        /**
         * Sets a home route
         *
         * @param mixed $route
@@ -355,7 +355,7 @@
             return $this->_home;
         }
 
-        /*
+        /**
         * Adds route restrictions
         *
         * @param function $rest
@@ -372,7 +372,7 @@
             return false;
         }
 
-        /*
+        /**
         * Throws an error route
         *
         * @param integer|xTend\Core\StatusCode
@@ -390,7 +390,7 @@
             return false;
         }
 
-        /*
+        /**
         * Executes the router
         *
         * @return boolean

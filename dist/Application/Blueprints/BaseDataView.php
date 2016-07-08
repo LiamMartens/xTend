@@ -1,14 +1,13 @@
 <?php
     namespace xTend\Blueprints;
+    /**
+    * Allows for data setting and getting
+    * on a view
+    */
     class BaseDataView extends BaseView
     {
-        /**
-            NOTICE: The code in here is the same as in BaseDataExtension but PHP sadly doesn't support muti inheritance,
-                    So I had to duplicate the code, though I still added the BaseDataExtension code for those who want custom
-                    Controllers with the same data functionality (also, the UrlHandler extends BaseDataExtension)
-        **/
         protected $_data=[];
-        /*
+        /**
         * Sets a data entry on the BaseDataView
         *
         * @param mixed $key
@@ -17,7 +16,7 @@
         public function setData($key,$value) {
             $this->_data[$key]=$value;
         }
-        /*
+        /**
         * Gets a data entry from the BaseDataView
         *
         * @param mixed $key
@@ -30,7 +29,7 @@
                 return $this->_data[$key];
             return $default;
         }
-        /*
+        /**
         * Checks whether a certain data entry exists in the BaseDataView
         *
         * @param mixed $key
@@ -40,7 +39,7 @@
         public function inData($key) {
             return array_key_exists($key, $this->_data);
         }
-        /*
+        /**
         * Returns all data entries
         *
         * @return array
@@ -48,7 +47,7 @@
         public function getAllData() {
             return $this->_data;
         }
-        /*
+        /**
         * Clears all data entries from the BaseDataView
         *
         * @return xTend\Blueprints\BaseDataView
@@ -57,7 +56,7 @@
             $this->_data = [];
             return $this;
         }
-        /*
+        /**
         * Sets a data entry on the BaseDataView
         *
         * @param mixed $key
@@ -68,7 +67,7 @@
                 $this->_data = $value;
             } else { $this->setData($name, $value); }
         }
-        /*
+        /**
         * Gets a data entry from the BaseDataView
         *
         * @param mixed $key

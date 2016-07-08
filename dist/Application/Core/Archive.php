@@ -5,7 +5,7 @@
         private $_zip;
         private $_destination;
 
-        /*
+        /**
         * @param string $dest
         * @param boolean $read
         */
@@ -17,7 +17,7 @@
             } else { $this->_zip->open($this->_destination, \ZipArchive::CREATE); }
         }
 
-        /*
+        /**
         * adds a file to the ZipArchive
         *
         * @param string $filePath
@@ -29,7 +29,7 @@
             } else { $this->_zip->addFile($filePath, $zipPath); }
         }
 
-        /*
+        /**
         * Adds a directory to the ZipArchive
         *
         * @param string $dirPath
@@ -38,7 +38,7 @@
             $this->_zip->addEmptyDir($dirPath);
         }
 
-        /*
+        /**
         * Deletes a file from the ZipArchive
         *
         * @param string $name
@@ -47,7 +47,7 @@
             $this->_zip->deleteName($name);
         }
 
-        /*
+        /**
         * Extracts a ZipArchive
         *
         * @param string $dest
@@ -58,7 +58,7 @@
             return $res;
         }
 
-        /*
+        /**
         * Closes a ZipArchive
         */
         public function save() {
