@@ -59,7 +59,7 @@
         */
         public static function generate() {
             return base64_encode(random_bytes(8));
-
+        }
     }
 
     /**
