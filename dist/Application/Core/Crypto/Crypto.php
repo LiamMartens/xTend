@@ -3,7 +3,7 @@ namespace Defuse\Crypto;
 
 use \Defuse\Crypto\Exception as Ex;
 
-/*
+/**
  * PHP Encryption Library
  * Copyright (c) 2014-2015, Taylor Hornby
  * All rights reserved.
@@ -34,7 +34,7 @@ final class Crypto
 {
     // Ciphertext format: [____HMAC____][____IV____][____CIPHERTEXT____].
 
-    /* DO NOT CHANGE THESE CONSTANTS!
+    /** DO NOT CHANGE THESE CONSTANTS!
      *
      * We spent *weeks* testing this code, making sure it is as perfect and
      * correct as possible. Are you going to do the same after making your
@@ -176,7 +176,7 @@ final class Crypto
 
             return $plaintext;
         } else {
-            /*
+            /**
              * We throw an exception instead of returning FALSE because we want
              * a script that doesn't handle this condition to CRASH, instead
              * of thinking the ciphertext decrypted to the value FALSE.
@@ -187,7 +187,7 @@ final class Crypto
         }
     }
 
-    /*
+    /**
      * Runs tests.
      * Raises CannotPerformOperationExceptionException or CryptoTestFailedExceptionException if
      * one of the tests fail. If any tests fails, your system is not capable of
@@ -206,7 +206,7 @@ final class Crypto
         }
 
         if ($test_state === 3) {
-            /* If an intermittent problem caused a test to fail previously, we
+            /** If an intermittent problem caused a test to fail previously, we
              * want that to be indicated to the user with every call to this
              * library. This way, if the user first does something they really
              * don't care about, and just ignores all exceptions, they won't get 
@@ -461,14 +461,14 @@ final class Crypto
         try {
             self::decrypt($ciphertext . "a", $key);
             throw new Ex\CryptoTestFailedException();
-        } catch (Ex\InvalidCiphertextException $e) { /* expected */ }
+        } catch (Ex\InvalidCiphertextException $e) { /** expected */ }
 
         // Modifying the ciphertext: Changing an IV byte.
         try {
             $ciphertext[0] = chr((ord($ciphertext[0]) + 1) % 256);
             self::decrypt($ciphertext, $key);
             throw new Ex\CryptoTestFailedException();
-        } catch (Ex\InvalidCiphertextException $e) { /* expected */ }
+        } catch (Ex\InvalidCiphertextException $e) { /** expected */ }
 
         // Decrypting with the wrong key.
         $key = self::createNewRandomKey();
@@ -478,7 +478,7 @@ final class Crypto
         try {
             self::decrypt($ciphertext, $wrong_key);
             throw new Ex\CryptoTestFailedException();
-        } catch (Ex\InvalidCiphertextException $e) { /* expected */ }
+        } catch (Ex\InvalidCiphertextException $e) { /** expected */ }
 
         // Ciphertext too small (shorter than HMAC).
         $key = self::createNewRandomKey();
@@ -486,7 +486,7 @@ final class Crypto
         try {
             self::decrypt($ciphertext, $key);
             throw new Ex\CryptoTestFailedException();
-        } catch (Ex\InvalidCiphertextException $e) { /* expected */ }
+        } catch (Ex\InvalidCiphertextException $e) { /** expected */ }
     }
 
     /**
@@ -565,7 +565,7 @@ final class Crypto
             "5086cb9b507219ee95db113a917678b2" .
             "73bed6b8e3c1743b7116e69e22229516" .
             "3ff1caa1681fac09120eca307586e1a7" .
-            /* Block due to padding. Not from NIST test vector.
+            /** Block due to padding. Not from NIST test vector.
                 Padding Block: 10101010101010101010101010101010
                 Ciphertext:    3ff1caa1681fac09120eca307586e1a7
                            (+) 2fe1dab1780fbc19021eda206596f1b7
@@ -586,7 +586,7 @@ final class Crypto
         }
     }
 
-    /* WARNING: Do not call this function on secrets. It creates side channels. */
+    /** WARNING: Do not call this function on secrets. It creates side channels. */
     private static function hexToBytes($hex_string)
     {
         return \pack("H*", $hex_string);
@@ -619,7 +619,7 @@ final class Crypto
         }
     }
 
-    /*
+    /**
      * We need these strlen() and substr() functions because when
      * 'mbstring.func_overload' is set in php.ini, the standard strlen() and
      * substr() are replaced by mb_strlen() and mb_substr().

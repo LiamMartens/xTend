@@ -44,8 +44,8 @@ If you don't have access to a command line you can also manually set these value
 
 ####Example
 ```
-	liam@server:~$ cd /var/www/domain.com
-	liam@server:/var/www/domain.com$ php workbench init
+    liam@server:~$ cd /var/www/domain.com
+    liam@server:/var/www/domain.com$ php workbench init
 ```
 
 ####Application configuration
@@ -59,11 +59,11 @@ Secondly, it is advised to check some of the Application configuration. Followin
 
 You can set or get these values using the workbench as follows
 ```
-	liam@server:/var/www/domain.com$ php workbench config:Url
-	http://localhost
-	liam@server:/var/www/domain.com$ php workbench config:Url http://domain.com
-	liam@server:/var/www/domain.com$ php workbench config:Url
-	http://domain.com
+    liam@server:/var/www/domain.com$ php workbench config:Url
+    http://localhost
+    liam@server:/var/www/domain.com$ php workbench config:Url http://domain.com
+    liam@server:/var/www/domain.com$ php workbench config:Url
+    http://domain.com
 ```
 
 In this case we set the `Url` configuration variable, but setting or getting the `DevelopmentStatus`, `BackupInterval`, `BackupLimit` and `LogLimit` is identical.
@@ -75,7 +75,7 @@ You can also use the command line workbench to change the public directory. Just
 
 ####Example
 ```
-	liam@server:/var/www/domain.com$ php workbench set:public public_html
+    liam@server:/var/www/domain.com$ php workbench set:public public_html
 ```
 
 ###Step 5 Check your server configuration

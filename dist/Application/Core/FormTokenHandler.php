@@ -1,13 +1,31 @@
 <?php
     namespace xTend\Core;
+
+    /**
+    * The FormTokenHandler handles
+    * CSRF token
+    */
     class FormTokenHandler {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array Contains all persistent tokens */
         private $_tokens;
+
+        /**
+        * @param xTend\Core\App
+        */
         public function __construct($app) {
             $this->_app = $app;
             $this->_tokens = [];
         }
 
+        /**
+        * Generates a form token with name
+        *
+        * @param string $name
+        *
+        * @return string
+        */
         public function generate($name) {
             //generate token
             $token = hash("sha512", random_bytes(16));
@@ -19,6 +37,13 @@
             return $token;
         }
 
+        /**
+        * Generates persistent token with name
+        *
+        * @param string $name
+        *
+        * @return string
+        */
         public function persistent($name) {
             if(!isset($this->_tokens[$name])) {
                 //generate token
@@ -32,6 +57,14 @@
             return $this->_tokens[$name];
         }
 
+        /**
+        * Checks whether formtokens match
+        *
+        * @param string $name
+        * @param string $value
+        *
+        * @return boolean
+        */
         public function check($name, $value) {
             $hash = Session::get("token-$name", false);
             if($hash!==false) {

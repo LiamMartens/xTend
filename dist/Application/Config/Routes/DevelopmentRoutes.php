@@ -1,4 +1,8 @@
 <?php
+    /**
+    * Register development routes which are available when
+    * the development status is on
+    */
     namespace Application;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $app->getRouter()->restrict($app->getDevelopmentStatus(), function($app) {

@@ -3,7 +3,7 @@ namespace Defuse\Crypto;
 
 use \Defuse\Crypto\Exception as Ex;
 
-/*
+/**
  * We want to catch all uncaught exceptions that come from the Crypto class,
  * since by default, PHP will leak the key in the stack trace from an uncaught
  * exception. This is a really ugly hack, but I think it's justified.
@@ -33,7 +33,7 @@ class ExceptionHandler
         ) {
             echo "FATAL ERROR: Uncaught crypto exception. Suppressing output.\n";
         } else {
-            /* Re-throw the exception in the destructor. */
+            /** Re-throw the exception in the destructor. */
             $this->rethrow = $ex;
         }
     }

@@ -1,4 +1,8 @@
 <?php
+    /**
+    * This file handles autoloading
+    * packagist libraries
+    */
     namespace Application;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $dirHandler = $app->getDirectoryHandler();

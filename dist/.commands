@@ -1,16 +1,20 @@
 <?php
+    /**
+    * Contains all workbench
+    * commands
+    */
     use xTend\Workbench\Workbench as Workbench;
     use xTend\Workbench\Helpers as Helpers;
     Workbench::registerCommand('init', function($app) {
         $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
-        $session_config = Helpers::json($conf->read());
+        $session_config = json_decode($conf->read(), true);
         $session_config["SessionName"] = Helpers::generate();
         $session_config["InitiatedKey"] = Helpers::generate();
         $session_config["UserAgentKey"] = Helpers::generate();
         $session_config["Salt"] = Helpers::generate();
         $session_config["UserSessionsKey"] = Helpers::generate();
         $session_config["UserCookiesKey"] = Helpers::generate();
-        $conf->write(Helpers::json($session_config));
+        $conf->write(json_encode($session_config));
     }, 'application.init');
 
     Workbench::registerCommand('^routes', function($app) {
@@ -56,13 +60,13 @@
         $file->append('
     namespace '.str_replace('.', '\\', $argv[2]).' {
         use \xTend\Workbench\Workbench as Workbench;
-		Workbench::setNamespace(__NAMESPACE__);
+        Workbench::setNamespace(__NAMESPACE__);
         global $matched_application;
-	    if(__NAMESPACE__==$matched_application) {
-			$app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
-		    $app->getFileHandler()->system("Config.App.App.php")->include();
-		    $app->run();
-		}
+        if(__NAMESPACE__==$matched_application) {
+            $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
+            $app->getFileHandler()->system("Config.App.App.php")->include();
+            $app->run();
+        }
     }
         ');
         //replac all xTend\Application namespaces to the new application
@@ -283,7 +287,7 @@
         $file->write('<?php
     namespace '.Workbench::getConfiguration('application').';
     use \xTend\Core\Wow as Wow;
-	$app=\xTend\Core\getCurrentApp(__NAMESPACE__);
+    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $wow = $app->getWowCompiler();
     $wow->setFlavor(Wow::'.$argv[2].');
     $wow->setInternalExpressions();');
