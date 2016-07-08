@@ -1,8 +1,14 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The ModelHandler handles loading
+    * models
+    */
     class ModelHandler
     {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array Contains all loaded models */
         public $_models;
 
         /**

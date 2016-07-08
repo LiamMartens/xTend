@@ -1,9 +1,14 @@
 <?php
     namespace xTend\Core;
     use \DateTime as DateTime;
+    /**
+    * The LogHandler handles writing and clearing logs
+    */
     class LogHandler
     {
+        /** @var xTend\Core\App Current application */
         private $_app;
+
         /**
         * @param xTend\Core\App $app
         */

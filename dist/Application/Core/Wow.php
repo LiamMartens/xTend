@@ -1,23 +1,42 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The Wow class handles the templating
+    * and layouting engine
+    */
     class Wow
     {
+        /** @var string regex for php variable and function names */
         const PHP_NAME_RX = '[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*';
+        /** @var integer html flavor code */
         const HTML = 0;
+        /** @var integer combined flavor code */
         const COMBINED = 1;
+        /** @var integer at_sign flavor code */
         const AT_SIGN = 2;
 
+        /** @var string Contains the regex for extracting the view version */
         private $_rx_version;
+        /** @var string Contains the regex for extracting the name of the layout to extend */
         private $_rx_layout;
+        /** @var string Contains the regex for extracting the compile flag */
         private $_rx_flag;
+        /** @var string Contains the regex for detecing sections */
         private $_rx_section;
+        /** @var string Contains the regex for extracting the sections */
         private $_rx_section_extract;
+        /** @var string Contains the regex for detecing modules */
         private $_rx_module;
+        /** @var string Contains the regex for extracting  modules */
         private $_rx_module_extract;
 
+        /** @var integer Contains the current Wow flavor */
         private $_flavor;
+        /** @var array Contains the current expressions */
         private $_expressions;
+        /** @var xTend\Core\App Current application */
         private $_app;
+        
         /**
         * @param xTend\Core\App
         */

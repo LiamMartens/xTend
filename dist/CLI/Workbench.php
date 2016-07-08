@@ -1,9 +1,17 @@
 <?php
     namespace xTend\Workbench;
+    /**
+    * The Command class handles executing and
+    * matching a command
+    */
     class Command {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var string Contains the regex for the command */
         private $_rx;
+        /** @var callable Contains the command function */
         private $_call;
+
         /**
         * @param xTend\Core\App $app
         * @param string $rx
@@ -37,6 +45,12 @@
             return call_user_func($this->_call, $this->_app, $arguments);
         }
     }
+
+    /**
+    * The Helper class contains
+    * the generate for generating
+    * a random key
+    */
     class Helpers {
         /**
         * Generates a key
@@ -45,28 +59,25 @@
         */
         public static function generate() {
             return base64_encode(random_bytes(8));
-        }
 
-        /**
-        * json encodes or decodes
-        *
-        * @param string|array $data
-        *
-        * @return string|array
-        */
-        public static function json($data) {
-            if(is_string($data)) {
-                return json_decode($data, true);
-            }
-            return json_encode($data);
-        }
     }
+
+    /**
+    * The Workbench handles registering
+    * and executing commands
+    */
     class Workbench {
+        /** @var string Contains the application namespace */
         private static $_ns;
+        /** @var xTend\Core\App Current application */
         private static $_app;
+        /** @var array Contains the command line arguments */
         private static $_argv;
+        /** @var xTend\Workbench\Command Contains the current executed command */
         private static $_command;
+        /** @var array Contains all registered commands */
         private static $_commands;
+        /** @var array Contains the Workbench configuration */
         private static $_configuration;
 
         /**

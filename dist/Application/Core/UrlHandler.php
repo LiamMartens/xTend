@@ -1,9 +1,15 @@
 <?php
     namespace xTend\Core;
     use \xTend\Blueprints\BaseDataExtension;
+    /**
+    * The UrlHandler hanldes navigating
+    * to routes or url's
+    */
     class UrlHandler extends BaseDataExtension
     {
+        /** @var  xTend\Objects\Route Contains te currently executed route */
         private $_route;
+
         /**
         * Returns the currently activated route
         *

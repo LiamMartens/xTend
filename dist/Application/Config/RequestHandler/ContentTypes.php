@@ -1,4 +1,7 @@
 <?php
+    /**
+    * Register content types to the requestHandler
+    */
     namespace Application;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $requestHandler = $app->getRequestHandler();

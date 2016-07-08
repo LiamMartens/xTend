@@ -6,6 +6,7 @@
     */
     class BaseController
     {
+        /** @var xTend\Core\App|null Contains the current application */
         protected $_app;
         /**
         * Creates a new BaseController

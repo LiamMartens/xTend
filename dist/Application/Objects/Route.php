@@ -1,14 +1,33 @@
 <?php
     namespace xTend\Objects;
+    /**
+    * The Route objects handles
+    * routes
+    */
     class Route
     {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var string Contains the handle of the route */
         private $_handle;
+        /** @var mixed Contains the route */
         private $_route;
+        /** @var string|boolean Cotnains the alias of the route */
         private $_alias;
 
+        /**
+        * @return string
+        */
         public function getHandle() { return $this->_handle; }
+
+        /**
+        * @return mixed
+        */
         public function getRoute() { return $this->_route; }
+
+        /**
+        * @return string|boolean
+        */
         public function getAlias() { return $this->_alias; }
 
         /**

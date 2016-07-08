@@ -6,6 +6,7 @@
     */
     class BaseDataView extends BaseView
     {
+        /** @var array dataset of the view */
         protected $_data=[];
         /**
         * Sets a data entry on the BaseDataView

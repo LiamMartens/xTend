@@ -5,6 +5,7 @@
     */
     class BaseModel
     {
+        /** @var xTend\Core\App current application */
         protected $_app;
         /**
         * Constructs BaseModel

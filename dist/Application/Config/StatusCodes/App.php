@@ -1,4 +1,8 @@
 <?php
+    /**
+    * Registers the application's
+    * status codes
+    */
     namespace Application;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     $statusCodeHandler = $app->getStatusCodeHandler();

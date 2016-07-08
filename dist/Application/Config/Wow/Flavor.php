@@ -1,4 +1,8 @@
 <?php
+    /**
+    * Sets the current Wow flavor
+    * and initializes the Wow engine
+    */
     namespace Application;
     use \xTend\Core\Wow as Wow;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);

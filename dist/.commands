@@ -1,4 +1,8 @@
 <?php
+    /**
+    * Contains all workbench
+    * commands
+    */
     use xTend\Workbench\Workbench as Workbench;
     use xTend\Workbench\Helpers as Helpers;
     Workbench::registerCommand('init', function($app) {

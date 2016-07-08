@@ -1,9 +1,16 @@
 <?php
     namespace xTend\Core;
     use \xTend\Objects\Request;
+    /**
+    * The RequestHandler handles
+    * the current Request
+    */
     class RequestHandler {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var xTend\Objects\Request Contains the current Request */
         private $_request;
+        /** @var array Contains currently registered content types */
         private $_contenTypes=[];
 
         /**

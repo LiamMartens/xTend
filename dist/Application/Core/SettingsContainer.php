@@ -1,7 +1,12 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The SettingsContainer handles
+    * application values
+    */
     class SettingsContainer
     {
+        /** @var array Contains the setting values */
         private $_settings;
         public function __construct() {
             $this->_settings = [];

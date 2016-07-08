@@ -1,9 +1,20 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The ControllerHandler handles
+    * loading and executing
+    * controllers
+    */
     class ControllerHandler
     {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array Set of controllers */
         public $_controllers;
+
+        /**
+        * @param xTend\Core\App $app
+        */
         public function __construct($app) {
             $this->_app = $app;
             $this->_controllers = [];

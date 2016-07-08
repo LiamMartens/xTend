@@ -55,7 +55,7 @@ final class Crypto
     const ENCRYPTION_INFO = 'DefusePHP|KeyForEncryption';
     const AUTHENTICATION_INFO = 'DefusePHP|KeyForAuthentication';
     
-    /***
+    /**
      * Use this to generate a random encryption key.
      * 
      * @return string
@@ -66,7 +66,7 @@ final class Crypto
         return self::secureRandom(self::KEY_BYTE_SIZE);
     }
 
-    /***
+    /**
      * 
      * Encrypts a message.
      * $plaintext is the message to encrypt.
@@ -111,7 +111,7 @@ final class Crypto
         return $ciphertext;
     }
 
-    /***
+    /**
      * Decrypts a ciphertext.
      * $ciphertext is the ciphertext to decrypt.
      * $key is the key that the ciphertext was encrypted with.
@@ -245,7 +245,7 @@ final class Crypto
         $test_state = 1;
     }
 
-    /***
+    /**
      * Never call this method directly!
      * 
      * Unauthenticated message encryption.
@@ -277,7 +277,7 @@ final class Crypto
         return $ciphertext;
     }
 
-    /***
+    /**
      * Never call this method directly!
      * 
      * Unauthenticated message deryption.
@@ -308,7 +308,7 @@ final class Crypto
         return $plaintext;
     }
 
-    /***
+    /**
      * Returns a random binary string of length $octets bytes.
      * 
      * @param int $octets
@@ -328,7 +328,7 @@ final class Crypto
         return $random;
     }
 
-    /***
+    /**
      * Use HKDF to derive multiple keys from one.
      * http://tools.ietf.org/html/rfc5869
      * 
@@ -396,7 +396,7 @@ final class Crypto
         return $orm;
     }
 
-    /***
+    /**
      * Verify a HMAC without crypto side-channels
      * 
      * @staticvar boolean $native Use native hash_equals()?
@@ -489,7 +489,7 @@ final class Crypto
         } catch (Ex\InvalidCiphertextException $e) { /** expected */ }
     }
 
-    /***
+    /**
      * Run-time testing
      * 
      * @throws Ex\CryptoTestFailedException
@@ -528,7 +528,7 @@ final class Crypto
 
     }
 
-    /***
+    /**
      * Run-Time tests
      * 
      * @throws Ex\CryptoTestFailedException
@@ -544,7 +544,7 @@ final class Crypto
         }
     }
 
-    /***
+    /**
      * Run-time tests
      * 
      * @throws Ex\CryptoTestFailedException
@@ -593,7 +593,7 @@ final class Crypto
     }
 
     
-    /***
+    /**
      * If the constant doesn't exist, throw an exception
      * 
      * @param string $name
@@ -606,7 +606,7 @@ final class Crypto
         }
     }
 
-    /***
+    /**
      * If the functon doesn't exist, throw an exception
      * 
      * @param string $name Function name
@@ -625,7 +625,7 @@ final class Crypto
      * substr() are replaced by mb_strlen() and mb_substr().
      */
 
-    /***
+    /**
      * Safe string length
      * 
      * @staticvar boolean $exists
@@ -651,7 +651,7 @@ final class Crypto
         }
     }
     
-    /***
+    /**
      * Safe substring
      * 
      * @staticvar boolean $exists
@@ -688,7 +688,7 @@ final class Crypto
             return \substr($str, $start);
         }
     }
-    /***
+    /**
      * Convert a binary string into a hexadecimal string without cache-timing 
      * leaks
      * 
@@ -708,7 +708,7 @@ final class Crypto
         return $hex;
     }
     
-    /***
+    /**
      * Convert a hexadecimal string into a binary string without cache-timing 
      * leaks
      * 

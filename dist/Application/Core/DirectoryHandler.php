@@ -1,8 +1,15 @@
 <?php
     namespace xTend\Core\DirectoryHandler {
         use \xTend\Core\FileHandler\File;
+        /**
+        * The Directory class wraps
+        * a direcotry
+        */
         class Directory {
+            /** @var xTend\Core\App Current application */
             private $_app;
+
+            /** @var string Contains the path of the Directory */
             private $_path;
 
             /**
@@ -223,9 +230,15 @@
         }
     }
     namespace xTend\Core {
+        /**
+        * The DirectoryHandler handles getting directory entries
+        * as Directory object from the Application or public directory
+        */
         class DirectoryHandler
         {
+            /** @var xTend\Core\App Current application */
             private $_app;
+
             /**
             * @param xTend\Core\App $app
             */

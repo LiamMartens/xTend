@@ -1,10 +1,16 @@
 <?php
     namespace xTend\Core;
     use \xTend\Objects\View as View;
+    /**
+    * The ViewHandler handles loading views
+    */
     class ViewHandler
     {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array Contains all loaded views */
         private $_views;
+
         /**
         * @param xTend\Core\App
         */

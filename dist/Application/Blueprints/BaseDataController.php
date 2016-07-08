@@ -7,6 +7,7 @@
     */
     class BaseDataController extends BaseController
     {
+        /** @var array The dataset of the controller */
         protected $_data=[];
         /**
         * Sets a data entry on the BaseDataController

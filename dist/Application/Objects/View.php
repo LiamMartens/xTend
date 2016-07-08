@@ -1,12 +1,21 @@
 <?php
     namespace xTend\Objects;
     use \xTend\Blueprints\BaseDataView;
+    /**
+    * The View object contains the
+    * current View
+    */
     class View extends BaseDataView
     {
+        /** @var string Contains the name of the view */
         private $_name;
+        /** @var strig Contains the file path to the view */
         private $_filePath;
+        /** @var string Contains the version of the view */
         private $_version;
+        /** @var boolean Contains whether the view exists */
         private $_exists;
+        /** @var boolean Holds whether the view is a wow template */
         private $_isWow;
 
         /**

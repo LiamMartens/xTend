@@ -1,20 +1,35 @@
 <?php
     namespace xTend\Core;
     use xTend\Objects\Route;
+    /**
+    * The Router handles the routes
+    */
     class Router
     {
+        /** @var xTend\Objects\Route Default route */
         private $_default;
+        /** @var xTend\Objects\Route Home route */
         private $_home;
+        /** @var array Contains the POST routes */
         private $_post;
+        /** @var array Contains the GET routes */
         private $_get;
+        /** @var array Contains the PUT routes */
         private $_put;
+        /** @var array Contains the DELETE routes */
         private $_delete;
+        /** @var array Contains the PATCH routes */
         private $_patch;
+        /** @var array Contains the OPTIONS routes */
         private $_options;
+        /** @var array Contains the any routes */
         private $_any;
+        /** @var array Contains the error routes */
         private $_error;
+        /** @var array Contains the aliases of the routes */
         private $_aliases;
 
+        /** @var xTend\Core\App Current application */
         private $_app;
         /**
         * @param xTend\Core\App

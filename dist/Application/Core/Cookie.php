@@ -1,14 +1,16 @@
 <?php
     namespace xTend\Core;
-    /***
-        Same rules as the Session class apply here
-        There should only be one cookie class as the key on the current machine will be the
-        same anyways
-    **/
     use \Defuse\Crypto\Crypto as Crypto;
+    /**
+    * The Cookie class handles
+    * getting, removing and setting
+    * encrypted cookies
+    */
     class Cookie
     {
+        /** @var string Encryption key for cookie values */
         private static $_enckey;
+
         /**
         * Generates a Cookie encryption key
         *

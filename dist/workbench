@@ -1,5 +1,9 @@
 #!/usr/bin/env php
 <?php
+    /**
+    * Contains the workbench
+    * entry point
+    */
     namespace Application;
     use \xTend\Workbench\Workbench as Workbench;
     require_once("CLI/Workbench.php");

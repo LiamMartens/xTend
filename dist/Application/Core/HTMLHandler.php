@@ -1,11 +1,18 @@
 <?php
     namespace xTend\Core\HTMLHandler
     {
+        /**
+        * The HTMLElement class
+        * wraps a HTML DOM element
+        */
         class HTMLElement {
+            /** @var string Contains the tag name of the element */
             private $_name;
+            /** @var array Contains the attributes of the element */
             private $_attributes;
+            /** @var string Contains the text of the element */
             private $_text;
-
+            /** @var array Contains eventual child elements */
             protected $_elements;
 
             /**

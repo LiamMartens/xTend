@@ -1,8 +1,15 @@
 <?php
     namespace xTend\Core;
+    /**
+    * VersionCheck handles checking
+    * packagist versions
+    */
     class VersionCheck {
+        /** @var string Contains the registered version expression */
         private $_expression;
+        /** @var string Contains the version to match */
         private $_version;
+        /** @var string Contains the exact version string */
         private $_exact;
 
         /**

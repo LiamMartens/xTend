@@ -1,9 +1,17 @@
 <?php
     namespace xTend\Objects;
+    /**
+    * The Request object handles the current
+    * request
+    */
     class Request {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var string Holds the Request method */
         private $_method;
+        /** @var string Holdes the Request path */
         private $_path;
+        
         /**
         * @param xTend\Core\App $app
         * @param string $method

@@ -1,13 +1,24 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The App class contains the starting point
+    * of the whole xTend application
+    */
     class App
     {
+        /** @var string Contains the current xTend version */
         private $_xTendVersion = "0.9.6";
+        /** @var string Contains the application's URL */
         private $_url = "http://localhost";
+        /** @var boolean Contains the status of development mode */
         private $_inDevelopment = false;
+        /** @var string|boolean Contains the backup inteval */
         private $_backupInterval = "1 week";
+        /** @var integer Contains the log limit */
         private $_backupLimit = 10;
+        /** @var integer Contains the log limit */
         private $_logLimit = 30;
+        /** @var string Contains the application's namespace */
         private $_namespace = "Application";
         /**
         * Returns the current xTend version

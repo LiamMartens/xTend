@@ -1,5 +1,9 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The SortHelper contains some helper
+    * functions for sorting values
+    */
     class SortHelper
     {
         /**

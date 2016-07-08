@@ -1,10 +1,17 @@
 <?php
     namespace xTend\Core;
     use \Exception as Exception;
+    /**
+    * StatusCode wraps status codes with
+    * a name, a code and a description
+    */
     class StatusCode
     {
+        /** @var integer Code of the status code */
         protected $_code;
+        /** @var string The name of the status */
         protected $_name;
+        /** @var string The description of the status */
         protected $_readableName;
 
         /**
@@ -57,8 +64,14 @@
             $this->_readableName = $readable;
         }
     }
+
+    /**
+    * The StatusCodeHandler handles registering
+    * and managing status codes
+    */
     class StatusCodeHandler
     {
+        /** @var array Contains the registered error codes */
         protected $_statusCodes;
 
         /**

@@ -1,7 +1,12 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The BackupManager handles taking backups
+    * from the current application
+    */
     class BackupManager
     {
+        /** @var xTend\Core\App Contains the current application */
         private $_app;
         public function __construct($app) {
             $this->_app = $app;

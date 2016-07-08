@@ -6,6 +6,7 @@
     */
     class BaseDataExtension
     {
+        /** @var array the dataset of the class */
         protected $_data=[];
         /**
         * Sets a data entry on the BaseDataExtension

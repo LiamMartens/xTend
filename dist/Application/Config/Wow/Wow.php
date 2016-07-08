@@ -1,4 +1,8 @@
 <?php
+    /**
+    * Registers other expressions
+    * apart from internal expressions
+    */
     namespace Application;
     use \xTend\Core\Wow as Wow;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);

@@ -1,7 +1,12 @@
 <?php
     namespace xTend\Core;
+
+    /**
+    * The FileManager handles including files
+    */
     class FileManager
     {
+        /** @var array All yet included files */
         private $_files;
         public function __construct() {
             $this->_files=[];

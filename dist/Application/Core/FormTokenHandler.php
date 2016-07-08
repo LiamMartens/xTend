@@ -1,7 +1,14 @@
 <?php
     namespace xTend\Core;
+
+    /**
+    * The FormTokenHandler handles
+    * CSRF token
+    */
     class FormTokenHandler {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array Contains all persistent tokens */
         private $_tokens;
 
         /**

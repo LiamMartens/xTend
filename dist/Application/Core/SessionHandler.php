@@ -1,23 +1,52 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The SessionHandler handles
+    * starting sessions
+    */
     class SessionHandler
     {
-        /***
-            The SessionHandler is solely static since there can only be one session
-            at a time on a single domain
-        **/
+        /** @var string Name of the session */
         private static $_sessionName = "secure_session_name";
+        /** @var string Initiated session key */
         private static $_initiated = "secure_initiated_key";
+        /** @var string User agent key */
         private static $_userAgent = "secre_user_agent_key";
+        /** @var string Salt key */
         private static $_salt = "secure_salt";
+        /** @var string User sessions key */
         private static $_user_sessions_key = "user_sessions_key";
+        /** @var string User cookies key */
         private static $_user_cookies_key = "user_cookies_key";
-        //no getters as those are not needed
+
+        /**
+        * @param string $name
+        */
         public static function setSessionName($name) { self::$_sessionName = $name; }
+
+        /**
+        * @param string $key
+        */
         public static function setInitiatedKey($key) { self::$_initiated = $key; }
+
+        /**
+        * @param string $key
+        */
         public static function setUserAgentKey($key) { self::$_userAgent = $key; }
+
+        /**
+        * @param string $salt
+        */
         public static function setSalt($salt) { self::$_salt = $salt; }
+
+        /**
+        * @param string $key
+        */
         public static function setUserSessionsKey($key) { self::$_user_sessions_key = $key; }
+
+        /**
+        * @param string $key
+        */
         public static function setUserCookiesKey($key) { self::$_user_cookies_key = $key; }
 
         public static function destroy() {

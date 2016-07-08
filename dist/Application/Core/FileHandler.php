@@ -1,8 +1,14 @@
 <?php
     namespace xTend\Core\FileHandler {
         use xTend\Core\DirectoryHandler\Directory;
+
+        /**
+        * The File class wraps a file
+        */
         class File {
+            /** @var xTend\Core\App Current application */
             private $_app;
+            /** @var string The path of the file */
             private $_path;
 
             /**
@@ -223,9 +229,17 @@
         }
     }
     namespace xTend\Core {
+        /**
+        * The FileHandler handles
+        * getting files as File objects
+        * from application or public
+        * directory
+        */
         class FileHandler
         {
+            /** @var xTend\Core\App Current application */
             private $_app;
+
             /**
             * @param xTend\Core\App $app
             */

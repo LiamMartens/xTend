@@ -1,4 +1,7 @@
 <?php
+    /**
+    * Configuration file of the current application
+    */
     namespace Application;
     $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
     //application configuration

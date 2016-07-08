@@ -1,11 +1,19 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The PackagistHandler handles installing
+    * and removing packages
+    */
     class PackagistHandler {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var xTend\Core\FileHandler Contains the application's file handler */
         private $_fileHandler;
+        /** @var xTend\Core\DirecotryHandler Contains the application's directory handler */
         private $_dirHandler;
-
+        /** @var array Contains all installed packages */
         private $_packages;
+
         /**
         * @return array
         */

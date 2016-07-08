@@ -1,8 +1,14 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The Archive class wraps
+    * the default ZipArchive class
+    */
     class Archive
     {
+        /** @var ZipArchive Contains the ZipArchive class of the Archive */
         private $_zip;
+        /** @var string Contains the destionation of the Archive */
         private $_destination;
 
         /**

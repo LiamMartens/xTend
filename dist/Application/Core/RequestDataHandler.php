@@ -1,9 +1,17 @@
 <?php
     namespace xTend\Core;
+    /**
+    * The RequestDataHandler handles
+    * get, post and navigation pass data
+    */
     class RequestDataHandler {
+        /** @var xTend\Core\App Current application */
         private $_app;
+        /** @var array GET data */
         private $_get;
+        /** @var array POST data */
         private $_post;
+        /** @var array navigation pass data */
         private $_data;
 
         /**
