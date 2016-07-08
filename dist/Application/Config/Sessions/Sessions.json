@@ -1,8 +1,8 @@
 {
-    "SessionName":"",
-    "InitiatedKey":"",
-    "UserAgentKey":"",
-    "Salt":"",
-    "UserSessionsKey":"",
-    "UserCookiesKey":""
+    "SessionName":"session_name",
+    "InitiatedKey":"initiated_key",
+    "UserAgentKey":"user_agent_key",
+    "Salt":"salt",
+    "UserSessionsKey":"user_sessions_key",
+    "UserCookiesKey":"user_cookies_key"
 }
