@@ -6,15 +6,24 @@
         private $_dirHandler;
 
         private $_packages;
+        /*
+        * @return array
+        */
         public function getPackages() {
             return $this->_packages;
         }
 
         private $_autoload;
+        /*
+        * @return array
+        */
         public function getAutoload() {
             return $this->_autoload;
         }
 
+        /*
+        * @param xTend\Core\App
+        */
         public function __construct($app) {
             $this->_app = $app;
             $this->_fileHandler = $app->getFileHandler();
@@ -25,14 +34,29 @@
             $this->_autoload = json_decode($this->_fileHandler->system('Libs.Packagist.autoload.json')->read(), true);
         }
 
+        /*
+        * @return boolean
+        */
         private function savePackages() {
             return $this->_fileHandler->system('packagist.json')->write(json_encode($this->_packages));
         }
 
+        /*
+        * @return boolean
+        */
         private function saveAutoload() {
             return $this->_fileHandler->system('Libs.Packagist.autoload.json')->write(json_encode($this->_autoload));
         }
 
+        /*
+        * Installs a packagist package
+        *
+        * @param string $package_name
+        * @param string|boolean $version_param
+        * @param boolean-
+        *
+        * @return boolean
+        */
         public function install($package_name, $version_param = false, $die_on_duplicate = true) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
             if(!array_key_exists("status", $package_info)) {
@@ -128,6 +152,13 @@
             return false;
         }
 
+        /*
+        * Removes a packagist package
+        *
+        * @param string $^package_name
+        *
+        * @return boolean
+        */
         public function remove($package_name) {
             if(array_key_exists($package_name, $this->_packages)) {
                 $version_installed = $this->_packages[$package_name];
@@ -179,6 +210,12 @@
             return false;
         }
 
+        /*
+        * Removes a packagist's dependencies
+        *
+        * @param string $package_name
+        * @param string|boolean $package_version
+        */
         public function autoremove($package_name, $package_version = false) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
             //get to_install

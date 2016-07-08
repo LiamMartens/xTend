@@ -5,14 +5,32 @@
         private $_app;
         public $_controllers;
         public function __construct($app) {
-            //keep current app reference for initializing controllers which might need the app to access app directives and settings
             $this->_app = $app;
             $this->_controllers = [];
         }
+
+        /*
+        * Checks whether a controller exists
+        *
+        * @param string $controllerName
+        *
+        * @return boolean
+        */
         public function exists($controllerName) {
             //controllerName excluding @ function call
             return $this->_app->getControllersDirectory()->file("$controllerName.php")->exists();
         }
+
+        /*
+        * Loads a controller
+        *
+        * @param string $controllerName
+        * @param array $data
+        * @param string|boolean $ns
+        * @param boolean $createInstance
+        *
+        * @return controller|boolean
+        */
         public function loadController($controllerName, $data = [], $ns = false, $createInstance = true) {
             //
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
@@ -66,6 +84,14 @@
             }
             return false;
         }
+
+        /*
+        * Returns a controller by name or the first one
+        *
+        * @param string|boolean $controllerName
+        *
+        * @return controller|boolean
+        */
         public function getController($controllerName=false) {
             //the controller name here also does not include any @ functions
             if(($controllerName==false)&&(count($this->_controllers)>0))

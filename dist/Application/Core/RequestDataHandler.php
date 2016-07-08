@@ -5,6 +5,10 @@
         private $_get;
         private $_post;
         private $_data;
+
+        /*
+        * @param xTend\Core\App
+        */
         public function __construct($app) {
             $this->_app = $app;
             $this->_get = [];
@@ -12,8 +16,25 @@
             $this->_data = [];
         }
 
+        /*
+        * Returns parsed GET data
+        *
+        * @return array
+        */
         public function get() { return $this->_get; }
+
+        /*
+        * Returns parsed POST data
+        *
+        * @return array
+        */
         public function post() { return $this->_post; }
+
+        /*
+        * Returns passed navigation data
+        *
+        * @return array
+        */
         public function data() { return $this->_data; }
 
         private function parseGet() {
@@ -35,7 +56,6 @@
             $data = Session::get(session_id().'-xtend-data', false);
             if($data!==false) {
                 $this->_data = json_decode($data, true);
-                //remove 1 from ttl
                 Session::remove(session_id().'-xtend-data');
             }
         }

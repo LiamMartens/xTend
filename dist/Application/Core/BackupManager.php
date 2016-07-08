@@ -2,15 +2,16 @@
     namespace xTend\Core;
     class BackupManager
     {
-        /**
-            Restore method is gone as it should not be done automatically
-            You should consider yourself what to restore and what not as this is
-            safer
-        **/
         private $_app;
         public function __construct($app) {
             $this->_app = $app;
         }
+
+        /*
+        * Checks whether the application's backup interval has been exceeded
+        *
+        * @return boolean
+        */
         private function needsBackup() {
             if($this->_app->getBackupInterval()!==false) {
                 $interval = strtotime($this->_app->getBackupInterval());
@@ -24,6 +25,10 @@
             }
             return false;
         }
+
+        /*
+        * Cleans backups when there are too many backup files (backuplimit exceed)
+        */
         private function cleanBackups() {
             if($this->_app->getBackupLimit()!==false) {
                 $backups = $this->_app->getBackupsDirectory()->files(); sort($backups);
@@ -35,6 +40,12 @@
                 }
             }
         }
+
+        /*
+        * Creates a backup if needed or forced
+        *
+        * @param boolean $force
+        */
         public function create($force=false) {
             if((!$this->needsBackup())&&(!$force)) return false;
             $bak = new Archive($this->_app->getBackupsDirectory()->file(time()."-".date("YmdHis").".zip"));

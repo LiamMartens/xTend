@@ -8,6 +8,10 @@
 
             protected $_elements;
 
+            /*
+            * @param string $name
+            * @param array $attributes
+            */
             public function __construct($name, $attributes=[]) {
                 $this->_name = $name;
                 $this->_attributes = $attributes;
@@ -15,12 +19,27 @@
                 $this->_elements = [];
             }
 
+            /*
+            * Creates an HTML element
+            *
+            * @param string $name
+            * @param array $attributes
+            *
+            * @return xTend\Core\HTMLHandler\HTMLElement
+            */
             public function createElement($name, $attributes=[]) {
                 $el = new HTMLElement($name, $attributes);
                 $this->_elements[] = $el;
                 return $el;
             }
 
+            /*
+            * Adds an element to the current one
+            *
+            * @param xTend\Core\HTMLHandler\HTMLElement $el
+            *
+            * @return xTend\Core\HTMLHandler\HTMLElement|boolean
+            */
             public function addElement($el) {
                 if($el instanceof HTMLElement) {
                     $this->_elements[] = $el;
@@ -28,11 +47,25 @@
                 } return false;
             }
 
+            /*
+            * Adds text to the element
+            *
+            * @param string $text
+            *
+            * @return xTend\Core\HTMLHandler\HTMLElement
+            */
             public function addText($text) {
                 $this->_text .= $text;
                 return $this;
             }
 
+            /*
+            * Writes the HTML element either echoing directory or just returning the text
+            *
+            * @param boolean $output
+            *
+            * @return string|null
+            */
             public function write($output=false) {
                 $html="";
                 if($this->_name!==false) {
@@ -60,9 +93,21 @@
 
         class HTMLDocument extends HTMLElement {
             private $_fullDoc;
+
+            /*
+            * @param boolean $fullDoc
+            */
             public function __construct($fullDoc = false) {
                 $this->_fullDoc = $fullDoc;
                 $this->_elements = []; }
+
+            /*
+            * Writes out the document
+            *
+            * @param boolean $output
+            *
+            * @return string|null
+            */
             public function write($output=false) {
                 $html = ($this->_fullDoc) ? "<!DOCTYPE html><html>" : "";
                 foreach ($this->_elements as $el) {
@@ -80,18 +125,36 @@
         {
             private $_app;
             private $_documents;
+
+            /*
+            * @param xTend\Core\App $app
+            */
             public function __construct($app) {
                 $this->_app = $app;
                 $this->_documents = [];
                 $this->_elements = [];
             }
 
+            /*
+            * Creates a new document
+            *
+            * @param boolean $fullDoc
+            *
+            * @return xTend\Core\HTMLHandler\HTMLDocument
+            */
             public function createDocument($fullDoc = false) {
                 $doc = new HTMLHandler\HTMLDocument($fullDoc);
                 $this->_documents[] = $doc;
                 return $doc;
             }
 
+            /*
+            * Writes out all documents
+            *
+            * @param boolean $output
+            *
+            * @return string|null
+            */
             public function write($output=false) {
                 $html = "";
                 foreach ($this->_documents as $doc) {

@@ -5,16 +5,38 @@
     {
         private $_app;
         private $_views;
+        /*
+        * @param xTend\Core\App
+        */
         public function __construct($app) {
             $this->_app = $app;
             $this->_views = [];
         }
+
+        /*
+        * Checks whether the view exists
+        *
+        * @param string $view
+        *
+        * @return boolean
+        */
         public function exists($view) {
             $fh = $this->_app->getFileHandler();
             if($this->_app->getViewsDirectory()->file("$view.php")->exists()||$this->_app->getViewsDirectory()->file("$view.wow.php", 2)->exists())
                 return true;
             return false;
         }
+
+        /*
+        * Loads a new view
+        *
+        * @param string $view
+        * @param array $data
+        * @param string|boolean $version
+        * @param string|boolean $viewClass
+        *
+        * @return boolean
+        */
         public function loadView($view, $data = [], $version = false, $viewClass = false) {
             if($this->exists($view)) {
                 //by default the view object extends BaseDataView,
@@ -36,6 +58,14 @@
             }
             return false;
         }
+
+        /*
+        * Returns the loaded view by name or the first one
+        *
+        * @param string|boolean $viewName
+        *
+        * @return view|boolean
+        */
         public function getView($viewName = false) {
             //the controller name here also does not include any @ functions
             if(($viewName==false)&&(count($this->_views)==1))

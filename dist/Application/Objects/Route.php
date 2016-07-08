@@ -11,6 +11,12 @@
         public function getRoute() { return $this->_route; }
         public function getAlias() { return $this->_alias; }
 
+        /*
+        * @param xTend\Core\App $app
+        * @param string $handle
+        * @param mixed $route
+        * @param string|boolean $alias
+        */
         public function __construct($app, $handle, $route, $alias=false) {
             $this->_app = $app;
             $this->_handle = trim($handle, "/");
@@ -18,12 +24,32 @@
             $this->_alias = $alias;
         }
 
-        public function navigate() {
+        /*
+        * @param array $data
+        * @param boolean $inc_url
+        */
+        public function navigate($data = [], $inc_url = true) {
             if(is_string($this->_handle)) {
-                $this->_app->getUrlHandler()->navigate($this->_handle);
+                return $this->_app->getUrlHandler()->navigate($this->_handle);
             }
+            return false;
         }
 
+        /*
+        * @param array $parameters
+        * @param array $data
+        *
+        * @return boolean
+        */
+        public function to($parameters = [], $data = []) {
+            return $this->_app->getUrlHandler()->to($this->_handle, $parameters, $data);
+        }
+
+        /*
+        * Executes the route
+        *
+        * @return boolean
+        */
         public function execute() {
             //this function will execute whatever is attached to the route
             if(is_callable($this->_route)) {
@@ -76,6 +102,13 @@
             return true;
         }
 
+        /*
+        * Checks whether the request uri is a match
+        *
+        * @param string $request
+        *
+        * @return boolean
+        */
         public function isMatch($request) {
             if(is_string($this->_handle)) {
                 //split handle for multi handle

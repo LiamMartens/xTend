@@ -4,14 +4,36 @@
     {
         private $_app;
         public $_models;
+
+        /*
+        * @param xTend\Core\App $app
+        */
         public function __construct($app) {
             //keep current app reference for initializing models which might need the app to access app directives and settings
             $this->_app = $app;
             $this->_models = [];
         }
+
+        /*
+        * Checks whether a model exists
+        *
+        * @param string $modelName
+        *
+        * @return boolean
+        */
         public function exists($modelName) {
             return $this->_app->getModelsDirectory()->file("$modelName.php")->exists();
         }
+
+        /*
+        * Loads a model
+        *
+        * @param string $modelName
+        * @param string|boolean $ns
+        * @param boolean $createInstance
+        *
+        * @return model|boolean
+        */
         public function loadModel($modelName, $ns = false, $createInstance = true) {
             //if create instance is set to false their will not be an instance of the model available
             //any reference to this model inclusion is also lost except for the fact that the file has been required
@@ -45,6 +67,14 @@
             }
             return false;
         }
+
+        /*
+        * Gets a model by name or gets the first model
+        *
+        * @param boolean|string $modelName
+        *
+        * @param model|boolean
+        */
         public function getModel($modelName=false) {
             if(($modelName==false)&&(count($this->_models)>0))
                 return $this->_models[array_keys($this->_models)[0]];

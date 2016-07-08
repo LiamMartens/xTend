@@ -18,16 +18,41 @@
         private $_flavor;
         private $_expressions;
         private $_app;
+        /*
+        * @param xTend\Core\App
+        */
         public function __construct($app) {
             $this->_flavor = Wow::HTML;
             $this->_expressions=[];
             $this->_app=$app;
         }
+
+        /*
+        * Sets the Wow templating engine flavor
+        *
+        * @param integer $fl
+        */
         public function setFlavor($fl) { $this->_flavor = $fl; }
+
+        /*
+        * Returns the currently set wow flavor
+        *
+        * @return integer
+        */
         public function getFlavor() { return $this->_flavor; }
+
+        /*
+        * Creates a regex
+        *
+        * @param string $pattern
+        * @param string $flags
+        *
+        * @return string
+        */
         public function rx($pattern, $flags) {
             return "/$pattern/$flags";
         }
+
         public function setInternalExpressions() {
             if($this->_flavor==Wow::HTML) {
                 $this->_rx_version = $this->rx("\<version\s+value=\"([0-9\.]+)\"\s*\/?\>", "i");
@@ -59,10 +84,23 @@
             }
         }
 
+        /*
+        * Register a new expression
+        *
+        * @param string $rx
+        * @param string $replacement
+        */
         public function registerExpression($rx, $replacement) {
             $this->_expressions[$rx]=$replacement;
         }
-        //compiler options
+
+        /*
+        * Checks the version of the view out of content
+        *
+        * @param string reference $content
+        *
+        * @return float|boolean
+        */
         private function version(&$content) {
             //must be at the beginning of a line
             $rx_matches=[]; preg_match($this->_rx_version, $content, $rx_matches);
@@ -70,12 +108,28 @@
                 return floatval($rx_matches[1]);
             return false;
         }
+
+        /*
+        * Gets the layout name out of a view's content
+        *
+        * @param string reference $content
+        *
+        * @return string
+        */
         private function layout(&$content) {
             $rx_matches=[]; preg_match($this->_rx_layout, $content, $rx_matches);
             if(isset($rx_matches[1]))
                 return $rx_matches[1];
             return false;
         }
+
+        /*
+        * Gets the compile flag out of a view's content
+        *
+        * @param string reference $content
+        *
+        * @return string|boolean
+        */
         private function flag(&$content) {
             //compile flags -> always (always compile), version (compile on version change to higher one),
             //never (never compile), change (compile on content change) -> version stays the same so
@@ -87,7 +141,16 @@
                 return $rx_matches[1];
             return false;
         }
-        //file changed
+
+        /*
+        * Checks whether the view was changed
+        *
+        * @param string $path
+        * @param string reference $view_content
+        * @param string|boolean $layout
+        *
+        * @return boolean
+        */
         private function changed($path, &$view_content, $layout=false) {
             //get last modification time
             $time_last_mod=filemtime($path);
@@ -114,11 +177,23 @@
             //if all fails return false
             return false;
         }
-        //update meta method
+
+        /*
+        * Sets the last_compile time of a path
+        *
+        * @param string $path
+        */
         private function update($path) {
             $path->setMeta("last_compile", time());
         }
-        //compile part method
+
+        /*
+        * Checks whether a part has been fully compiled and contains more expressions
+        *
+        * @param string $content
+        *
+        * @return boolean
+        */
         private function isFullyCompiled($content) {
             if(preg_match($this->_rx_module, $content)==1) { return false; }
             foreach($this->_expressions as $rx => $repl) {
@@ -126,6 +201,15 @@
             }
             return true;
         }
+
+        /*
+        * Compiles a section with the registered expressions (non internal)
+        *
+        * @param string $content
+        * @param string|boolean $modules_dir
+        *
+        * @return string
+        */
         private function compileRaw($content, $modules_dir = false) {
             foreach ($this->_expressions as $rx => $repl) {
                 $content = preg_replace($rx, $repl, $content);
@@ -135,6 +219,15 @@
             }
             return $content;
         }
+
+        /*
+        * Compiles a view content
+        *
+        * @param string $content
+        * @param string|boolean $modules_dir
+        *
+        * @return string
+        */
         private function compile($content, $modules_dir = false) {
             //remove @version, @compile, @layout and @section flags as these
             //should not be repaced by anything, they should be ignored
@@ -162,7 +255,15 @@
             $content=$final_content;
             return $final_content;
         }
-        //compile layout method
+
+        /*
+        * Compiles a layout
+        *
+        * @param string $layout_c
+        * @param string|boolean $modules_dir
+        *
+        * @return array
+        */
         private function compileLayout($layout_c, $modules_dir = false) {
             //split the layout into sections
             $layout_c=$this->compileRaw($layout_c, $modules_dir);
@@ -174,7 +275,16 @@
             //returns array of compiled parts and the section parts
             return $split;
         }
-        //compile view method
+
+        /*
+        * Starts a view compilation
+        *
+        * @param string $file
+        * @param string|boolean $layout_dir
+        * @param string|boolean $modules_dir
+        *
+        * @return string
+        */
         public function compileView($file, $layout_dir = false, $modules_dir = false) {
             //file hash
             $file_hash = hash("sha256", $file);

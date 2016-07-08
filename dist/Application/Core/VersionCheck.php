@@ -4,6 +4,11 @@
         private $_expression;
         private $_version;
         private $_exact;
+
+        /*
+        * @param string $expression
+        * @param string $version
+        */
         public function __construct($expression, $version) {
             $this->_expression = trim($expression);
             $version_match = []; preg_match('/((([0-9]\.)+[0-9])|([0-9]+))/', $version, $version_match);
@@ -16,10 +21,20 @@
             $this->_exact = $version;
         }
 
+        /*
+        * Checks whether the versions are exact matches
+        *
+        * @return boolean
+        */
         private function isExact() {
             return ($this->_expression==$this->_exact);
         }
 
+        /*
+        * Checks whether the versions are a range match
+        *
+        * @return boolean
+        */
         private function isRange() {
             $or_expressions = explode('||', $this->_expression);
             foreach($or_expressions as $or_exp) {
@@ -40,6 +55,11 @@
             return false;
         }
 
+        /*
+        * Checks whether the versions are a hyphen match
+        *
+        * @return boolean
+        */
         private function isHyphenRange() {
             $parts = explode('-', $this->_expression);
             if(!isset($parts[1])) { return false; }
@@ -51,6 +71,11 @@
 
         }
 
+        /*
+        * Checks whether the versions are a wildcard match
+        *
+        * @return boolean
+        */
         private function isWildcard() {
             $version_start = trim($this->_expression, '.*');
             $rx_matches=[]; preg_match('/([0-9]+)\.\*/', $this->_expression, $rx_matches);
@@ -60,6 +85,11 @@
                 &&version_compare($this->_version, trim($version_end), '<'));
         }
 
+        /*
+        * Checks whether the versions are a tilde match
+        *
+        * @return boolean
+        */
         private function isTilde() {
             if(substr($this->_expression, 0, 1)!=='~') { return false; }
             $version_start = substr($this->_expression, 1);
@@ -70,6 +100,11 @@
                     &&version_compare($this->_version, trim($version_end), '<'));
         }
 
+        /*
+        * Checks whether the versions are a caret match
+        *
+        * @return boolean
+        */
         private function isCaret() {
             if(substr($this->_expression, 0, 1)!=='^') { return false; }
             $version_start = substr($this->_expression, 1);
@@ -80,6 +115,9 @@
                     &&version_compare($this->_version, trim($version_end), '<'));
         }
 
+        /*
+        * @return boolean
+        */
         public function isMatch() {
             return ($this->isExact()||
                     $this->isRange()||

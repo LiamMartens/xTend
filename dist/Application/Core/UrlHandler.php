@@ -4,14 +4,35 @@
     class UrlHandler extends BaseDataExtension
     {
         private $_route;
+        /*
+        * Returns the currently activated route
+        *
+        * @return xTend\Objects\Route
+        */
         public function getRoute() { return $this->_route; }
+
+        /*
+        * Sets the currently activated route
+        *
+        * @param xTend\Objects\Route $route
+        */
         public function setRoute($route) { $this->_route=$route; }
 
         private $_app;
+        /*
+        * @param xTend\Core\App $app
+        */
         public function __construct($app) {
             $this->_app = $app;
         }
 
+        /*
+        * @param xTend\Objects\Route|string $route
+        * @param array $parameters
+        * @param array $data
+        *
+        * @return boolean
+        */
         public function to($route, $parameters = [], $data = []) {
             Session::set(session_id().'-xtend-data', json_encode($data));
             $handle='';
@@ -39,6 +60,11 @@
             return true;
         }
 
+        /*
+        * @param xTend\Objects\Route|string $route
+        * @param array $data
+        * @param boolean $inc_url
+        */
         public function navigate($request, $data = [], $inc_url = true) {
             //set temp data and time to live
             Session::set(session_id().'-xtend-data', json_encode($data));
