@@ -475,6 +475,14 @@
         */
         public function getRequestHandler() { return $this->_requestHandler; }
 
+        private $_orm;
+        /**
+        * Returns the app's PDO ORM wrapper
+        *
+        * @return xTend\Core\xORM
+        */
+        public function orm() { return $this->_orm; }
+
         /**
         * Throws an application error and sets an HTTP code
         *
@@ -630,11 +638,13 @@
                 [ "xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php" ],
                 [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
                 [ "xTend\\Core\\RequestHandler", $this->_dirSystem."/Core/RequestHandler.php" ],
+                [ "xTend\\Core\\xORM", $this->_dirSystem."/Core/xORM.php" ],
                 [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
                 [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
                 [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ],
+                [ "xTend\\Blueprints\\BaseDataModel", $this->_dirBlueprints->file("BaseDataModel.php") ],
                 [ "xTend\\Blueprints\\BaseRespondController", $this->_dirBlueprints->file("BaseRespondController.php") ],
-                [ "xTend\\Objects\\Request", $this->_dirObjects->file("Request.php") ]
+                [ "xTend\\Objects\\Request", $this->_dirObjects->file("Request.php") ],
             ]);
             $this->_fileHandler = new FileHandler($this);
             $this->_logHandler = new LogHandler($this);
@@ -653,6 +663,7 @@
             $this->_formTokenHandler = new FormTokenHandler($this);
             $this->_packagistHandler = new PackagistHandler($this);
             $this->_requestHandler = new RequestHandler($this);
+            $this->_orm = new xORM($this);
             //set post and pre config arrays
             $this->_preConfigMethods = [];
             $this->_postConfigMethods = [];
