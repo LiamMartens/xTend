@@ -265,9 +265,9 @@
                 $dir->create();
             }
         }
-        $controller = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
+        $layout = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
         if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
-            $controller->write("<!DOCTYPE html>
+            $layout->write("<!DOCTYPE html>
 <html>
     <head>
         @section:head
@@ -278,18 +278,16 @@
 </html>"
             );
         } else {
-            if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
-                $controller->write("<!DOCTYPE html>
-    <html>
-        <head>
-            <section name=\"head\" />
-        </head>
-        <body>
-            <section name=\"body\" />
-        </body>
-    </html>"
-                );
-            }
+            $layout->write("<!DOCTYPE html>
+<html>
+    <head>
+        <section name=\"head\" />
+    </head>
+    <body>
+        <section name=\"body\" />
+    </body>
+</html>"
+            );
         }
     });
 

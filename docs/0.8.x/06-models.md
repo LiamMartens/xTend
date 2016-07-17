@@ -1,5 +1,5 @@
 #Models
-In MVC the Models are used to handle most of your data retrieval. xTend has simple Model support for you to use. Mind you xTend does not have a Database layer as you should be able to choose yourself how you implement this. (For example, I usually use [idiorm](https://github.com/j4mie/idiorm) in comination with [paris](https://github.com/j4mie/paris).
+In MVC the Models are used to handle most of your data retrieval. xTend has simple Model support for you to use with or without database interaction.
 
 ###Creating a Model
 To create a model you can either choose to create a file manually or use the `workbench`. If you use the workbench you'll just have to call the `new:model` command and it will create it for you with some default model code. If not you'll have create the file and add the code yourself. This is how a default model looks like
