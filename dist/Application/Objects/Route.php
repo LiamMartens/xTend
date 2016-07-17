@@ -80,25 +80,25 @@
             } elseif(is_array($this->_route)) {
                 //data array passed
                 //view, controller, model, data
-                $data=(array_key_exists("data", $this->_route)&&(is_array($this->_route["data"]))) ? $this->_route["data"] : [];
+                $data=(isset($this->_route['data'])&&(is_array($this->_route["data"]))) ? $this->_route["data"] : [];
                 //check and load one model
-                if(array_key_exists("model", $this->_route)) {
+                if(isset($this->_route['model'])) {
                     $this->_app->getModelHandler()->loadModel($this->_route["model"]);
                 }
                 //check and load multiple models
-                if(array_key_exists("models", $this->_route)) {
+                if(isset($this->_route['models'])) {
                     foreach ($this->_route["models"] as $model) {
                         $this->_app->getModelHandler()->loadModel($model);
                     }
                 }
                 //check for controller
                 $controller_found=false;
-                if(array_key_exists("controller", $this->_route)) {
+                if(isset($this->_route['controller'])) {
                     $this->_app->getControllerHandler()->loadController($this->_route["controller"], $data);
                     $controller_found=true;
                 }
                 //check for multiple controllers
-                if(array_key_exists("controllers", $this->_route)) {
+                if(isset($this->_route['controllers'])) {
                     foreach ($this->_route["controllers"] as $controller) {
                         $this->_app->getControllerHandler()->loadController($controller, $data);
                     }
@@ -107,12 +107,12 @@
                 //check for view
                 //For views, don't pass data, when a controller already has the data
                 //No need for duplicate data
-                if(array_key_exists("view", $this->_route)) {
-                    $version = false; if(array_key_exists("version", $this->_route)) { $version = $this->_route["version"]; }
+                if(isset($this->_route['view'])) {
+                    $version = false; if(isset($this->_route['version'])) { $version = $this->_route["version"]; }
                     $this->_app->getViewHandler()->loadView($this->_route["view"], ($controller_found) ? [] : $data, $version);
                 }
                 //check for multiple views
-                if(array_key_exists("views", $this->_route)) {
+                if(isset($this->_route['views'])) {
                     foreach ($this->_route["views"] as $view) {
                         $this->_app->getViewHandler()->loadView($view, ($controller_found) ? [] : $data);
                     }

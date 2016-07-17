@@ -67,10 +67,10 @@
         */
         public function install($package_name, $version_param = false, $die_on_duplicate = true) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
-            if(!array_key_exists("status", $package_info)) {
+            if(!isset($package_info['status'])) {
                 $to_install = false;
                 //has package already been added to the app's packagist file
-                $exists = array_key_exists($package_name, $this->_packages) ? $this->_packages[$package_name] : false;
+                $exists = isset($this->_packages[$package_name]) ? $this->_packages[$package_name] : false;
                 //check for matching version either new or existing ugradable
                 foreach($package_info["package"]["versions"] as $version => $information) {
                     if(($version_param!==false)&&((new VersionCheck($version_param, $version))->isMatch()==true)) {
@@ -141,7 +141,7 @@
                     $prev_version_found = false;
                     foreach($prev_versions as $prev_version) {
                         $prev_version_name = $prev_version->name();
-                        if(($prev_version_name!=="$name-$id")&&array_key_exists($prev_version_name, $this->_autoload)) {
+                        if(($prev_version_name!=="$name-$id")&&isset($this->_autoload[$prev_version_name])) {
                             $prev_version_found = $prev_version_name;
                             unset($this->_autoload[$prev_version_name]);
                         }
@@ -151,7 +151,7 @@
                         echo "A previously installed version was detected and removed from the autoload.json in favor of the new version. The package files still exist in Libs/Packagist/$name/$prev_version_found\n";
                     }
                     //add autoload
-                    if(array_key_exists("autoload", $to_install)) {
+                    if(isset($to_install['autoload'])) {
                         $this->_autoload["$name-$id"] = $to_install["autoload"]; }
                     $this->saveAutoload();
                     return true;
@@ -168,7 +168,7 @@
         * @return boolean
         */
         public function remove($package_name) {
-            if(array_key_exists($package_name, $this->_packages)) {
+            if(isset($this->_packages[$package_name])) {
                 $version_installed = $this->_packages[$package_name];
                 //remove from packagist
                 unset($this->_packages[$package_name]);
@@ -182,7 +182,7 @@
                 $installed_versions = $package_directory->directories();
                 //remove from autoload
                 foreach($installed_versions as $version) {
-                    if(array_key_exists($version->name(), $this->_autoload)) {
+                    if(isset($this->_autoload[$version->name()])) {
                         unset($this->_autoload[$version->name()]);
                     }
                     //remove version

@@ -77,7 +77,7 @@
             if(($viewName==false)&&(count($this->_views)==1))
                 return $this->_views[array_keys($this->_views)[0]];
             elseif($viewName==false) return false;
-            if(array_key_exists($viewName, $this->_views))
+            if(isset($this->_views[$viewName]))
                 return $this->_views[$viewName];
             return false;
         }

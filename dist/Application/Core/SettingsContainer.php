@@ -31,7 +31,7 @@
         * @return mixed
         */
         public function get($key, $default = false) {
-            if(array_key_exists($key, $this->_settings))
+            if(isset($this->_settings[$key]))
                 return $this->_settings[$key];
             return $default;
         }

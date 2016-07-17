@@ -29,7 +29,7 @@
         $argv[2]=$args[0];
         $argv[]=$args[1];
         $argv[]=$args[2];
-        if(is_dir($argv[2])||array_key_exists($argv[2], Workbench::getConfiguration('applications'))) {
+        if(is_dir($argv[2])||isset(Workbench::getConfiguration('applications')[$argv[2]])) {
             die("This application already exists\n");
         }
         //get the xTend master
@@ -81,7 +81,7 @@
     }, 'new.application');
 
     Workbench::registerCommand('^remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        if(!is_dir($argv[2])||!isset(Workbench::getConfiguration('applications')[$argv[2]])) { die("The application does not exist\n"); }
         if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
         //remove app dir
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2], RecursiveDirectoryIterator::SKIP_DOTS),
@@ -105,7 +105,7 @@
 
     //setters
     Workbench::registerCommand('^set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!array_key_exists($argv[2], Workbench::getConfiguration('applications'))) { die("The application does not exist\n"); }
+        if(!is_dir($argv[2])||!isset(Workbench::getConfiguration('applications')[$argv[2]])) { die("The application does not exist\n"); }
         Workbench::setApplication($argv[2]);
         $contents=file_get_contents("workbench");
         $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
@@ -331,7 +331,7 @@
         $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
         $configuration = json_decode($conf->read(), true);
-        if(array_key_exists($key, $configuration)) {
+        if(isset($configuration[$key])) {
             if(($argv[2]==="true")||($argv[2]==="false")) { $argv[2]=boolval($argv[2]); }
             elseif(is_numeric($argv[2])) { $argv[2]=intval($argv[2]); }
             $configuration[$key] = $argv[2];
@@ -343,7 +343,7 @@
         $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
         $configuration = json_decode($conf->read(), true);
-        if(array_key_exists($key, $configuration)) {
+        if(isset($configuration[$key])) {
             echo $configuration[$key]."\n";
         } else { die("Configuration key not found"); }
     });

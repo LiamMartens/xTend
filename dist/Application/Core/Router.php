@@ -68,7 +68,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getRouteByAlias($alias) {
-            if(array_key_exists($alias, $this->_aliases))
+            if(isset($this->_aliases[$alias]))
                 return $this->_aliases[$alias];
             return false;
         }
@@ -81,7 +81,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getPostRoute($handle) {
-            if(array_key_exists($handle, $this->_post))
+            if(isset($this->_post[$handle]))
                 return $this->_post[$handle];
             return false;
         }
@@ -94,7 +94,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getGetRoute($handle) {
-            if(array_key_exists($handle, $this->_get))
+            if(isset($this->_get[$handle]))
                 return $this->_get[$handle];
             return false;
         }
@@ -107,7 +107,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getPutRoute($handle) {
-            if(array_key_exists($handle, $this->_put))
+            if(isset($this->_put[$handle]))
                 return $this->_put[$handle];
             return false;
         }
@@ -120,7 +120,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getDeleteRoute($handle) {
-            if(array_key_exists($handle, $this->_delete))
+            if(isset($this->_delete[$handle]))
                 return $this->_delete[$handle];
             return false;
         }
@@ -133,7 +133,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getPatchRoute($handle) {
-            if(array_key_exists($handle, $this->_patch)) {
+            if(isset($this->_patch[$handle])) {
                 return $this->_patch[$handle];
             }
             return false;
@@ -147,7 +147,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getOptionsRoute($handle) {
-            if(array_key_exists($handle, $this->_options)) {
+            if(isset($this->_options[$handle])) {
                 return $this->_options[$handle];
             }
             return false;
@@ -161,7 +161,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getAnyRoute($handle) {
-            if(array_key_exists($handle, $this->_any))
+            if(isset($this->_any[$handle]))
                 return $this->_any[$handle];
             return false;
         }
@@ -174,7 +174,7 @@
         * @return xTend\Objects\Route | boolean
         */
         public function getErrorRoute($handle) {
-            if(array_key_exists($handle, $this->_error))
+            if(isset($this->_error[$handle]))
                 return $this->_error[$handle];
             return false;
         }
@@ -398,7 +398,7 @@
             $code=$error;
             if($error instanceof StatusCode) { $code=$error->getCode(); }
             //find the error route if set
-            if(array_key_exists($code, $this->_error)) {
+            if(isset($this->_error[$code])) {
                 $this->_error[$code]->execute();
                 return true;
             }
@@ -416,7 +416,7 @@
             $this->_app->getRequestDataHandler()->parse();
             //allow method spoofing
             $post=$this->_app->getRequestDataHandler()->post();
-            if(array_key_exists('_method', $post)) {
+            if(isset($post['_method'])) {
                 $_SERVER['REQUEST_METHOD']=strtoupper($post['_method']); }
             $this->_app->getRequestHandler()->initialize($_SERVER["REQUEST_METHOD"], $request);
             //check home route

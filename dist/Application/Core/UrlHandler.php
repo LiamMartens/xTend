@@ -53,11 +53,11 @@
             foreach ($parts as $part) {
                 $match=[];
                 if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $part, $match)) {
-                    if(array_key_exists($match[3], $parameters)) {
+                    if(isset($parameters[$match[3]])) {
                         $url.='/'.$parameters[$match[3]];
                     }
                 } elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $part, $match)) {
-                    if(array_key_exists($match[2], $parameters)) {
+                    if(isset($parameters[$match[2]])) {
                         $url.='/'.$parameters[$match[2]];
                     }
                 } else { $url.="/$part"; }

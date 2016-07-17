@@ -172,7 +172,7 @@
                 if($this->exists()) {
                     $m_file = $this->_app->getMetaDirectory()->file(hash("sha256", $this->_path).".meta");
                     $meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
-                    if(array_key_exists($key, $meta)) return $meta[$key];
+                    if(isset($meta[$key])) return $meta[$key];
                 }
                 return $default;
             }
@@ -192,7 +192,7 @@
                     $meta=[]; if($m_file->exists()) $meta=json_decode($m_file->read(), true);
                     if($value!==null) {
                         $meta[$key]=$value;
-                    } elseif(array_key_exists($key, $meta)) { unset($meta[$key]); }
+                    } elseif(isset($meta[$key])) { unset($meta[$key]); }
                     return $m_file->write(json_encode($meta));
                 }
                 return false;

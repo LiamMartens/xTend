@@ -91,7 +91,7 @@
         * @return xTend\Core\StatusCode
         */
         public function findStatus($key) {
-            if(is_numeric($key)&&(array_key_exists($key, $this->_statusCodes))) {
+            if(is_numeric($key)&&(isset($this->_statusCodes[$key]))) {
                 //provided key is numeric -> found it in status code directory itself
                 return $this->_statusCodes[$key];
             } elseif(is_string($key)) {

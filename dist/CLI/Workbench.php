@@ -145,7 +145,7 @@
         * @return mixed
         */
         public static function getConfiguration($key) {
-            if(array_key_exists($key, self::$_configuration)) {
+            if(isset(self::$_configuration[$key])) {
                 return self::$_configuration[$key];
             }
             return false;
@@ -195,8 +195,7 @@
         * @return boolean
         */
         public static function isAppMatch() {
-            if(array_key_exists(self::namespaceApplication(),
-                                self::getConfiguration('applications'))) {
+            if(isset(self::getConfiguration('applications')[self::namespaceApplication()])) {
                 $rsts = self::getConfiguration('applications')[self::namespaceApplication()];
                 $domain_match = (($_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME']==trim($rsts["url"]))||($rsts["url"]=="*"));
                 $request = trim($_SERVER['REQUEST_URI'], '/');
@@ -233,7 +232,7 @@
         * @return boolean
         */
         public static function addApplication($name, $url, $path) {
-            if(!array_key_exists($name, self::getConfiguration('applications'))) {
+            if(!isset(self::getConfiguration('applications')[$name])) {
                 self::$_configuration['applications'][$name] = [
                     "url" => $url,
                     "path" => $path
@@ -252,7 +251,7 @@
         * @return boolean
         */
         public static function removeApplication($name) {
-            if(array_key_exists($name, self::getConfiguration('applications'))) {
+            if(isset(self::getConfiguration('applications')[$name])) {
                 unset(self::$_configuration['applications'][$name]);
                 self::saveConfiguration();
                 return true;

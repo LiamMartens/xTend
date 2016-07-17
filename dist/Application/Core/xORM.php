@@ -230,7 +230,7 @@
             * @return mixed
             */
             public function __get($name) {
-                if(array_key_exists($name, $this->_values)) {
+                if(isset($this->_values[$name])) {
                     return $this->_values[$name];
                 }
                 return $this->{$name};
@@ -292,10 +292,10 @@
             }
 
             private function primaryKeyValue() {
-                $col_name = $this->_id_column; if(array_key_exists($col_name, $this->_column_bindings)) {
+                $col_name = $this->_id_column; if(isset($this->_column_bindings[$col_name])) {
                     $col_name = $this->_column_bindings[$col_name];
                 }
-                if(array_key_exists($col_name, $this->_values)) {
+                if(isset($this->_values[$col_name])) {
                     return $this->_values[$col_name];
                 }
                 return false;
@@ -886,14 +886,14 @@
                 $array_map_result=[]; foreach($this->_columns as $col) {
                     $column_string;
                     $agg_found = true; $agg_alias = false;
-                    if(array_key_exists($col, $this->_aggregate)) {
+                    if(isset($this->_aggregate[$col])) {
                         $column_string=$this->_aggregate[$col]->query();
                         $agg_alias=$this->_aggregate[$col]->hasAlias();
                     } else {
                         $agg_found = false;
                         $column_string = $col;
                     }
-                    if(!$agg_alias&&array_key_exists($col, $this->_alias)) {
+                    if(!$agg_alias&&isset($this->_alias[$col])) {
                         $column_string .= " AS ".$this->_alias[$col];
                     } $array_map_result[] = $column_string;
                 }

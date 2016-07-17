@@ -27,7 +27,7 @@
         * @return mixed
         */
         public function getData($key, $default=false) {
-            if(array_key_exists($key, $this->_data))
+            if(isset($this->_data[$key]))
                 return $this->_data[$key];
             return $default;
         }
@@ -39,7 +39,7 @@
         * @return boolean
         */
         public function inData($key) {
-            return array_key_exists($key, $this->_data);
+            return isset($this->_data[$key]);
         }
         /**
         * Returns all data entries
