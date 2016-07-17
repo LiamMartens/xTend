@@ -11,6 +11,8 @@
         private $_app;
         /** @var array Set of controllers */
         public $_controllers;
+        /** @var array Containing controller names */
+        private $_controllers_names;
 
         /**
         * @param xTend\Core\App $app
@@ -18,6 +20,7 @@
         public function __construct($app) {
             $this->_app = $app;
             $this->_controllers = [];
+            $this->_controllers_names = [];
         }
 
         /**
@@ -70,7 +73,8 @@
                     //if not you'll have to instantiate it yourself
                     //the function @ call will be ignored if an instance is not being created
                     //app reference is passed
-                    $this->_controllers[$controllerClassName] = new $controllerClassName($this->_app);
+                    $this->_controllers[$controllerClassName] = new $controllerClassName($this->_app, $this->_app->getModelHandler()->getModelsNames());
+                    $this->_controllers_names[$controllerPath] = &$this->_controllers[$controllerClassName];
                     //data was passed
                     if(($data!=null)&&(count($data)>0)) {
                         if(method_exists($this->_controllers[$controllerClassName], "setData")) {
@@ -113,5 +117,23 @@
             elseif(array_key_exists($this->_app->getNamespace()."\\$controllerName", $this->_controllers))
                 return $this->_controllers[$this->_app->getNamespace()."\\$controllerName"];
             return false;
+        }
+
+        /**
+        * Gets all controller instances
+        *
+        * @return array
+        */
+        public function getControllers() {
+            return $this->_controllers;
+        }
+
+        /**
+        * Gets all controller instances by registered name
+        *
+        * @return array
+        */
+        public function getControllersNames() {
+            return $this->_controllers_names;
         }
     }

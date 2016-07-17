@@ -15,6 +15,8 @@ To create a controller you can use the workbench's `new:controller` command or y
 
 *Notice as said in the models section you don't have to extend the blueprint, though with controllers you'll have to implement something in the lines of the `BaseDataExtension` to support passing data to your controller from the router*
 
+*Notice a BaseController derived controller has 3 protected members by default. The `$_app`, the `$_models` and the `$_model`. The models member contains all loaded models by their registered name and the model member contains the first model*
+
 ###Creating a respond controller
 You can also create a `BaseRespondController` using the `new:respondcontroller` method or by manually extending the `BaseRespondController`. This adds a `protected respond` method. The method accepts a maximum of 3 parameters being a success boolean, a status code or name and additional data. The `respond` method will return an array and set the content type to JSON. When you return the array yourself the controller handler will automatically `echo` it as JSON.
 

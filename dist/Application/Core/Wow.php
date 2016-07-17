@@ -373,7 +373,7 @@
                     }
                 } else { $compiled_string=$this->compile($file->read(), $modules_dir); }
                 //add namespace to compiled_string
-                $compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\Core\\getCurrentApp(__NAMESPACE__); ?>".$compiled_string;
+                $compiled_string="<?php namespace ".$this->_app->getNamespace()."; \$app=\\xTend\\Core\\getCurrentApp(__NAMESPACE__); \$controller=\$app->getControllerHandler()->getController(); \$controllers=\$app->getControllerHandler()->getControllersNames(); ?>".$compiled_string;
                 //write view output
                 $this->_app->getViewOutputDirectory()->file("$file_hash.v$version.php", 2)->write($compiled_string);
                 //update meta file

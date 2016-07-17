@@ -309,6 +309,8 @@ OR
     @controller:myMethod()
 ```
 
+*Notice every view also comes with a variable called $controller and another one called $controllers. The $controller contains your first controller and the $controllers variable contains all of em*
+
 ####controller inject
 Use this to inject a controller method (for use inside an `if` statement for example)
 ```

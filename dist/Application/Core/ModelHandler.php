@@ -9,7 +9,9 @@
         /** @var xTend\Core\App Current application */
         private $_app;
         /** @var array Contains all loaded models */
-        public $_models;
+        private $_models;
+        /** @var array Contains model names */
+        private $_models_names;
 
         /**
         * @param xTend\Core\App $app
@@ -18,6 +20,7 @@
             //keep current app reference for initializing models which might need the app to access app directives and settings
             $this->_app = $app;
             $this->_models = [];
+            $this->_models_names = [];
         }
 
         /**
@@ -66,6 +69,7 @@
                     //by default a reference to the app is passed as well in order to make it's directives and settings available
                     try {
                         $this->_models[$className] = new $className($this->_app);
+                        $this->_models_names[$modelName] = &$this->_models[$className];
                         return $this->_models[$className];
                     } catch(\Exception $ex) { return true; }
                 }
@@ -90,5 +94,23 @@
             elseif(array_key_exists($this->_app->getNamespace()."\\$modelName", $this->_models))
                 return $this->_models[$this->_app->getNamespace()."\\$modelName"];
             return false;
+        }
+
+        /**
+        * Gets all model instances
+        *
+        * @return array
+        */
+        public function getModels() {
+            return $this->_models;
+        }
+
+        /**
+        * Gets all model instances by registered name
+        *
+        * @return array
+        */
+        public function getModelsNames() {
+            return $this->_models_names;
         }
     }

@@ -1,5 +1,6 @@
 <?php
     namespace xTend\Core\xORM {
+        use \ArrayAccess;
         use \xTend\Core\xORM;
         class Where {
             const OPERATOR_GT = '>';
@@ -201,7 +202,7 @@
             }
         }
 
-        class ResultObject {
+        class ResultObject implements ArrayAccess {
             /** @var xTend\Core\App Current application instance */
             protected $_app;
             /** @var array The data of the result */
@@ -245,6 +246,49 @@
             */
             public function __set($name, $value) {
                 return $this->_values[$name] = $value;
+            }
+
+            /**
+            * For ArrayAccess setting
+            *
+            * @param mixed $offset
+            * @param mixed $value
+            */
+            public function offsetSet($offset, $value) {
+                if (!is_null($offset)) {
+                    $this->_values[$offset] = $value;
+                }
+            }
+
+            /**
+            * For ArrayAccess isset
+            *
+            * @param mixed $offset
+            *
+            * @return boolean
+            */
+            public function offsetExists($offset) {
+                return isset($this->_values[$offset]);
+            }
+
+            /**
+            * For ArrayAccess unset
+            *
+            * @param mixed $offset
+            */
+            public function offsetUnset($offset) {
+                unset($this->_values[$offset]);
+            }
+
+            /**
+            * For ArrayAccess get
+            *
+            * @param mixed $offset
+            *
+            * @return mixed
+            */
+            public function offsetGet($offset) {
+                return $this->_values[$offset];
             }
 
             private function primaryKeyValue() {
@@ -577,8 +621,10 @@
             private $_is_distinct = false;
             /** @var array Contains the order statements */
             private $_orders = [];
-            /** @var string Contains the TOP expression */
-            private $_top = false;
+            /** @var string Contains the LIMIT expression */
+            private $_limit = false;
+            /** @var string Contains the OFFSET expression */
+            private $_offset = false;
             /** @var array Contains join statements */
             private $_join = [];
             /** @var array Aggregate functions */
@@ -644,12 +690,26 @@
             }
 
             /**
-            * Sets TOP value (not supported in every database)
+            * Sets SQL's LIMIT keyword
+            *
+            * @param integer $value
             *
             * @return xTend\Core\xORM\Select Own instance
             */
-            public function top($value) {
-                $this->_top = str_replace('%', ' PERCENT', $value);
+            public function limit($value) {
+                $this->_limit = $value;
+                return $this;
+            }
+
+            /**
+            * Sets SQL's OFFSET keyword
+            *
+            * @param integer $value
+            *
+            * @return xTend\Core\xORM\Select Own instance
+            */
+            public function offset($value) {
+                $this->_offset = $value;
                 return $this;
             }
 
@@ -822,7 +882,8 @@
             * @return string
             */
             public function query() {
-                $query = "SELECT ".(($this->_is_distinct) ? "DISTINCT " : '').(($this->_top!==false) ? "TOP ".$this->_top." " : "").implode(",", array_map(function($col) {
+                $query = "SELECT ".(($this->_is_distinct) ? "DISTINCT " : '');
+                $query.=implode(",", array_map(function($col) {
                     $column_string;
                     $agg_found = true; $agg_alias = false;
                     if(array_key_exists($col, $this->_aggregate)) {
@@ -838,10 +899,12 @@
                     return $column_string;
                 }, $this->_columns))." FROM ".$this->_table.implode('', array_map(function($join) {
                     return " ".$join->query();
-                }, $this->_join))." WHERE ";
+                }, $this->_join));
+                if($this->_limit!==false) { $query.=" LIMIT ".$this->_limit; }
+                if($this->_offset!==false) { $query.=" OFFSET ".$this->_offset; }
                 //insert where statements here
                 //wrapped where and groups
-                $query.=implode(" AND ", array_map(function($group) {
+                $query.=" WHERE ".implode(" AND ", array_map(function($group) {
                     $q = "(".$group[0]->query();
                     if(count($group)>1) {
                         if($group[1] instanceof WhereGroupOr) { $q.=" OR "; }
