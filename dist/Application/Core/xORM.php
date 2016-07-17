@@ -294,6 +294,7 @@
             }
 
             public function insert() {
+
                 return $this->_app->orm()->execute($this->query_insert(), $this->values());
             }
         }
@@ -891,6 +892,7 @@
     }
     namespace xTend\Core {
         use \PDO;
+        use \Exception;
         use xTend\Core\xORM\Select;
         use xTend\Core\xORM\Raw;
         use xTend\Core\xORM\ResultObject;
@@ -930,7 +932,10 @@
                         default:
                             return false;
                     }
-                } catch(\Exception $ex) { return false; }
+                } catch(Exception $ex) {
+                    if($this->_app->getDevelopmentStatus()) { throw $ex; }
+                    return false;
+                }
                 return true;
             }
 
@@ -945,6 +950,10 @@
             public function execute($query, $values) {
                 $q = $this->_instance->prepare($query);
                 $q->execute($values);
+                if($this->_app->getDevelopmentStatus()) {
+                    $info = $q->errorInfo();
+                    if($info[0]!="00000") { throw (new Exception($info[2], $info[1])); }
+                }
                 return $q;
             }
 
