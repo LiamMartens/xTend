@@ -117,16 +117,36 @@
             }
 
             public function query() {
-                return $this->_type."(".$this->_column.") ".(($this->_alias!==false) ? "AS ".$this->_alias : ''); 
+                return $this->_type."(".$this->_column.") ".(($this->_alias!==false) ? "AS ".$this->_alias : '');
             }
         }
 
         abstract class WhereGroup {
-            /** @var array Contains all where clauses */
+            /** @var array Contains wheres */
             protected $_wheres=[];
 
             public function __construct($wheres=[]) {
                 $this->_wheres = $wheres;
+            }
+
+            /**
+            * Returns the count of the wheres
+            *
+            * @return int
+            */
+            public function count() {
+                return count($this->_wheres);
+            }
+
+            /**
+            * Cuts of the last couple of elements starting at index and returns it
+            *
+            * @param int $start
+            *
+            * @return array
+            */
+            public function pop($start) {
+                return array_splice($this->_wheres, $start);
             }
 
             /**
@@ -159,10 +179,10 @@
             */
             public function query() {
                 if(count($this->_wheres)>0) {
-                    return "(".implode(" OR ", array_map(function($where) {
+                    return implode(" OR ", array_map(function($where) {
                         return $where->query();
-                    }, $this->_wheres)).")";
-                } else { return ' 1 '; }
+                    }, $this->_wheres));
+                } else { return ' 0 '; }
             }
         }
 
@@ -174,13 +194,13 @@
             */
             public function query() {
                 if(count($this->_wheres)>0) {
-                    return "(".implode(" AND ", array_map(function($where) {
+                    return implode(" AND ", array_map(function($where) {
                         return $where->query();
-                    }, $this->_wheres)).")";
+                    }, $this->_wheres));
                 } else { return ' 1 '; }
             }
         }
-        
+
         class ResultObject {
             /** @var xTend\Core\App Current application instance */
             protected $_app;
@@ -262,7 +282,7 @@
 
             /**
             * Returns the insert statement query of the result
-            * 
+            *
             * @return string
             */
             public function query_insert() {
@@ -314,9 +334,15 @@
             protected $_wheresAnd=false;
             /** @var array where statements */
             protected $_wheresOr=false;
+            /** @var array wrapped where and groups */
+            protected $_wheresWrapAnd=[];
+            /** @var array wrapped where or groups */
+            protected $_wheresWrapOr=[];
 
             public function __construct($app) {
                 $this->_app = $app;
+                $this->_wheresAnd = new WhereGroupAnd();
+                $this->_wheresOr = new WhereGroupOr();
             }
 
             /**
@@ -331,6 +357,53 @@
                     $this->_id_column = $column[0];
                 } else { $this->_id_column = $column; }
                 return $this;
+            }
+
+            /**
+            * Base where wrap function
+            *
+            * @param array reference Array to put where groups in
+            * @param function $fn Function to execute for where registering
+            *
+            * @return xTend\Core\xORM\Query Own instance
+            */
+            private function _wrap(&$array, $fn) {
+                //get start indexes
+                $start_index_and = $this->_wheresAnd->count() ;
+                $start_index_or = $this->_wheresOr->count() ;
+                //run function
+                $fn($this);
+                //remove and and or statements
+                //and put them in the wrap groups
+                $and_tail = $this->_wheresAnd->pop($start_index_and);
+                $or_tail = $this->_wheresOr->pop($start_index_or);
+                $group=[];
+                if(count($and_tail)>0) { $group[] = new WhereGroupAnd($and_tail); }
+                if(count($or_tail)>0) { $group[] = new WhereGroupOr($or_tail); }
+                $array[]=$group;
+                return $this;
+            }
+
+            /**
+            * Starts a where wrap and
+            *
+            * @param function $fn
+            *
+            * @return xTend\Core\xORM\Query Own instance
+            */
+            public function wrap($fn) {
+                return $this->_wrap($this->_wheresWrapAnd, $fn);
+            }
+
+            /**
+            * Starts a where wrap or
+            *
+            * @param function $fn
+            *
+            * @return xTend\Core\xORM\Query Own instance
+            */
+            public function orWrap($fn) {
+                return $this->_wrap($this->_wheresWrapOr, $fn);
             }
 
             /**
@@ -423,7 +496,7 @@
                 $this->_wheresOr->where(new Where($column, Where::OPERATOR_EQ, $value));
                 return $this;
             }
-            
+
             /**
             * Adds where statement >
             *
@@ -522,8 +595,6 @@
                     $this->_columns[] = $column[0];
                     $this->_alias[$column[0]] = $column[1];
                 } else { $this->_columns[] = $column; }
-                $this->_wheresAnd = new WhereGroupAnd();
-                $this->_wheresOr = new WhereGroupOr();
             }
 
             /**
@@ -549,7 +620,7 @@
             */
             public function distinct() {
                 $this->_is_distinct = true;
-                return $this;  
+                return $this;
             }
 
             /**
@@ -751,7 +822,7 @@
             * @return string
             */
             public function query() {
-                return "SELECT ".(($this->_is_distinct) ? "DISTINCT " : '').(($this->_top!==false) ? "TOP ".$this->_top." " : "").implode(",", array_map(function($col) {
+                $query = "SELECT ".(($this->_is_distinct) ? "DISTINCT " : '').(($this->_top!==false) ? "TOP ".$this->_top." " : "").implode(",", array_map(function($col) {
                     $column_string;
                     $agg_found = true; $agg_alias = false;
                     if(array_key_exists($col, $this->_aggregate)) {
@@ -767,9 +838,35 @@
                     return $column_string;
                 }, $this->_columns))." FROM ".$this->_table.implode('', array_map(function($join) {
                     return " ".$join->query();
-                }, $this->_join))." WHERE ".$this->_wheresAnd->query()." AND ".$this->_wheresOr->query().((count($this->_orders)>0) ? " ORDER BY ".implode(',', array_map(function($ord) {
+                }, $this->_join))." WHERE ";
+                //insert where statements here
+                //wrapped where and groups
+                $query.=implode(" AND ", array_map(function($group) {
+                    $q = "(".$group[0]->query();
+                    if(count($group)>1) {
+                        if($group[1] instanceof WhereGroupOr) { $q.=" OR "; }
+                        elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
+                        $q.=$group[1]->query();
+                    }
+                    return ($q.")");
+                }, $this->_wheresWrapAnd));
+                if(count($this->_wheresWrapOr)>0) {
+                    $query.=" OR ";
+                    $query.=implode(" OR ", array_map(function($group) {
+                        $q = "(".$group[0]->query();
+                        if(count($group)>1) {
+                            if($group[1] instanceof WhereGroupOr) { $q.=" OR "; }
+                            elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
+                            $q.=$group[1]->query();
+                        }
+                        return ($q.")");
+                    }, $this->_wheresWrapOr));
+                }
+                //non wrapped groups + group / order
+                $query.=" AND ".$this->_wheresAnd->query()." OR ".$this->_wheresOr->query().((count($this->_orders)>0) ? " ORDER BY ".implode(',', array_map(function($ord) {
                     return $ord->query();
                 }, $this->_orders)) : '').((count($this->_group)>0) ? " GROUP BY ".implode(",", $this->_group) : '');
+                return $query;
             }
 
 
@@ -874,7 +971,7 @@
                     $this->_table,
                     $this->_column_bindings,
                     $this->_id_column);
-                
+
             }
 
             public function findMany() {
