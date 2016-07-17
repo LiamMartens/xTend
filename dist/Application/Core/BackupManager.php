@@ -39,8 +39,8 @@
                 $backups = $this->_app->getBackupsDirectory()->files(); sort($backups);
                 $to_remove = count($backups) - $this->_app->getBackupLimit();
                 if($to_remove>0) {
-                    for($i=0;$i<$to_remove;$i++) {
-                        $backups[$i]->remove();
+                    $i=0; while($i<$to_remove) {
+                        $backups[$i]->remove(); $i++;
                     }
                 }
             }

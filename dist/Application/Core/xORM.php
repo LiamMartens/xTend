@@ -166,9 +166,9 @@
             * @return array
             */
             public function values() {
-                return array_map(function($where) {
-                    return $where->value();
-                }, $this->_wheres);
+                $array_map_result=[]; foreach($this->_wheres as $w) {
+                    $array_map_result[] = $w->value();
+                } return $array_map_result;
             }
         }
 
@@ -180,9 +180,9 @@
             */
             public function query() {
                 if(count($this->_wheres)>0) {
-                    return implode(" OR ", array_map(function($where) {
-                        return $where->query();
-                    }, $this->_wheres));
+                    $array_map_result=[]; foreach($this->_wheres as $w) {
+                        $array_map_result[] = $w->query();
+                    } return implode(" OR ", $array_map_result);
                 } else { return ' 0 '; }
             }
         }
@@ -195,9 +195,9 @@
             */
             public function query() {
                 if(count($this->_wheres)>0) {
-                    return implode(" AND ", array_map(function($where) {
-                        return $where->query();
-                    }, $this->_wheres));
+                    $array_map_result=[]; foreach($this->_wheres as $w) {
+                        $array_map_result[] = $w->query();
+                    } return implode(" AND ", $array_map_result);
                 } else { return ' 1 '; }
             }
         }
@@ -883,7 +883,7 @@
             */
             public function query() {
                 $query = "SELECT ".(($this->_is_distinct) ? "DISTINCT " : '');
-                $query.=implode(",", array_map(function($col) {
+                $array_map_result=[]; foreach($this->_columns as $col) {
                     $column_string;
                     $agg_found = true; $agg_alias = false;
                     if(array_key_exists($col, $this->_aggregate)) {
@@ -895,40 +895,44 @@
                     }
                     if(!$agg_alias&&array_key_exists($col, $this->_alias)) {
                         $column_string .= " AS ".$this->_alias[$col];
-                    }
-                    return $column_string;
-                }, $this->_columns))." FROM ".$this->_table.implode('', array_map(function($join) {
-                    return " ".$join->query();
-                }, $this->_join));
+                    } $array_map_result[] = $column_string;
+                }
+                $query.=implode(",", $array_map_result)." FROM ".$this->_table;
+                $array_map_result=[]; foreach($this->_join as $join) {
+                    $array_map_result[] = $join->query();
+                } $query.=" ".implode(" ", $array_map_result);;
                 if($this->_limit!==false) { $query.=" LIMIT ".$this->_limit; }
                 if($this->_offset!==false) { $query.=" OFFSET ".$this->_offset; }
                 //insert where statements here
                 //wrapped where and groups
-                $query.=" WHERE ".implode(" AND ", array_map(function($group) {
+                $array_map_result=[]; foreach($this->_wheresWrapAnd as $group) {
                     $q = "(".$group[0]->query();
                     if(count($group)>1) {
                         if($group[1] instanceof WhereGroupOr) { $q.=" OR "; }
                         elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
                         $q.=$group[1]->query();
-                    }
-                    return ($q.")");
-                }, $this->_wheresWrapAnd));
+                    } $array_map_result[] = ($q.")");
+                }
+                $query.=" WHERE ".implode(" AND ", $array_map_result);
                 if(count($this->_wheresWrapOr)>0) {
                     $query.=" OR ";
-                    $query.=implode(" OR ", array_map(function($group) {
+                    $array_map_result=[]; foreach($this->_wheresWrapOr as $group) {
                         $q = "(".$group[0]->query();
                         if(count($group)>1) {
                             if($group[1] instanceof WhereGroupOr) { $q.=" OR "; }
                             elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
                             $q.=$group[1]->query();
-                        }
-                        return ($q.")");
-                    }, $this->_wheresWrapOr));
+                        } $array_map_result[] = ($q.")");
+                    }
+                    $query.=implode(" OR ", $array_map_result);
                 }
                 //non wrapped groups + group / order
-                $query.=" AND ".$this->_wheresAnd->query()." OR ".$this->_wheresOr->query().((count($this->_orders)>0) ? " ORDER BY ".implode(',', array_map(function($ord) {
-                    return $ord->query();
-                }, $this->_orders)) : '').((count($this->_group)>0) ? " GROUP BY ".implode(",", $this->_group) : '');
+                $query.=" AND ".$this->_wheresAnd->query()." OR ".$this->_wheresOr->query();
+                $array_map_result=[]; foreach($this->_orders as $ord) {
+                    $array_map_result[] = $ord->query();
+                }
+                $query.=((count($this->_orders)>0) ? " ORDER BY ".implode(',', $array_map_result) : '');
+                $query.=((count($this->_group)>0) ? " GROUP BY ".implode(",", $this->_group) : '');
                 return $query;
             }
 
@@ -955,14 +959,14 @@
             */
             public function findMany() {
                 $results = $this->_app->orm()->findMany($this->query(), $this->values());
-                return array_map(function($rs) {
-                    return new ResultObject(
-                                    $this->_app,
-                                    $rs,
-                                    $this->_table,
-                                    $this->_alias,
-                                    $this->_id_column);
-                }, $results);
+                $array_map_result=[]; foreach($results as $rs) {
+                    $array_map_result[] = new ResultObject(
+                                            $this->_app,
+                                            $rs,
+                                            $this->_table,
+                                            $this->_alias,
+                                            $this->_id_column);
+                } return $array_map_result;
             }
         }
 
@@ -1039,14 +1043,14 @@
 
             public function findMany() {
                 $results = $this->_app->orm()->findMany($this->_sql, $this->_parameters);
-                return array_map(function($rs) {
-                    return new ResultObject(
-                                    $this->_app,
-                                    $rs,
-                                    $this->_table,
-                                    $this->_column_bindings,
-                                    $this->_id_column);
-                }, $results);
+                $array_map_result=[]; foreach($results as $rs) {
+                    $array_map_result[] = new ResultObject(
+                                                $this->_app,
+                                                $rs,
+                                                $this->_table,
+                                                $this->_column_bindings,
+                                                $this->_id_column);
+                } return $array_map_result;
             }
         }
     }

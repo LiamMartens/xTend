@@ -96,11 +96,11 @@
                     }
                 } else { $entries = array_merge(glob($this->_path."/**"), glob($this->_path."/.[!.][!.]*")); }
                 //run map on entries for class creation
-                return array_map(function($entry) {
+                $array_map_result=[]; foreach($entries as $entry) {
                     if(is_file($entry)) {
-                        return new File($this->_app, $entry);
-                    } elseif(is_dir($entry)) { return new Directory($this->_app, $entry); }
-                }, $entries);
+                        $array_map_result[] = new File($this->_app, $entry);
+                    } elseif(is_dir($entry)) { $array_map_result[] = new Directory($this->_app, $entry); }
+                } return $array_map_result;
             }
 
             /**
@@ -112,9 +112,9 @@
             */
             public function files($recursive = false) {
                 $entries = $this->scan($recursive);
-                return array_filter($entries, function($entry) {
-                    return is_file($entry);
-                });
+                $array_filter_result=[]; foreach($entries as $entry) {
+                    if(is_file($entry)) { $array_filter_result[]=$entry; }
+                } return $array_filter_result;
             }
 
             /**
@@ -126,9 +126,9 @@
             */
             public function directories($recursive = false) {
                 $entries = $this->scan($recursive);
-                return array_filter($entries, function($entry) {
-                    return is_dir($entry);
-                });
+                $array_filter_result=[]; foreach($entries as $entry) {
+                    if(is_dir($entry)) { $array_filter_result[]=$entry; }
+                } return $array_filter_result;
             }
 
             /**
@@ -200,9 +200,9 @@
                 $file_parts = explode(".", $name);
                 //for loop here since we need to exclude the last part of the array -> extension
                 $file_parts_count = count($file_parts)-$ext_count;
-                for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
+                $path.="/".implode("/", array_slice($file_parts, 0, $file_parts_count));
                 //add extension part
-                for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
+                $path.=".".implode(".", array_slice($file_parts, $file_parts_count));
                 return new File($this->_app, $path);
             }
 
@@ -217,7 +217,7 @@
                 $path=$this->_path;
                 $dir_parts = explode(".", $name);
                 //foreach loop is possible here
-                foreach ($dir_parts as $part) { $path.="/".$part; }
+                $path.="/".implode("/", $dir_parts);
                 return new Directory($this->_app, $path);
             }
 
@@ -258,7 +258,7 @@
                 $path=$this->_app->getSystemDirectory();
                 $dir_parts = explode(".", $dirName);
                 //foreach loop is possible here
-                foreach ($dir_parts as $part) { $path.="/".$part; }
+                $path.="/".implode("/", $dir_parts);
                 return new DirectoryHandler\Directory($this->_app, $path);
             }
 
@@ -273,7 +273,7 @@
                 $path=$this->_app->getPublicDirectory();
                 $dir_parts = explode(".", $dirName);
                 //foreach loop is possible here
-                foreach ($dir_parts as $part) { $path.="/".$part; }
+                $path.="/".implode("/", $dir_parts);
                 return new DirectoryHandler\Directory($this->_app, $path);
             }
         }

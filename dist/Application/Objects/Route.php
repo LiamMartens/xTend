@@ -143,7 +143,7 @@
                     if(count($ex_request)!=count($ex_handle)) continue;
                     //check all parts of the handle and see whether they match up  to the request
                     $ex_count=count($ex_handle); $rx_matches;
-                    for($i=0;$i<$ex_count;$i++) {
+                    $i=0; while($i<$ex_count) {
                         //check
                         $handle_part=$ex_handle[$i];
                         $request_part=$ex_request[$i];
@@ -185,7 +185,7 @@
                             ($request_part==$handle_part)) /**they just equal each other*/) {
                             //if all of te above fails, return false
                             $handle_matched=false;
-                        }
+                        } $i++;
                     }
                     if(!$handle_matched) continue;
                     //set the route on the UrlHandler

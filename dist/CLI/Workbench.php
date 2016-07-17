@@ -107,9 +107,10 @@
             self::$_argv = $argv;
             //set command
             self::$_command='';
-            for($i=1;$i<count(self::$_argv);$i++) {
+            $args_count=count(self::$_argv);
+            $i=1; while($i<$args_count) {
                 if($i>1) self::$_command.=' ';
-                self::$_command.=self::$_argv[$i];
+                self::$_command.=self::$_argv[$i]; $i++;
             }
         }
 

@@ -261,9 +261,9 @@
                 $file_parts = explode(".", $fileName);
                 //for loop here since we need to exclude the last part of the array -> extension
                 $file_parts_count = count($file_parts)-$ext_count;
-                for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
+                $path.="/".implode("/", array_slice($file_parts, 0, $file_parts_count));
                 //add extension part
-                for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
+                $path.=".".implode(".", array_slice($file_parts, $file_parts_count));
                 return new FileHandler\File($this->_app, $path);
             }
 
@@ -280,9 +280,9 @@
                 $file_parts = explode(".", $fileName);
                 //for loop here since we need to exclude the last part of the array -> extension
                 $file_parts_count = count($file_parts)-$ext_count;
-                for($i=0;$i<$file_parts_count;$i++) { $path.="/".$file_parts[$i]; }
+                $path.="/".implode("/", array_slice($file_parts, 0, $file_parts_count));
                 //add extension part
-                for($i=$file_parts_count;$i<count($file_parts);$i++) { $path.=".".$file_parts[$i]; }
+                $path.=".".implode(".", array_slice($file_parts, $file_parts_count));
                 return new FileHandler\File($this->_app, $path);
             }
         }

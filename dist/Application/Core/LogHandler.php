@@ -25,8 +25,8 @@
             $files = $this->_app->getLogsDirectory()->files(); sort($files);
             $files_to_remove = count($files) - $this->_app->getLogLimit();
             if($files_to_remove>0) {
-                for($i=0;$i<$files_to_remove;$i++) {
-                    $files[$i]->remove();
+                $i=0; while($i<$files_to_remove) {
+                    $files[$i]->remove(); $i++;
                 }
             }
         }
