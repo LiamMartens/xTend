@@ -110,7 +110,7 @@
             $args_count=count(self::$_argv);
             $i=1; while($i<$args_count) {
                 if($i>1) self::$_command.=' ';
-                self::$_command.=self::$_argv[$i]; $i++;
+                self::$_command.=self::$_argv[$i]; ++$i;
             }
         }
 

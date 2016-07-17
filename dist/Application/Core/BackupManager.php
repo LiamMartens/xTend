@@ -40,7 +40,7 @@
                 $to_remove = count($backups) - $this->_app->getBackupLimit();
                 if($to_remove>0) {
                     $i=0; while($i<$to_remove) {
-                        $backups[$i]->remove(); $i++;
+                        $backups[$i]->remove(); ++$i;
                     }
                 }
             }

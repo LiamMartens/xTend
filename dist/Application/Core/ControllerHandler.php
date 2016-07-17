@@ -91,7 +91,7 @@
                         if(method_exists($this->_controllers[$controllerClassName], $split[$i])) {
                             $return_data = $this->_controllers[$controllerClassName]->{$split[$i]}();
                             if(is_array($return_data)) { echo json_encode($return_data); }
-                        } $i++;
+                        } ++$i;
                     }
                     return $this->_controllers[$controllerClassName];
                 }

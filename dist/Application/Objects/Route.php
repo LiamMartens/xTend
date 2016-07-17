@@ -185,7 +185,7 @@
                             ($request_part==$handle_part)) /**they just equal each other*/) {
                             //if all of te above fails, return false
                             $handle_matched=false;
-                        } $i++;
+                        } ++$i;
                     }
                     if(!$handle_matched) continue;
                     //set the route on the UrlHandler

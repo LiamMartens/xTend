@@ -26,7 +26,7 @@
             $files_to_remove = count($files) - $this->_app->getLogLimit();
             if($files_to_remove>0) {
                 $i=0; while($i<$files_to_remove) {
-                    $files[$i]->remove(); $i++;
+                    $files[$i]->remove(); ++$i;
                 }
             }
         }

@@ -152,13 +152,13 @@ OR
 Use the `for` expression to add a for loop to your view
 ```
     <for>
-        <loop>$i=0;$i<10;$i++</loop>
+        <loop>$i=0;$i<10;++$i</loop>
         //your code
     </for>
 ```
 OR
 ```
-    @for:$i=0;$i<10;$i++
+    @for:$i=0;$i<10;++$i
         //your code
     @end
 ```
