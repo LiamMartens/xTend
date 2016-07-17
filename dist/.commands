@@ -189,6 +189,53 @@
         );
     });
 
+    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
+      $args = explode(':', $argv[2]);
+      $dot_pos = strrpos($args[0], '.');
+      $ns_suffix='';
+      $class_name=$args[0];
+      if($dot_pos!==false) {
+          $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+          if(!$dir->exists()) {
+              $dir->create();
+          }
+          $class_name=substr($args[0], $dot_pos+1);
+      }
+      $controller = $app->getFileHandler()->system('Models.'.$args[0].'.php');
+      $controller->write('<?php
+  namespace '.Workbench::getConfiguration('application').";
+  class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
+      //The BaseDataModel blueprint allows for
+      //database interaction using the ORM
+      protected \$_table = '{$args[1]}';
+      protected \$_id_column = '{$args[2]}';
+  }"
+      );
+    });
+
+    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
+        $args = explode(':', $argv[2]);
+        $dot_pos = strrpos($args[0], '.');
+        $ns_suffix='';
+        $class_name=$args[0];
+        if($dot_pos!==false) {
+            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($args[0], $dot_pos+1);
+        }
+        $controller = $app->getFileHandler()->system('Models.'.$args[0].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::getConfiguration('application').";
+    class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
+        //The BaseDataModel blueprint allows for
+        //database interaction using the ORM
+        protected \$_table = '{$args[1]}';
+    }"
+        );
+    });
+
     Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
@@ -206,51 +253,6 @@
     class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
         //The BaseDataModel blueprint allows for
         //database interaction using the ORM
-    }"
-        );
-    });
-
-    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
-        $dot_pos = strrpos($argv[2], '.');
-        $ns_suffix='';
-        $class_name=$argv[2];
-        if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
-            if(!$dir->exists()) {
-                $dir->create();
-            }
-            $class_name=substr($argv[2], $dot_pos+1);
-        }
-        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
-        $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
-        //The BaseDataModel blueprint allows for
-        //database interaction using the ORM
-        protected $_table = {$argv[3]}
-    }"
-        );
-    });
-
-    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
-        $dot_pos = strrpos($argv[2], '.');
-        $ns_suffix='';
-        $class_name=$argv[2];
-        if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
-            if(!$dir->exists()) {
-                $dir->create();
-            }
-            $class_name=substr($argv[2], $dot_pos+1);
-        }
-        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
-        $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
-        //The BaseDataModel blueprint allows for
-        //database interaction using the ORM
-        protected $_table = {$argv[3]}
-        protected $_id_column = {$argv[4]}
     }"
         );
     });
