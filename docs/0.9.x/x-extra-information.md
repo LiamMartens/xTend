@@ -37,3 +37,11 @@ Manually loading a controller is almost identical to manually loading a model. J
 
 ###Manually loading a View
 Using the app's view handler `getViewHandler()` you can also choose to manually load your view. The `loadView()` method accepts 4 parameters at most, being the view name, the data to pass, the version to load and lastly you can also pass the view class. The view class should only be set if you don't want to use the default `View` object located in `Application/Objects`. The parameter allows you to use your own class instead but make sure you know what you are doing!
+
+###The Request object
+The `Request` object has a couple of nice methods you can use. First off you can retrieve
+the request method using the `getMethod` function. This will return the HTTP verb in all caps.
+Secondly, you can get the request scheme with the `getScheme` method. This will return either `http` 
+or `https`. You can also get the host, port, query string and full path values by using the `getHost`,
+ `getPort`, `getQuery` and `getPath` methods respectively. Lastly you can retrieve all types of data,
+ `post`, `get` or navigational data by using the `post`, `get` and `data` methods.

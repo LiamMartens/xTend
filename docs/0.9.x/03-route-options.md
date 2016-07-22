@@ -34,6 +34,8 @@ Besides simple text you can also pass an array of options. Using this array you 
     //loading multiple views is less useful but it is possible
 ```
 
+*Notice by default xTend will look inside your application's namespace, but you can also use different namespaces by prefixing model or controller*
+
 ####Example 3
 ```
     $app->getRouter()->get('contact', [
@@ -46,7 +48,7 @@ Besides simple text you can also pass an array of options. Using this array you 
     //view to load. This will become more clear later on.
 ```
 
-*Notice by default xTend will look inside your application's namespace, but you can also use different namespaces by prefixing model or controller*
+*Notice xTend automatically injects the request object into the controller method. More about the request object in the extra information*
 
 ###Function
 You choose to execute a function upon route match. When the function is executed the router will also pass the current application as parameter.
@@ -54,11 +56,11 @@ You choose to execute a function upon route match. When the function is executed
 ####Example
 
 ```
-    $app->getRouter()->get('contact', function($app) {
+    $app->getRouter()->get('contact', function($app, $request) {
         //your code..
     });
 ```
 
 Passing a function instead of passing an array of options can be useful if you need to execute logic before loading views, models or controllers. It can also be useful if you really want to customize xTend and you want to manually load your models, controllers and views with custom objects and so on.
 
-*Notice More about manually loading views, controllers and models in the extra information*
+*Notice More about manually loading views, controllers, models and the request object can be found in the extra information*

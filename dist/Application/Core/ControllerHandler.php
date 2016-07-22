@@ -89,7 +89,7 @@
                     $totalclassparts = count($split);
                     $i=1; while($i<$totalclassparts) {
                         if(method_exists($this->_controllers[$controllerClassName], $split[$i])) {
-                            $return_data = $this->_controllers[$controllerClassName]->{$split[$i]}();
+                            $return_data = $this->_controllers[$controllerClassName]->{$split[$i]}($this->_app->getRequestHandler()->getRequest());
                             if(is_array($return_data)) { echo json_encode($return_data); }
                         } ++$i;
                     }

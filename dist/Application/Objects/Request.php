@@ -56,6 +56,28 @@
         }
 
         /**
+        * Returns GET data
+        *
+        * @return array
+        */
+        public function get() { return $this->_app->getRequestDataHandler()->_get(); }
+
+        /**
+        * Returns POST data
+        *
+        * @return array
+        */
+        public function post() { return $this->_app->getRequestDataHandler()->_post(); }
+
+        /**
+        * Returns passed navigation data
+        *
+        * @return array
+        */
+        public function data() { return $this->_app->getRequestDataHandler()->_data(); }
+
+
+        /**
         * Sets the content type
         *
         * @param string $type
