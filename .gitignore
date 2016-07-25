@@ -7,5 +7,6 @@ dist/Application/Layouts
 dist/Application/Modules
 dist/Application/Logs
 dist/Application/Meta
+dist/.vscode/*
 .idea/*
 .vscode/*
