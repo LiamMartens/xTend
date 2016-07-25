@@ -10,7 +10,7 @@
 
     //general echo
     $wow->registerExpression(
-        $wow->rx("{{(.+)}}", "i"),
+        $wow->rx("{{(.+?)}}", "i"),
         "<?php echo $1; ?>"
     );
 

@@ -287,6 +287,7 @@ OR
     @app:getUrl()
 ```
 *Notice you can also use PHP to retrieve the app in your view as every view is compiled in your application's namespace with a variable called `$app` containg your current application.*
+*Secondly, there is also a variable called `$request` available which contains the current Request object*
 
 ####app inject
 Use this to inject an app method. This will compile without opening and closing php tags and without ending semicolon (;)
