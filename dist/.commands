@@ -4,18 +4,25 @@
     * commands
     */
     use xTend\Workbench\Workbench as Workbench;
-    use xTend\Workbench\Helpers as Helpers;
-    Workbench::registerCommand('init', function($app) {
+    Workbench::registerCommand('^init$', function($app) {
         $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
         $session_config = json_decode($conf->read(), true);
-        $session_config["SessionName"] = Helpers::generate();
-        $session_config["InitiatedKey"] = Helpers::generate();
-        $session_config["UserAgentKey"] = Helpers::generate();
-        $session_config["Salt"] = Helpers::generate();
-        $session_config["UserSessionsKey"] = Helpers::generate();
-        $session_config["UserCookiesKey"] = Helpers::generate();
+        $session_config["SessionName"] = Workbench::generate();
+        $session_config["InitiatedKey"] = Workbench::generate();
+        $session_config["UserAgentKey"] = Workbench::generate();
+        $session_config["Salt"] = Workbench::generate();
+        $session_config["UserSessionsKey"] = Workbench::generate();
+        $session_config["UserCookiesKey"] = Workbench::generate();
         $conf->write(json_encode($session_config));
     }, 'application.init');
+
+    Workbench::registerCommand('^init show$', function($app) {
+        $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
+        $session_config = json_decode($conf->read(), true);
+        echo "\n"; foreach($session_config as $key => $value) {
+            echo str_pad($key, 30).$value."\n";
+        } echo "\n";
+    });
 
     Workbench::registerCommand('^routes', function($app) {
         $routes = $app->getRouter()->getRoutes();
@@ -327,6 +334,14 @@
         );
     });
 
+    Workbench::registerCommand('^config$', function($app, $argv) {
+        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+        $configuration = json_decode($conf->read(), true);
+        echo "\n"; foreach($configuration as $key => $value) {
+            echo str_pad($key, 30).(is_bool($value) ? ($value ? 'true' : 'false') : $value)."\n";
+        } echo "\n";
+    });
+
     Workbench::registerCommand('^config:([a-zA-Z]+) (.*)', function($app, $argv) {
         $key = explode(":", $argv[1])[1];
         $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
@@ -394,9 +409,11 @@
     });
 
     //===========================================//
-    Workbench::registerCommand('^help', function() {
+    Workbench::registerCommand('^help', function($app, $argv) {
         $help = [
             "init" => "Initializes xTend with secure keys",
+            "init show" => "Shows the application's keys",
+            "config" => "Prints out the configuration values",
             "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit and LogLimit",
             "config:[Key]" => "Gets an application configuration variable",
             "wow:flavor [HTML, AT_SIGN or COMBINED flavor]" => "Sets the flavor of the Wow templating engine (COMBINED by default)",
@@ -422,9 +439,27 @@
             "packagist:autoremove [Vendor/Package] [Version]" => "Automatically removes 'require' packages"
         ];
 
-        echo "xTend CLI\n";
+        $command_match=[]; $match_percent=0;
         foreach($help as $cm => $info) {
-            echo "$cm\n  $info\n\n";
+            $command_text = preg_replace('/(\s*|\:)\[.+?\](\s*|\:)/', '', $cm);
+            $command_parts = substr_count($command_text, ' ')+1;
+            $argument = implode(' ', array_slice($argv, 1, $command_parts));
+            $percent=0; similar_text($command_text, $argument, $percent);
+            if($percent>50) {
+                $command_match[]=$cm;
+            }
+        }
+
+        if(count($command_match)>0) {
+            echo "\nDid you mean one of these: \n";
+            foreach($command_match as $command) {
+                echo $command."\n";
+            }
+        } else {
+            echo "xTend CLI\n";
+            foreach($help as $cm => $info) {
+                echo "$cm\n  $info\n\n";
+            }   
         }
         echo "\n";
     }, 'help');

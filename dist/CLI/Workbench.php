@@ -45,23 +45,7 @@
             return call_user_func($this->_call, $this->_app, $arguments);
         }
     }
-
-    /**
-    * The Helper class contains
-    * the generate for generating
-    * a random key
-    */
-    class Helpers {
-        /**
-        * Generates a key
-        *
-        * @return string
-        */
-        public static function generate() {
-            return base64_encode(random_bytes(8));
-        }
-    }
-
+    
     /**
     * The Workbench handles registering
     * and executing commands
@@ -79,6 +63,15 @@
         private static $_commands;
         /** @var array Contains the Workbench configuration */
         private static $_configuration;
+
+        /**
+        * Generates a key
+        *
+        * @return string
+        */
+        public static function generate() {
+            return sha1(random_bytes(8));
+        }
 
         /**
         * Sets the workbench namespace
