@@ -50,6 +50,24 @@ Besides simple text you can also pass an array of options. Using this array you 
 
 *Notice xTend automatically injects the request object into the controller method. More about the request object in the extra information*
 
+####Example 4
+```
+    $app->getRouter()->get('home', [
+        'view' => 'home.production',
+        'environment' => 'production'
+    ]);
+
+    $app->getRouter()->get('home', [
+        'view' => 'home.development',
+        'environment' => 'development'
+    ]);
+```
+
+Using this setup xTend will load the view `home/production` if the environment is set to production
+and if the environment is set to development xTend will load `home/development`.
+
+*Notice you can also retrieve the environment using the `getEnvironment()` method of the app*
+
 ###Function
 You choose to execute a function upon route match. When the function is executed the router will also pass the current application as parameter.
 
