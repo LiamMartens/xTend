@@ -129,6 +129,9 @@
         * @return boolean
         */
         public function isMatch($request) {
+            if(is_array($this->_route)&&isset($this->_route['environment'])&&($this->_route['environment']!=$this->_app->getEnvironment())) {
+                return false;
+            }
             if(is_string($this->_handle)) {
                 //split handle for multi handle
                 $handles = explode("|", $this->_handle);

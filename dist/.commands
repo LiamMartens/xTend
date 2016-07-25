@@ -414,7 +414,7 @@
             "init" => "Initializes xTend with secure keys",
             "init show" => "Shows the application's keys",
             "config" => "Prints out the configuration values",
-            "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit and LogLimit",
+            "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit, LogLimit and Environment",
             "config:[Key]" => "Gets an application configuration variable",
             "wow:flavor [HTML, AT_SIGN or COMBINED flavor]" => "Sets the flavor of the Wow templating engine (COMBINED by default)",
             "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",

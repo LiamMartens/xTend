@@ -3,5 +3,6 @@
     "DevelopmentStatus": false,
     "BackupInterval": "1 week",
     "BackupLimit": 10,
-    "LogLimit": 30
+    "LogLimit": 30,
+    "Environment": "production"
 }

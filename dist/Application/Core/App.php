@@ -7,17 +7,19 @@
     class App
     {
         /** @var string Contains the current xTend version */
-        private $_xTendVersion = "0.9.9";
+        private $_xTendVersion = '0.9.9';
         /** @var string Contains the application's URL */
         private $_url = "http://localhost";
         /** @var boolean Contains the status of development mode */
         private $_inDevelopment = false;
         /** @var string|boolean Contains the backup inteval */
-        private $_backupInterval = "1 week";
+        private $_backupInterval = '1 week';
         /** @var integer Contains the log limit */
         private $_backupLimit = 10;
         /** @var integer Contains the log limit */
         private $_logLimit = 30;
+        /** @var string Contains the current environment */
+        private $_environment = 'production';
         /** @var string Contains the application's namespace */
         private $_namespace = "Application";
         /**
@@ -57,6 +59,12 @@
         */
         public function getLogLimit() { return $this->_logLimit; }
         /**
+        * Returns the current environment
+        *
+        * @return string
+        */
+        public function getEnvironment() { return $this->_environment; }
+        /**
         * Returns the namespace of the application
         *
         * @return string
@@ -92,6 +100,12 @@
         * @param integer $limit
         */
         public function setLogLimit($limit) { $this->_logLimit = $limit; }
+        /**
+        * Sets the current environment
+        *
+        * @param string $environment
+        */
+        public function setEnvironment($environment) { $this->_environment = $environment; }
         /**
         * Sets application configuration values
         *
