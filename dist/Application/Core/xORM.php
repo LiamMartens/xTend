@@ -18,6 +18,7 @@
             private $_value;
 
             public function __construct($col_left, $operator, $value) {
+                //check column left ` characters
                 $this->_column_left = $col_left;
                 $this->_operator = $operator;
                 $this->_value = $value;
@@ -29,7 +30,7 @@
             * @return string
             */
             public function query() {
-                return $this->_column_left.$this->_operator.'?';
+                return xORM::addBrackets($this->_column_left).$this->_operator.'?';
             }
 
             /**
@@ -67,7 +68,11 @@
             }
 
             public function  query() {
-                return $this->_join." ".$this->_table.(($this->_alias!==false) ? " AS ".$this->_alias : '')." ON ".$this->_on[0].$this->_on[1].$this->_on[2];
+                return $this->_join." ".
+                        xORM::addBrackets($this->_table).
+                        (($this->_alias!==false) ? " AS ".xORM::addBrackets($this->_alias) : '').
+                        " ON ".xORM::addBrackets($this->_on[0]).
+                        $this->_on[1].xORM::addBrackets($this->_on[2]);
             }
         }
 
@@ -86,7 +91,7 @@
             }
 
             public function query() {
-                return $this->_column." ".$this->_type;
+                return xORM::addBrackets($this->_column)." ".$this->_type;
             }
         }
 
@@ -118,7 +123,8 @@
             }
 
             public function query() {
-                return $this->_type."(".$this->_column.") ".(($this->_alias!==false) ? "AS ".$this->_alias : '');
+                return $this->_type."(".xORM::addBrackets($this->_column).") ".
+                        (($this->_alias!==false) ? "AS ".xORM::addBrackets($this->_alias) : '');
             }
         }
 
@@ -310,9 +316,10 @@
                 $set_arr=[]; foreach($this->_values as $key => $value) {
                     $col_name=$key; $search=array_search($key, $this->_column_bindings);
                     if($search!==false) { $col_name = $search; }
-                    $set_arr[] = "$col_name=?";
+                    $set_arr[] = xORM::addBrackets($col_name).'=?';;
                 }
-                return "UPDATE ".$this->_table." SET ".implode(',', $set_arr)." WHERE ".$this->_id_column."=?";
+                return "UPDATE ".xORM::addBrackets($this->_table)." SET ".
+                        implode(',', $set_arr)." WHERE ".xORM::addBrackets($this->_id_column)."=?";
             }
 
             /**
@@ -321,7 +328,8 @@
             * @return string
             */
             public function query_delete() {
-                return "DELETE FROM ".$this->_table." WHERE ".$this->_id_column."=?";
+                return "DELETE FROM ".xORM::addBrackets($this->_table).
+                        " WHERE ".xORM::addBrackets($this->_id_column)."=?";
             }
 
             /**
@@ -332,9 +340,11 @@
             public function query_insert() {
                 $column_names=array_keys($this->_values); foreach($column_names as $i => $col) {
                     $search=array_search($col, $this->_column_bindings);
-                    if($search!==false) { $column_names[$i]=$search; }
+                    if($search!==false) { $column_names[$i]=xORM::addBrackets($search); }
                 }
-                return "INSERT INTO `".$this->_table."` (`".implode("`,`", $column_names)."`) VALUES (".trim(str_repeat("?,", count($this->_values)), ",").")";
+                return "INSERT INTO ".xORM::addBrackets($this->_table).
+                        " (".implode(",", $column_names).") VALUES (".
+                        trim(str_repeat("?,", count($this->_values)), ",").")";
             }
 
             /**
@@ -891,13 +901,13 @@
                         $agg_alias=$this->_aggregate[$col]->hasAlias();
                     } else {
                         $agg_found = false;
-                        $column_string = $col;
+                        $column_string = xORM::addBrackets($col);
                     }
                     if(!$agg_alias&&isset($this->_alias[$col])) {
-                        $column_string .= " AS ".$this->_alias[$col];
+                        $column_string .= " AS ".xORM::addBrackets($this->_alias[$col]);
                     } $array_map_result[] = $column_string;
                 }
-                $query.=implode(",", $array_map_result)." FROM ".$this->_table;
+                $query.=implode(",", $array_map_result)." FROM ".xORM::addBrackets($this->_table);
                 $array_map_result=[]; foreach($this->_join as $join) {
                     $array_map_result[] = $join->query();
                 } $query.=" ".implode(" ", $array_map_result);;
@@ -1078,6 +1088,18 @@
 
             public function __construct($app) {
                 $this->_app = $app;
+            }
+
+            /**
+            * Adds ` brackets where necessary
+            *
+            * @param string $str
+            *
+            * @return string
+            */
+            public static function addBrackets($str) {
+                $str_arr=explode('.', $str);
+                return '`'.implode('`.`', $str_arr).'`';
             }
 
             /**
