@@ -905,6 +905,7 @@
                 if($this->_offset!==false) { $query.=" OFFSET ".$this->_offset; }
                 //insert where statements here
                 //wrapped where and groups
+                $total_group_count=0;
                 $array_map_result=[]; foreach($this->_wheresWrapAnd as $group) {
                     $q = "(".$group[0]->query();
                     if(count($group)>1) {
@@ -912,6 +913,7 @@
                         elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
                         $q.=$group[1]->query();
                     } $array_map_result[] = ($q.")");
+                    $total_group_count++;
                 }
                 $query.=" WHERE ".implode(" AND ", $array_map_result);
                 if(count($this->_wheresWrapOr)>0) {
@@ -923,11 +925,16 @@
                             elseif($group[1] instanceof WhereGroupAnd) { $q.=" AND "; }
                             $q.=$group[1]->query();
                         } $array_map_result[] = ($q.")");
+                        $total_group_count++;
                     }
                     $query.=implode(" OR ", $array_map_result);
                 }
+
                 //non wrapped groups + group / order
-                $query.=" AND ".$this->_wheresAnd->query()." OR ".$this->_wheresOr->query();
+                if($total_group_count>0) {
+                    $query.=" AND ";
+                }
+                $query.=$this->_wheresAnd->query()." OR ".$this->_wheresOr->query();
                 $array_map_result=[]; foreach($this->_orders as $ord) {
                     $array_map_result[] = $ord->query();
                 }
@@ -1112,6 +1119,7 @@
             * @return PDOStatement
             */
             public function execute($query, $values) {
+                echo $query;
                 $q = $this->_instance->prepare($query);
                 $q->execute($values);
                 if($this->_app->getDevelopmentStatus()) {
