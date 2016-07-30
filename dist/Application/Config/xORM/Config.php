@@ -6,7 +6,8 @@
     /*
     $orm->configure(xORM::DRIVER_MYSQL, '127.0.0.1', [
         'user' => 'root',
-        'password' => 'pass
+        'password' => 'pass',
+        'db' => 'database'
     ]);
 
     $orm->configure(xORM::DRIVER_SQLITE, './db.sqlite');
