@@ -334,7 +334,7 @@
                     $search=array_search($col, $this->_column_bindings);
                     if($search!==false) { $column_names[$i]=$search; }
                 }
-                return "INSERT INTO ".$this->_table." (".implode(",", $column_names).") VALUES (".trim(str_repeat("?,", count($this->_values)), ",").")";
+                return "INSERT INTO `".$this->_table."` (`".implode("`,`", $column_names)."`) VALUES (".trim(str_repeat("?,", count($this->_values)), ",").")";
             }
 
             /**
@@ -929,7 +929,7 @@
                     }
                     $query.=implode(" OR ", $array_map_result);
                 }
-
+                
                 //non wrapped groups + group / order
                 if($total_group_count>0) {
                     $query.=" AND ";
@@ -1119,7 +1119,6 @@
             * @return PDOStatement
             */
             public function execute($query, $values) {
-                echo $query;
                 $q = $this->_instance->prepare($query);
                 $q->execute($values);
                 if($this->_app->getDevelopmentStatus()) {
