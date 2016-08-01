@@ -341,6 +341,7 @@
                 $column_names=array_keys($this->_values); foreach($column_names as $i => $col) {
                     $search=array_search($col, $this->_column_bindings);
                     if($search!==false) { $column_names[$i]=xORM::addBrackets($search); }
+                    else { $column_names[$i]=xORM::addBrackets($column_names[$i]); }
                 }
                 return "INSERT INTO ".xORM::addBrackets($this->_table).
                         " (".implode(",", $column_names).") VALUES (".
