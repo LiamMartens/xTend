@@ -369,7 +369,6 @@
             }
 
             public function insert() {
-
                 return $this->_app->orm()->execute($this->query_insert(), $this->values());
             }
         }
@@ -961,9 +960,11 @@
             * @return xTend\Core\xORM\ResultObject
             */
             public function findOne() {
+                $values=$this->_app->orm()->findOne($this->query(), $this->values());
+                if($values===false) { return false; }
                 return new ResultObject(
                                 $this->_app,
-                                $this->_app->orm()->findOne($this->query(), $this->values()),
+                                $values,
                                 $this->_table,
                                 $this->_alias,
                                 $this->_id_column);
@@ -1050,9 +1051,11 @@
             }
 
             public function findOne() {
+                $values=$this->_app->orm()->findOne($this->_sql, $this->_parameters);
+                if($values===false) { return false; }
                 return new ResultObject(
                     $this->_app,
-                    $this->_app->orm()->findOne($this->_sql, $this->_parameters),
+                    $values,
                     $this->_table,
                     $this->_column_bindings,
                     $this->_id_column);
