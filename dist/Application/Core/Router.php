@@ -412,8 +412,6 @@
         */
         public function execute() {
             $request = trim($_SERVER["REQUEST_URI"], "/");
-            //execute data handler parser
-            $this->_app->getRequestDataHandler()->parse();
             //allow method spoofing
             $post=$this->_app->getRequestDataHandler()->post();
             if(isset($post['_method'])) {

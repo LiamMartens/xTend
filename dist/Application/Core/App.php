@@ -7,7 +7,7 @@
     class App
     {
         /** @var string Contains the current xTend version */
-        private $_xTendVersion = '1.0.4';
+        private $_xTendVersion = '1.0.5';
         /** @var string Contains the application's URL */
         private $_url = "http://localhost";
         /** @var boolean Contains the status of development mode */
@@ -827,6 +827,8 @@
             //start a session
             SessionHandler::configuration(json_decode($this->_fileHandler->system("Config.Sessions.Sessions.json")->read(), true));
             SessionHandler::start();
+            //execute data handler parser
+            $this->_app->getRequestDataHandler()->parse();
             //run library inclusion
             $this->loadLibraries();
             //run preconfig methods
