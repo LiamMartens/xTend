@@ -331,6 +331,7 @@ OR
 ```
     @controller_Pages.HomeController:myMethod()
 ```
+*Use the name you used to load the controller*
 
 ####controller with name inject
 Use this to inject a controller method from a specific controller.

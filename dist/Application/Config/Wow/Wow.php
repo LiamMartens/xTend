@@ -272,7 +272,7 @@
         //
         $wow->registerExpression(
             $wow->rx("\<formtoken\s+name=\"(.+?)\"\s*\/?\>", "i"),
-            '<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->generate("$1"); ?>" />'
+            '<input type="hidden" data-component="token.$1" name="token-$1" value="<?php echo $app->getFormTokenHandler()->generate("$1"); ?>" />'
         );
 
         //
@@ -280,7 +280,7 @@
         //
         $wow->registerExpression(
             $wow->rx("\<formtoken\s+(?:(?:persistent\s+name=\"(.+?)\")|(?:name=\"(.+?)\")\s+persistent)\s*\/?\>", "i"),
-            '<input type="hidden" name="token-$1" value="<?php echo $app->getFormTokenHandler()->persistent("$1"); ?>" />'
+            '<input type="hidden" data-component="token.$1" name="token-$1" value="<?php echo $app->getFormTokenHandler()->persistent("$1"); ?>" />'
         );
     }
     if($wow->getFlavor()>=Wow::COMBINED) {
@@ -461,11 +461,11 @@
         //    @controller_Pages.HomeController:method()
         //
         $wow->registerExpression(
-            $wow->rx('@controller_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+            $wow->rx('@controller_(.+?):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
             "<?php echo \$app->getControllerHandler()->getController('$1')->$2; ?>"
         );
         $wow->registerExpression(
-            $wow->rx('@icontroller_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
+            $wow->rx('@icontroller_(.+?):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
             "\$app->getControllerHandler()->getController('$1')->$2"
         );
 

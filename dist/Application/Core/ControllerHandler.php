@@ -50,6 +50,8 @@
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
             //
             //set default namespace
+            $at_index=strpos($controllerName, '@');
+            $registerName=($at_index===false) ? $controllerName : substr($controllerName, 0, $at_index);
             if($ns===false) $ns=$this->_app->getNamespace();
             //extract directive
             $dot_pos = strrpos($controllerName, ".");

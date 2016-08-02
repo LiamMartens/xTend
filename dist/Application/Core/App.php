@@ -7,7 +7,7 @@
     class App
     {
         /** @var string Contains the current xTend version */
-        private $_xTendVersion = '1.0.5';
+        private $_xTendVersion = '1.0.6';
         /** @var string Contains the application's URL */
         private $_url = "http://localhost";
         /** @var boolean Contains the status of development mode */
