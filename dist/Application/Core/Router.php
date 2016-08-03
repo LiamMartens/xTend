@@ -450,13 +450,11 @@
             }
             //no routes have been executed here
             //check for error page
-            if(!$this->_app->throwError(0x0194)) {
-                //check for default
-                if(isset($this->_default)) {
-                    $this->_default->execute();
-                    return true;
-                }
+            if(isset($this->_default)) {
+                $this->_default->execute();
+                return true;
             }
+            $this->_app->throwError(0x0194);
             return false;
         }
     }
