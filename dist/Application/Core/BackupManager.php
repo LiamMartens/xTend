@@ -31,7 +31,7 @@
         * Cleans backups when there are too many backup files (backuplimit exceed)
         */
         private static function clean() {
-            $limit=App::backupsLimit();
+            $limit=App::backupLimit();
             if($limit!==false) {
                 $backups = App::backups()->files(); sort($backups);
                 $to_remove = count($backups) - $limit;
