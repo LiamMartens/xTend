@@ -1,13 +1,12 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
     use \Defuse\Crypto\Crypto as Crypto;
     /**
     * The Cookie class handles
     * getting, removing and setting
     * encrypted cookies
     */
-    class Cookie
-    {
+    class Cookie {
         /** @var string Encryption key for cookie values */
         private static $_enckey;
 
@@ -17,7 +16,7 @@
         * @param string $key
         */
         public static function generate($key) {
-            self::$_enckey = sha1($_SERVER["HTTP_USER_AGENT"].$_SERVER["REMOTE_ADDR"].$key);
+            self::$_enckey = sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].$key);
         }
 
         /**

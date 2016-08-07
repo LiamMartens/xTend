@@ -1,59 +1,45 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
+
     /**
     * The PackagistHandler handles installing
     * and removing packages
     */
     class PackagistHandler {
-        /** @var xTend\Core\App Current application */
-        private $_app;
-        /** @var xTend\Core\FileHandler Contains the application's file handler */
-        private $_fileHandler;
-        /** @var xTend\Core\DirecotryHandler Contains the application's directory handler */
-        private $_dirHandler;
         /** @var array Contains all installed packages */
-        private $_packages;
+        private static $_packages;
+        /** @var array Contains the autoload spec */
+        private static $_autoload;
 
         /**
         * @return array
         */
-        public function getPackages() {
-            return $this->_packages;
+        public static function packages() {
+            return self::$_packages;
         }
 
-        private $_autoload;
         /**
         * @return array
         */
-        public function getAutoload() {
-            return $this->_autoload;
+        public static function autoload() {
+            return self::$_autoload;
         }
 
         /**
-        * @param xTend\Core\App
+        * Initializes packagist handler
         */
-        public function __construct($app) {
-            $this->_app = $app;
-            $this->_fileHandler = $app->getFileHandler();
-            $this->_dirHandler = $app->getDirectoryHandler();
-            //load current packages
-            $this->_packages = json_decode($this->_fileHandler->system('packagist.json')->read(), true);
-            //load current autoload spec
-            $this->_autoload = json_decode($this->_fileHandler->system('Libs.Packagist.autoload.json')->read(), true);
+        public static function start() {
+            self::$_packages = json_decode(FileHandler::system('packagist.json')->read(), true);
+            self::$_autoload = json_decode(App::libs()->file('Packagist.autoload.json')->read(), true);
+            App::libs()->file('Packagist.autoload.php')->include();
         }
 
         /**
         * @return boolean
         */
-        private function savePackages() {
-            return $this->_fileHandler->system('packagist.json')->write(json_encode($this->_packages));
-        }
-
-        /**
-        * @return boolean
-        */
-        private function saveAutoload() {
-            return $this->_fileHandler->system('Libs.Packagist.autoload.json')->write(json_encode($this->_autoload));
+        private static function save() {
+            return (FileHandler::system('packagist.json')->write(json_encode(self::$_packages))&&
+                    App::libs()->file('Packagist.autoload.json')->write(json_encode(self::$_autoload)));
         }
 
         /**
@@ -65,25 +51,25 @@
         *
         * @return boolean
         */
-        public function install($package_name, $version_param = false, $die_on_duplicate = true) {
+        public static function install($package_name, $version_param = false, $die_on_duplicate = true) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
             if(!isset($package_info['status'])) {
                 $to_install = false;
                 //has package already been added to the app's packagist file
-                $exists = isset($this->_packages[$package_name]) ? $this->_packages[$package_name] : false;
+                $exists = isset(self::$_packages[$package_name]) ? self::$_packages[$package_name] : false;
                 //check for matching version either new or existing ugradable
                 foreach($package_info["package"]["versions"] as $version => $information) {
-                    if(($version_param!==false)&&((new VersionCheck($version_param, $version))->isMatch()==true)) {
+                    if(($version_param!==false)&&((new VersionCheck($version_param, $version))->match()==true)) {
                         $to_install = $information;
-                        $this->_packages[$package_name]=$version_param;
-                        $this->savePackages();
+                        self::$_packages[$package_name]=$version_param;
+                        self::save();
                         break;
                     } elseif(($exists===false)&&(substr($version, 0, 4)!=="dev-")&&($version_param===false)) {
                         $to_install = $information;
-                        $this->_packages[$package_name]='^'.trim($to_install["version"], 'v');
-                        $this->savePackages();
+                        self::$_packages[$package_name]='^'.trim($to_install["version"], 'v');
+                        self::save();
                         break;
-                    } elseif(($exists!==true)&&((new VersionCheck($exists, $version))->isMatch()==true)&&($version_param===false)) {
+                    } elseif(($exists!==true)&&((new VersionCheck($exists, $version))->match()==true)&&($version_param===false)) {
                         $to_install = $information;
                         break;
                     }
@@ -97,7 +83,7 @@
                             if(version_compare(phpversion(), $php_vmatch[2], $php_vmatch[1])==false) {
                                 die("PHP version $version required"); }
                         } elseif(strpos($rpackage, '/')!==false) {
-                            $this->install($rpackage, $version, false);
+                            self::install($rpackage, $version, false);
                         }
                     }
                     //get directory names and create if not existing yet
@@ -105,7 +91,7 @@
                     $name=substr($name, strlen('https://github.com/'));
                     $name=str_replace('/', '-', substr($name, 0, strrpos($name, '.')));
                     $id=substr($to_install["dist"]["reference"], 0, 7);
-                    $package_directory = $this->_dirHandler->system("Libs.Packagist.".strtolower($name));
+                    $package_directory = App::libs()->directory('Packagist.'.strtolower($name));
                     $package_sub = $package_directory->directory("$name-$id");
                     if($package_sub->exists()) {
                         if($die_on_duplicate) {
@@ -117,7 +103,7 @@
                     }
                     if(!$package_directory->exists()) { $package_directory->create(); }
                     //download file
-                    $package_zip = (string)$this->_fileHandler->system('package.zip');
+                    $package_zip = (string)FileHandler::system('package.zip');
                     $fp = fopen($package_zip, 'w');
                     $ch = curl_init($to_install["dist"]["url"]);
                     curl_setopt($ch, CURLOPT_TIMEOUT, 50);
@@ -141,9 +127,9 @@
                     $prev_version_found = false;
                     foreach($prev_versions as $prev_version) {
                         $prev_version_name = $prev_version->name();
-                        if(($prev_version_name!=="$name-$id")&&isset($this->_autoload[$prev_version_name])) {
+                        if(($prev_version_name!=="$name-$id")&&isset(self::$_autoload[$prev_version_name])) {
                             $prev_version_found = $prev_version_name;
-                            unset($this->_autoload[$prev_version_name]);
+                            unset(self::$_autoload[$prev_version_name]);
                         }
                     }
                     //let the user know the previous version has been removed from autoload
@@ -152,8 +138,8 @@
                     }
                     //add autoload
                     if(isset($to_install['autoload'])) {
-                        $this->_autoload["$name-$id"] = $to_install["autoload"]; }
-                    $this->saveAutoload();
+                        self::$_autoload["$name-$id"] = $to_install["autoload"]; }
+                    self::save();
                     return true;
                 }
             }
@@ -167,34 +153,34 @@
         *
         * @return boolean
         */
-        public function remove($package_name) {
-            if(isset($this->_packages[$package_name])) {
-                $version_installed = $this->_packages[$package_name];
+        public static function remove($package_name) {
+            if(isset(self::$_packages[$package_name])) {
+                $version_installed = self::$_packages[$package_name];
                 //remove from packagist
-                unset($this->_packages[$package_name]);
-                $this->savePackages();
+                unset(self::$_packages[$package_name]);
+                self::save();
                 //get package info
                 $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
                 $git_name = $package_info["package"]["repository"];
                 $git_name = substr($git_name, strrpos($git_name, '/', strrpos($git_name, '/') - strlen($git_name) - 1) + 1);
                 //get all directories
-                $package_directory = $this->_dirHandler->system('Libs.Packagist.'.trim(str_replace('/', '-', strtolower($git_name))));
+                $package_directory = App::libs()->directory('Packagist.'.trim(str_replace('/', '-', strtolower($git_name))));
                 $installed_versions = $package_directory->directories();
                 //remove from autoload
                 foreach($installed_versions as $version) {
-                    if(isset($this->_autoload[$version->name()])) {
-                        unset($this->_autoload[$version->name()]);
+                    if(isset(self::$_autoload[$version->name()])) {
+                        unset(self::$_autoload[$version->name()]);
                     }
                     //remove version
                     $version->remove();
                 }
-                $this->saveAutoload();
+                self::save();
                 //remove remaining directory
                 $package_directory->remove();
                 //show packages
                 $to_install = false;
                 foreach($package_info["package"]["versions"] as $pack_v => $information) {
-                    if((new VersionCheck($version_installed, $pack_v))->isMatch()==true) {
+                    if((new VersionCheck($version_installed, $pack_v))->match()==true) {
                         $to_install = $information;
                         break;
                     } elseif(substr($version, 0, 4)!=="dev-") {
@@ -224,12 +210,12 @@
         * @param string $package_name
         * @param string|boolean $package_version
         */
-        public function autoremove($package_name, $package_version = false) {
+        public static function autoremove($package_name, $package_version = false) {
             $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
             //get to_install
             $to_install = false;
             foreach($package_info["package"]["versions"] as $version => $information) {
-                if(($package_version!==false)&&((new VersionCheck($package_version, $version))->isMatch()==true)) {
+                if(($package_version!==false)&&((new VersionCheck($package_version, $version))->match()==true)) {
                     $to_install = $information;
                     break;
                 } elseif((substr($version, 0, 4)!=="dev-")&&($package_version===false)) {
@@ -242,7 +228,7 @@
                 $to_install["require"] = array_reverse($to_install["require"]);
                 foreach($to_install["require"] as $p => $v) {
                     if(strpos($p, '/')!==false) {
-                        $this->remove($p);
+                        self::remove($p);
                     }
                 }
             }

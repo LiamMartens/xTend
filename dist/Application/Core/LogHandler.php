@@ -1,29 +1,18 @@
 <?php
-    namespace xTend\Core;
-    use \DateTime as DateTime;
+    namespace Application\Core;
+    use \DateTime;
+
     /**
     * The LogHandler handles writing and clearing logs
     */
-    class LogHandler
-    {
-        /** @var xTend\Core\App Current application */
-        private $_app;
-
-        /**
-        * @param xTend\Core\App $app
-        */
-        public function __construct($app) {
-            //store app reference for directives
-            $this->_app = $app;
-        }
-
-        public function clearLogs() {
-            $files = $this->_app->getLogsDirectory()->files();
+    class LogHandler {
+        public static function clear() {
+            $files = App::logs()->files();
             foreach ($files as $file) { $file->remove(); }
         }
-        public function cleanLogs() {
-            $files = $this->_app->getLogsDirectory()->files(); sort($files);
-            $files_to_remove = count($files) - $this->_app->getLogLimit();
+        public static function clean() {
+            $files = App::logs()->files(); sort($files);
+            $files_to_remove = count($files) - App::logLimit();
             if($files_to_remove>0) {
                 $i=0; while($i<$files_to_remove) {
                     $files[$i]->remove(); ++$i;
@@ -37,11 +26,10 @@
         * @param StatusCode $err
         * @param string $additional
         */
-        public function write($err, $additional = "") {
+        public static function write($err, $additional = '') {
             $dt = new DateTime();
-            $this->_app->getLogsDirectory()->file("log_".$dt->format("Y-m-d").".log")->append(
-                $dt->format("H:i:s")."\t".$err->getStatus()."\t$additional\r\n"
-            );
-            $this->cleanLogs();
+            App::logs()->file('log_'.$dt->format('Y-m-d').'.log')->append(
+                $dt->format('H:i:s')."\t".$err->status().'\t$additional\r\n'
+            ); self::clean();
         }
     }

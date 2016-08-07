@@ -1,11 +1,12 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Objects;
+    use \ZipArchive;
+
     /**
     * The Archive class wraps
     * the default ZipArchive class
     */
-    class Archive
-    {
+    class Archive {
         /** @var ZipArchive Contains the ZipArchive class of the Archive */
         private $_zip;
         /** @var string Contains the destionation of the Archive */
@@ -17,7 +18,7 @@
         */
         public function __construct($dest, $read = false) {
             $this->_destination = $dest;
-            $this->_zip = new \ZipArchive;
+            $this->_zip = new ZipArchive;
             if($read) {
                 $this->_zip->open($this->_destination);
             } else { $this->_zip->open($this->_destination, \ZipArchive::CREATE); }

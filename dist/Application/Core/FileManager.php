@@ -1,38 +1,23 @@
 <?php
-    namespace xTend\Core;
-
+    namespace Application\Core;
     /**
-    * The FileManager handles including files
+    * The FileManager handles including files only once
+    * in a faster manner than *_once
     */
-    class FileManager
-    {
-        /** @var array All yet included files */
-        private $_files;
-        public function __construct() {
-            $this->_files=[];
-        }
-
+    class FileManager {
         /**
         * Includes a file if it hasn't been included yet
         *
-        * @param string $fullPath
-        */
-        public function includeFile($fullPath) {
-            $fullPath=realpath($fullPath);
-            if(array_search($fullPath, $this->_files)===false) {
-                include($fullPath);
-                $this->_files[]=$fullPath;
-            }
-        }
-
-        /**
-        * Includes mulitple files
+        * @param string $path
         *
-        * @param array $filePaths
+        * @return boolean
         */
-        public function includeFiles($filePaths) {
-            foreach ($filePaths as $path) {
-                $this->includeFile($path);
+        public static function include($path) {
+            if(!defined($path)) {
+                require($path);
+                define($path, true);
+                return true;
             }
+            return false;
         }
     }

@@ -1,22 +1,17 @@
 <?php
-    namespace xTend\Blueprints;
-    use \xTend\Core\xORM\Select;
-    use \xTend\Core\xORM\ResultObject;
+    namespace Application\Blueprints;
+    use Application\Objects\xORM\Select;
+    use Application\Objects\xORM\ResultObject;
+
     /**
     * Default Model which allows for database interaction
     * using the built in ORM
     */
-    class BaseDataModel {
-        /** @var xTend\Core\App Current application instance */
-        protected $_app;
+    class Model {
         /** @var string Name of the table of the model. By default the plural lowercase version of the class name is used */
         protected $_table = false;
         /** @var string Column name of the primary key */
         protected $_id_column = 'id';
-
-        public function __construct($app) {
-            $this->_app = $app;
-        }
 
         /**
         * Returns the table name if set or lowercases it and returns the plural
@@ -41,13 +36,13 @@
         * @param boolean Whether this column name is the id column
         */
         public function select($column) {
-            return (new Select($this->_app, $column))->primary($this->_id_column)->from($this->tableName());
+            return (new Select($column))->primary($this->_id_column)->from($this->tableName());
         }
 
         /**
         * Starts creation of a record
         */
         public function create($values = []) {
-            return new ResultObject($this->_app, $values, $this->tableName(), [], $this->_id_column);
+            return new ResultObject($values, $this->tableName(), [], $this->_id_column);
         }
     }

@@ -1,11 +1,10 @@
 <?php
-    namespace xTend\Blueprints;
+    namespace Application\Blueprints;
     /**
     * The BaseDataExtension allows for data setting
     * and getting
     */
-    class BaseDataExtension
-    {
+    class DataExtension {
         /** @var array the dataset of the class */
         protected $_data=[];
         /**
@@ -14,7 +13,7 @@
         * @param mixed $key
         * @param mixed $value
         */
-        public function setData($key,$value) {
+        public function set($key,$value) {
             $this->_data[$key]=$value;
         }
         /**
@@ -25,7 +24,7 @@
         *
         * @return mixed
         */
-        public function getData($key, $default=false) {
+        public function get($key, $default=false) {
             if(isset($this->_data[$key]))
                 return $this->_data[$key];
             return $default;
@@ -37,7 +36,7 @@
         *
         * @return boolean
         */
-        public function inData($key) {
+        public function in($key) {
             return isset($this->_data[$key]);
         }
         /**
@@ -45,7 +44,7 @@
         *
         * @return array
         */
-        public function getAllData() {
+        public function all() {
             return $this->_data;
         }
         /**
@@ -53,32 +52,7 @@
         *
         * @return xTend\Blueprints\BaseDataExtension
         */
-        public function clearData() {
+        public function clear() {
             $this->_data = [];
-            return $this;
-        }
-        /**
-        * Sets a data entry on the BaseDataExtension
-        *
-        * @param mixed $key
-        * @param mixed $value
-        */
-        public function __set($name, $value) {
-            if($name=='_data') {
-                $this->_data = $value;
-            } else { $this->setData($name, $value); }
-        }
-        /**
-        * Gets a data entry from the BaseDataExtension
-        *
-        * @param mixed $key
-        * @param mixed $default
-        *
-        * @return mixed
-        */
-        public function __get($name) {
-            if($this->inData($name))
-                return $this->getData($name);
-            return false;
         }
     }

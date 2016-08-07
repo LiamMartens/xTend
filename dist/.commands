@@ -1,95 +1,110 @@
 <?php
+    namespace Application;
+    use \RecursiveIteratorIterator;
+    use \RecursiveDirectoryIterator;
+    use xTend\Workbench;
+
     /**
-    * Contains all workbench
-    * commands
+    * Initializes the session keys
     */
-    use xTend\Workbench\Workbench as Workbench;
-    Workbench::registerCommand('^init$', function($app) {
-        $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
+    Workbench::register('^init$', function($argv) {
+        $conf = Core\App::config()->file('Sessions.Sessions.json');
         $session_config = json_decode($conf->read(), true);
-        $session_config["SessionName"] = Workbench::generate();
-        $session_config["InitiatedKey"] = Workbench::generate();
-        $session_config["UserAgentKey"] = Workbench::generate();
-        $session_config["Salt"] = Workbench::generate();
-        $session_config["UserSessionsKey"] = Workbench::generate();
-        $session_config["UserCookiesKey"] = Workbench::generate();
+        $session_config['sessionName'] = sha1(random_bytes(8));
+        $session_config['initiatedKey'] = sha1(random_bytes(8));
+        $session_config['userAgentKey'] = sha1(random_bytes(8));
+        $session_config['salt'] = sha1(random_bytes(8));
+        $session_config['userSessionsKey'] = sha1(random_bytes(8));
+        $session_config['userCookiesKey'] = sha1(random_bytes(8));
         $conf->write(json_encode($session_config));
     }, 'application.init');
 
-    Workbench::registerCommand('^init show$', function($app) {
-        $conf = $app->getFileHandler()->system("Config.Sessions.Sessions.json");
+    /**
+    * Shows the current application's session keys
+    */
+    Workbench::register('^init show$', function($argv) {
+        $conf = Core\App::config()->file('Sessions.Sessions.json');
         $session_config = json_decode($conf->read(), true);
         echo "\n"; foreach($session_config as $key => $value) {
             echo str_pad($key, 30).$value."\n";
         } echo "\n";
-    });
+    }, 'application.init.show');
 
-    Workbench::registerCommand('^routes', function($app) {
-        $routes = $app->getRouter()->getRoutes();
+    /**
+    * Shows the application routes
+    * (those not under restrict)
+    */
+    Workbench::register('^routes$', function($argv) {
+        $routes = Core\Router::all();
         foreach($routes as $route) {
-            echo "/".$route->getHandle()."\t".$route."\n";
+            echo "/".$route->handle()."\t".$route."\n";
         }
     }, 'application.routes');
 
-    Workbench::registerCommand('^new ([a-zA-Z0-9\.]+):(.+):(.+)', function($app, $argv) {
-        $args = explode(":", $argv[2]);
-        $argv[2]=$args[0];
-        $argv[]=$args[1];
-        $argv[]=$args[2];
-        if(is_dir($argv[2])||isset(Workbench::getConfiguration('applications')[$argv[2]])) {
+    /**
+    * Adds a new application under a certain namespace
+    */
+    Workbench::register('^new ([a-zA-Z0-9\.]+) (.+) (.+)$', function($argv) {
+        if($argv[3]=='any') { $argv[3]='*'; }
+        if($argv[4]=='any') { $argv[4]='*'; }
+        if(is_dir($argv[2])||isset(Workbench::get('applications')[$argv[2]])) {
             die("This application already exists\n");
         }
         //get the xTend master
         $latest = file_get_contents('https://xtend.liammartens.com/releases/latest.release');
         $zip=file_get_contents('https://xtend.liammartens.com/releases/'.$latest.'.zip');
-        file_put_contents("xtend.zip", $zip);
+        file_put_contents(__DIR__.'/xtend.zip', $zip);
         $zip=new \ZipArchive;
         $zip->open("xtend.zip");
         $zip->extractTo(__DIR__);
         //move the Application directory to the new application
-        if(is_dir("xTend")) {
-            rename("xTend/dist/Application", __DIR__."/".$argv[2]);
-        } else { rename("xTend-".$latest."/dist/Application", __DIR__."/".$argv[2]); }
+        if(is_dir('xTend')) {
+            rename('xTend/dist/Application', __DIR__.'/'.$argv[2]);
+        } else { rename('xTend-'.$latest.'/dist/Application', __DIR__.'/'.$argv[2]); }
         //remove zip
         unlink('xtend.zip');
         //remove xTend-master
-        $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend");
+        $directory=new Objects\DirectoryHandler\Directory(__DIR__.'/xTend');
         if($directory->exists()) {
             $directory->remove();
         } else {
-            $directory=new \xTend\Core\DirectoryHandler\Directory($app, __DIR__."/xTend-".$latest);
+            $directory=new Objects\DirectoryHandler\Directory(__DIR__.'/xTend-'.$latest);
             $directory->remove();
         }
         //add to configuration
-        Workbench::addApplication($argv[2], $argv[3], $argv[4]);
+        Workbench::add($argv[2], $argv[3], $argv[4]);
         //add to index.php
-        $file=$app->getFileHandler()->public(Workbench::getConfiguration('public').'.index.php');
-        $file->append('
+        file_put_contents(__DIR__.'/'.Workbench::get('public').'/index.php', '
     namespace '.str_replace('.', '\\', $argv[2]).' {
-        use \xTend\Workbench\Workbench as Workbench;
-        Workbench::setNamespace(__NAMESPACE__);
         global $matched_application;
         if(__NAMESPACE__==$matched_application) {
-            $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__);
-            $app->getFileHandler()->system("Config.App.App.php")->include();
-            $app->run();
+            Core\App::start(__DIR__);
+            Core\FileHandler::system(\'Config.App.App.php\')->include();
+            Core\App::configuration([]);
+            Core\App::run();
         }
     }
-        ');
+        ', FILE_APPEND);
         //replac all xTend\Application namespaces to the new application
         foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2])) as $file) {
             if(!is_file($file)) continue;
             $contents=file_get_contents($file);
-            $contents=preg_replace('/namespace Application;/',
+            $contents=preg_replace('/namespace Blog;/',
                                     'namespace '.str_replace('.', '\\', $argv[2]).';',
+                                    $contents);
+            $contents=preg_replace('/use Application\\((?:.+?\\)(?:.+?));/', 
+                                    'namespace '.str_replace('.', '\\', $argv[2]).'\\$1;',
                                     $contents);
             file_put_contents($file, $contents);
         }
     }, 'new.application');
 
-    Workbench::registerCommand('^remove ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!isset(Workbench::getConfiguration('applications')[$argv[2]])) { die("The application does not exist\n"); }
-        if($argv[2]==self::getConfiguration('application')) { die("You can't remove the current workbench application\n"); }
+    /**
+    * Removes an application
+    */
+    Workbench::register('^remove ([a-zA-Z0-9\.]+)$', function($argv) {
+        if(!is_dir($argv[2])||!isset(Workbench::get('applications')[$argv[2]])) { die("The application does not exist\n"); }
+        if($argv[2]==self::get('application')) { die("You can't remove the current workbench application\n"); }
         //remove app dir
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($argv[2], RecursiveDirectoryIterator::SKIP_DOTS),
                      RecursiveIteratorIterator::CHILD_FIRST);
@@ -102,179 +117,213 @@
         }
         rmdir($argv[2]);
         //remove from configuration
-        Workbench::removeApplication($argv[2]);
+        Workbench::remove($argv[2]);
         //remove from index.php
-        $contents=file_get_contents(Workbench::getConfiguration('public').'/index.php');
+        $contents=file_get_contents(Workbench::get('public').'/index.php');
         $contents=preg_replace('/namespace '.str_replace('.', '\\\\', $argv[2]).' \{.+?\}.+?\}/s',
                                 '', $contents);
-        file_put_contents(Workbench::getConfiguration('public').'/index.php', $contents);
+        file_put_contents(Workbench::get('public').'/index.php', $contents);
     }, 'remove.application');
 
-    //setters
-    Workbench::registerCommand('^set:application ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        if(!is_dir($argv[2])||!isset(Workbench::getConfiguration('applications')[$argv[2]])) { die("The application does not exist\n"); }
-        Workbench::setApplication($argv[2]);
-        $contents=file_get_contents("workbench");
-        $contents=preg_replace('/namespace [a-zA-Z0-9\\\\]+;/',
-                                'namespace '.str_replace('.', '\\', $argv[2]).';',
-                                $contents);
-        file_put_contents("workbench", $contents);
+    /**
+    * Sets the workbench application
+    */
+    Workbench::register('^set:application ([a-zA-Z0-9\.]+)', function($argv) {
+        if(!is_dir($argv[2])||!isset(Workbench::get('applications')[$argv[2]])) { die("The application does not exist\n"); }
+        Workbench::application($argv[2]);
     }, 'set.application');
 
-    Workbench::registerCommand('^set:public ([a-zA-Z0-9\.]+)', function($app, $argv) {
-        rename(Workbench::getConfiguration('public'), $argv[2]);
-        Workbench::setPublic($argv[2]);
+    /**
+    * Sets the public directory
+    */
+    Workbench::register('^set:public ([a-zA-Z0-9\.]+)$', function($argv) {
+        Workbench::public($argv[2]);
     });
 
-    Workbench::registerCommand('^new:controller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Creates a new controller which extends the Controller blueprint
+    */
+    Workbench::register('^new:controller ([a-zA-Z0-9\_\.]+)$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Controllers.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::controllers()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
             $class_name=substr($argv[2], $dot_pos+1);
         }
-        $controller = $app->getFileHandler()->system('Controllers.'.$argv[2].'.php');
+        $controller = Core\App::controllers()->file($argv[2].'.php');
         $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseDataController {
-        //you can retrieve the current application with \$this->_app
-        //you don't have to extend the BaseDataController
-        //the current \$app will always be passed as first argument in the contructor
-        //the data extension allows for extra data to be passed
-        //look for the BaseDataExtension in Blueprints to find out more about this
-    }
-        ");
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' extends Blueprints\\Controller {
+
+    }'
+        );
     });
 
-    Workbench::registerCommand('^new:respondcontroller ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Creates a empty controller which doesn't inherit the controller class
+    */
+    Workbench::register('^new:controller ([a-zA-Z0-9\_\.]+) empty$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Controllers.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::controllers()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
             $class_name=substr($argv[2], $dot_pos+1);
         }
-        $controller = $app->getFileHandler()->system('Controllers.'.$argv[2].'.php');
+        $controller = Core\App::controllers()->file($argv[2].'.php');
         $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseRespondController {
-        //The BaseRespondController adds a protected method called respond
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' {
+
+    }'
+        );
+    });
+
+    /**
+    * Creates a new controller which inherits the RespondController
+    */
+    Workbench::register('^new:respondcontroller ([a-zA-Z0-9\_\.]+)$', function($argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = Core\App::controllers()->directory(substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = Core\App::controllers()->file($argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' extends Blueprints\\RespondController {
+        //The RespondController adds a protected method called respond
         //which you can use to return JSON data with a success parameter (boolean)
         //a status parameter with a code, hex code, status name and status message
         //and a data parameter which you can use to pass extra data
-        //all info about the BaseRespondController can be found in the documentation
-    }
-        ");
+        //all info about the RespondController can be found in the documentation
+    }'
+        );
     });
 
-    Workbench::registerCommand('^new:model ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Creates a new controller which inherits the StaticRespondController
+    */
+    Workbench::register('^new:respondcontroller ([a-zA-Z0-9\_\.]+) static$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::controllers()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
             $class_name=substr($argv[2], $dot_pos+1);
         }
-        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
+        $controller = Core\App::controllers()->file($argv[2].'.php');
         $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseModel {
-        //you can retrieve the current application with \$this->_app
-        //you don't have to extend the BaseModel
-        //the current \$app will always be passed as first argument in the
-    }"
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' extends Blueprints\\StaticRespondController {
+        //The StaticRespondController adds a protected static method called respond
+        //which you can use to return JSON data with a success parameter (boolean)
+        //a status parameter with a code, hex code, status name and status message
+        //and a data parameter which you can use to pass extra data
+        //all info about the RespondController can be found in the documentation
+    }'
         );
     });
 
-    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
-      $args = explode(':', $argv[2]);
-      $dot_pos = strrpos($args[0], '.');
-      $ns_suffix='';
-      $class_name=$args[0];
-      if($dot_pos!==false) {
-          $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
-          if(!$dir->exists()) {
-              $dir->create();
-          }
-          $class_name=substr($args[0], $dot_pos+1);
-      }
-      $controller = $app->getFileHandler()->system('Models.'.$args[0].'.php');
-      $controller->write('<?php
-  namespace '.Workbench::getConfiguration('application').";
-  class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
-      //The BaseDataModel blueprint allows for
-      //database interaction using the ORM
-      protected \$_table = '{$args[1]}';
-      protected \$_id_column = '{$args[2]}';
-  }"
-      );
-    });
-
-    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+):([a-zA-Z_][a-zA-Z0-9_]*)', function($app, $argv) {
-        $args = explode(':', $argv[2]);
-        $dot_pos = strrpos($args[0], '.');
-        $ns_suffix='';
-        $class_name=$args[0];
-        if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
-            if(!$dir->exists()) {
-                $dir->create();
-            }
-            $class_name=substr($args[0], $dot_pos+1);
-        }
-        $controller = $app->getFileHandler()->system('Models.'.$args[0].'.php');
-        $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
-        //The BaseDataModel blueprint allows for
-        //database interaction using the ORM
-        protected \$_table = '{$args[1]}';
-    }"
-        );
-    });
-
-    Workbench::registerCommand('^new:dbmodel ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Creates a new model which inherits the initiated blueprint Model
+    */
+    Workbench::register('^new:model ([a-zA-Z0-9\_\.]+)$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         $ns_suffix='';
         $class_name=$argv[2];
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Models.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::models()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
             $class_name=substr($argv[2], $dot_pos+1);
         }
-        $controller = $app->getFileHandler()->system('Models.'.$argv[2].'.php');
+        $controller = Core\App::models()->file($argv[2].'.php');
         $controller->write('<?php
-    namespace '.Workbench::getConfiguration('application').";
-    class $class_name extends \\xTend\\Blueprints\\BaseDataModel {
-        //The BaseDataModel blueprint allows for
-        //database interaction using the ORM
-    }"
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' extends Blueprints\\Model {
+        protected $_table = \''.str_replace('.', '_', $argv[2]).'\';
+        protected $_id_column = \'id\';
+    }'
         );
     });
 
-    Workbench::registerCommand('^new:layout ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Creates a new model which doesn't inherit the blueprint
+    */
+    Workbench::register('^new:model ([a-zA-Z0-9\_\.]+) empty$', function($argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = Core\App::models()->directory(substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = Core\App::models()->file($argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' {
+
+    }'
+        );
+    });
+
+    /**
+    * Creates a new model which doesn't inherit the blueprint
+    */
+    Workbench::register('^new:model ([a-zA-Z0-9\_\.]+) static$', function($argv) {
+        $dot_pos = strrpos($argv[2], '.');
+        $ns_suffix='';
+        $class_name=$argv[2];
+        if($dot_pos!==false) {
+            $dir = Core\App::models()->directory(substr($argv[2], 0, $dot_pos));
+            if(!$dir->exists()) {
+                $dir->create();
+            }
+            $class_name=substr($argv[2], $dot_pos+1);
+        }
+        $controller = Core\App::models()->file($argv[2].'.php');
+        $controller->write('<?php
+    namespace '.Workbench::get('application').';
+    class '.$class_name.' extends Blueprints\\StaticModel {
+        protected static $_table = \''.str_replace('.', '_', $argv[2]).'\';
+        protected static $_id_column = \'id\';
+    }');
+    });
+
+    /**
+    * Creates a new basic layout
+    */
+    Workbench::register('^new:layout ([a-zA-Z0-9\_\.]+)$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Layouts.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::layouts()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
         }
-        $layout = $app->getFileHandler()->system('Layouts.'.$argv[2].'.wow.php', 2);
-        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
-            $layout->write("<!DOCTYPE html>
+        $layout = Core\App::layouts()->file($argv[2].'.wow.php', 2);
+        if(Core\Wow::flavor()==Core\Wow::AT_SIGN) {
+            $layout->write('<!DOCTYPE html>
 <html>
     <head>
         @section:head
@@ -282,155 +331,214 @@
     <body>
         @section:body
     </body>
-</html>"
+</html>'
             );
         } else {
-            $layout->write("<!DOCTYPE html>
+            $layout->write('<!DOCTYPE html>
 <html>
     <head>
-        <section name=\"head\" />
+        <section name="head" />
     </head>
     <body>
-        <section name=\"body\" />
+        <section name="body" />
     </body>
-</html>"
+</html>'
             );
         }
     });
 
-    Workbench::registerCommand('^new:view ([a-zA-Z0-9\_\.]+)', function($app, $argv) {
+    /**
+    * Create a new empty view
+    */
+    Workbench::register('^new:view ([a-zA-Z0-9\_\.]+)$', function($argv) {
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::views()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
         }
-        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.wow.php', 2);
-        if($app->getWowCompiler()->getFlavor()==\xTend\Core\Wow::AT_SIGN) {
-            $controller->write("@version:1
-@compile:change+version"
+        $view = Core\App::views()->file($argv[2].'.wow.php', 2);
+        if(Core\Wow::flavor()==Core\Wow::AT_SIGN) {
+            $view->write('@version:1
+@compile:change+version'
             );
         } else {
-            $controller->write("<version value=\"1\" />
-<compile value=\"change+version\" />"
+            $view->write('<version value="1" />
+<compile value="change+version" />'
             );
         }
     });
 
-    Workbench::registerCommand('^new:view ([a-zA-Z0-9\_\.]+):([a-zA-Z0-9\_\.]+)', function($app, $argv) {
-        if(!$app->getFileHandler()->system('Views'.$argv[3].'.wow.php', 2)->exists()) { die("Layout does not exist"); }
+    /**
+    * Creates a new view which extends a layout
+    */
+    Workbench::register('^new:view ([a-zA-Z0-9\_\.]+) ([a-zA-Z0-9\_\.]+)$', function($argv) {
+        if(!Core\App::layouts()->file($argv[3].'.wow.php', 2)->exists()) { die('Layout does not exist'); }
         $dot_pos = strrpos($argv[2], '.');
         if($dot_pos!==false) {
-            $dir = $app->getDirectoryHandler()->system('Views.'.substr($argv[2], 0, $dot_pos));
+            $dir = Core\App::views()->directory(substr($argv[2], 0, $dot_pos));
             if(!$dir->exists()) {
                 $dir->create();
             }
         }
-        $controller = $app->getFileHandler()->system('Views.'.$argv[2].'.php');
-        $controller->write("@version:1
-@layout:".$argv[3]."
-@compile:change+version"
-        );
+        $view = Core\App::views()->file($argv[2].'.wow.php', 2);
+        if(Core\Wow::flavor()==Core\Wow::AT_SIGN) {
+            $view->write('@version:1
+    @layout:'.$argv[3].'
+    @compile:change+version'
+            );
+        } else {
+            $view->write('<version ="1" />
+<compile value="change+version" />
+<layout value="'.$argv[3].'" />');
+        }
     });
 
-    Workbench::registerCommand('^config$', function($app, $argv) {
-        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+    /**
+    * Lists the application configuration
+    */
+    Workbench::register('^config$', function($argv) {
+        $conf = Core\App::config()->file('App.Configuration.json');
         $configuration = json_decode($conf->read(), true);
         echo "\n"; foreach($configuration as $key => $value) {
             echo str_pad($key, 30).(is_bool($value) ? ($value ? 'true' : 'false') : $value)."\n";
         } echo "\n";
     });
 
-    Workbench::registerCommand('^config:([a-zA-Z]+) (.*)', function($app, $argv) {
-        $key = explode(":", $argv[1])[1];
-        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+    /**
+    * Sets a configuration value
+    */
+    Workbench::register('^config ([a-zA-Z]+) (.*)$', function($argv) {
+        $conf = Core\App::config()->file('App.Configuration.json');
         $configuration = json_decode($conf->read(), true);
-        if(isset($configuration[$key])) {
-            if(($argv[2]==="true")||($argv[2]==="false")) { $argv[2]=boolval($argv[2]); }
-            elseif(is_numeric($argv[2])) { $argv[2]=intval($argv[2]); }
-            $configuration[$key] = $argv[2];
+        if(isset($configuration[$argv[2]])) {
+            if(($argv[3]==='true')||($argv[3]==='false')) { $argv[2]=boolval($argv[3]); }
+            elseif(is_numeric($argv[3])) { $argv[2]=intval($argv[3]); }
+            $configuration[$argv[2]] = $argv[3];
             $conf->write(json_encode($configuration));
-        } else { die("Configuration key not found"); }
+        } else { die("Configuration key not found\n"); }
     });
 
-    Workbench::registerCommand('config:([a-zA-Z]+)', function($app, $argv) {
-        $key = explode(":", $argv[1])[1];
-        $conf = $app->getFileHandler()->system("Config.App.Configuration.json");
+    /**
+    * Shows the value of a config variable
+    */
+    Workbench::register('config ([a-zA-Z]+)$', function($argv) {
+        $conf = Core\App::config()->file('App.Configuration.json');
         $configuration = json_decode($conf->read(), true);
-        if(isset($configuration[$key])) {
-            echo $configuration[$key]."\n";
-        } else { die("Configuration key not found"); }
+        if(isset($configuration[$argv[2]])) {
+            echo $configuration[$argv[2]]."\n";
+        } else { die("Configuration key not found\n"); }
     });
 
-    Workbench::registerCommand('wow:flavor (HTML|AT_SIGN|COMBINED)', function($app, $argv) {
-        $file = $app->getFileHandler()->system("Config.Wow.Flavor.php");
+    /**
+    * Sets the wow flavor
+    */
+    Workbench::register('wow:flavor (HTML|AT_SIGN|COMBINED)', function($argv) {
+        $file = Core\App::config()->file('Wow.Flavor.php');
         $file->write('<?php
-    namespace '.Workbench::getConfiguration('application').';
-    use \xTend\Core\Wow as Wow;
-    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
-    $wow = $app->getWowCompiler();
-    $wow->setFlavor(Wow::'.$argv[2].');
-    $wow->setInternalExpressions();');
+    /**
+    * Sets the current Wow flavor
+    * and initializes the Wow engine
+    */
+    namespace '.Workbench::get('application').';
+    use '.Workbench::get('application').'\Core\Wow;
+    Wow::flavor(Wow::'.$argv[2].');
+    Wow::start();'
+        );
     });
 
-    Workbench::registerCommand('packagist:(install|update) ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)$', function($app, $argv) {
+    /**
+    * Installs or updates a package
+    */
+    Workbench::register('packagist:(install|update) ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)$', function($argv) {
         $package_name = $argv[2];
-        if($app->getPackagistHandler()->install($package_name)) {
+        if(Core\PackagistHandler::install($package_name)) {
             die("Installed $package_name\n");
         }
         die("No suitable version was found for $package_name\n");
     });
 
-    Workbench::registerCommand('packagist:install ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+) (.+)', function($app, $argv) {
+    /**
+    * Installs a new package of a specific version
+    */
+    Workbench::register('packagist:install ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+) (.+)$', function($argv) {
         $package_name = $argv[2];
         $package_version = $argv[3];
-        if($app->getPackagistHandler()->install($package_name, $package_version)) {
+        if(Core\PackagistHandler::install($package_name, $package_version)) {
             die("Installed $package_name\n");
         }
         die("No suitable version was found for $package_name\n");
     });
 
-    Workbench::registerCommand('^packagist:install', function($app, $argv) {
+    /**
+    * Installs all packages in package.json
+    */
+    Workbench::register('^packagist:install', function($argv) {
         //to install or update all packages
-        $package_handler = $app->getPackagistHandler();
-        $packages = $app->getPackagistHandler()->getPackages();
+        $packages = Core\PackagistHandler::packages();
         foreach($packages as $package => $version) {
-            $package_handler->install($package, $version, false);
+            Core\PackagistHanlder::install($package, $version, false);
         }
     });
 
-    Workbench::registerCommand('^packagist:remove ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)', function($app, $argv) {
+    /**
+    * Removes a certain package
+    */
+    Workbench::register('^packagist:remove ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)$', function($argv) {
         $package_name = $argv[2];
-        if($app->getPackagistHandler()->remove($package_name)) {
+        if(Core\PackagistHandler::remove($package_name)) {
             die("Removed $package_name\n");
         }
         die("Couldn't remove $package_name, maybe it wasn't installed?\n");
     });
 
+    /**
+    * Autoremoves a certain package
+    */
+    Workbench::register('^packagist:autoremove ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+)$', function($argv) {
+        $package_name = $argv[2];
+        if(Core\PackagistHandler::autoremove($package_name)) {
+            die("Autoremoved $package_name\n");
+        }
+        die("Couldn't autoremove $package_name\n");
+    });
+
+    /**
+    * Autoremoves a certain package of a certain version
+    */
+    Workbench::register('^packagist:autoremove ([a-zA-Z0-9\-\_]+)\/([a-zA-Z0-9\-\_]+) (.+)$', function($argv) {
+        $package_name = $argv[2];
+        if(Core\PackagistHandler::autoremove($package_name, $argv[3])) {
+            die("Autoremoved $package_name\n");
+        }
+        die("Couldn't autoremove $package_name\n");
+    });
+
     //===========================================//
-    Workbench::registerCommand('^help', function($app, $argv) {
+    Workbench::register('^help', function($argv) {
         $help = [
             "init" => "Initializes xTend with secure keys",
             "init show" => "Shows the application's keys",
             "config" => "Prints out the configuration values",
-            "config:[Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit, LogLimit and Environment",
-            "config:[Key]" => "Gets an application configuration variable",
+            "config [Key] [Value]" => "Sets an application configuration variable, such as\n\tUrl, DevelopmentStatus, BackupInterval, BackupLimit, LogLimit and Environment",
+            "config [Key]" => "Gets an application configuration variable",
             "wow:flavor [HTML, AT_SIGN or COMBINED flavor]" => "Sets the flavor of the Wow templating engine (COMBINED by default)",
             "routes" => "Displays the routes of the currently selected application (only those NOT under a restrict)",
-            "new [AppName]:[Host or *]:[PathRegex]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
+            "new [AppName] [Host or any] [Path or any]" => "Creates a new empty application starting from the current public directory. Can be useful when you have multiple sites in 1 project.",
             "remove [AppName]" => "Removes an application. Make sure you don't try to remove the currently selected application",
             "set:application [AppName]" => "Selects an application",
             "set:public [PublicDirectory]" => "Sets the public directory",
             "new:controller [ControllerName]" => "Creates a new controller. Example:\n\tnew:controller Main.HomeController - will create a controller in Controllers/Main called HomeController.php",
+            "new:controller [ControllerName] empty" => "Creates a new controller which  does not inherit the Controller blueprint",
             "new:respondcontroller [ControllerName]" => "Creates a new controller which extends the BaseRespondController. Can be useful for creating an API controller",
+            "new:respondcontroller [ControllerName] static" => "Creates a new respond controller for static use instead of initiated use",
             "new:model [ModelName]" => "Creates a new model. Example:\n\tnew:model Api.User - will create a model in Models/Api called User.php",
-            "new:dbmodel [ModelName]" => "Creates a new database model. Example:\n\tnew:dbmodel Api.User - will create a model in Models/Api called User.php",
-            "new:dbmodel [ModelName]:[TableName]" => "Creates a new database model with the set table name. Example:\n\tnew:dbmodel Api.User:users",
-            "new:dbmodel [ModelName]:[TableName]:[IdColumn]" => "Creates a new database model with the set table name and id column. Example:\n\tnew:dbmodel Api.User:users:user_id",
+            "new:model [ModelName] empty" => "Creates a new model which doesn't extend the Model blueprint",
+            "new:model [ModelName] static" => "Creates a new model for static use instead of initiated use",
             "new:layout [LayoutName]" => "Creates a new basic layout",
             "new:view [ViewName]" => "Creates a new basic view",
-            "new:view [ViewName]:[LayoutName]" => "Creates a new basic view which extends a layout",
+            "new:view [ViewName] [LayoutName]" => "Creates a new basic view which extends a layout",
             "packagist:install [Vendor/Package]" => "Installs a packagist package",
             "packagist:install [Vendor/Package] [Version]" => "Installs a packagist package of a certain version. (Supports packagist's version conditions such as ^ and ~)",
             "packagist:remove [Vendor/Package]" => "Removes a package from your application",

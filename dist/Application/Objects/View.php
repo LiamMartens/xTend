@@ -1,12 +1,12 @@
 <?php
-    namespace xTend\Objects;
-    use \xTend\Blueprints\BaseDataView;
+    namespace Application\Objects\ViewHandler;
+    use Application\Core\App;
+    use Application\Blueprints\DataExtension;
     /**
     * The View object contains the
     * current View
     */
-    class View extends BaseDataView
-    {
+    class View extends DataExtension {
         /** @var string Contains the name of the view */
         private $_name;
         /** @var strig Contains the file path to the view */
@@ -21,37 +21,36 @@
         /**
         * @return string
         */
-        public function getName() { return $this->_name; }
+        public function name() { return $this->_name; }
 
         /**
         * @return string
         */
-        public function getFilePath() { return $this->_filePath; }
+        public function file() { return $this->_filePath; }
 
         /**
         * @return boolean
         */
-        public function getExists() { return $this->_exists; }
+        public function exists() { return $this->_exists; }
 
         /**
         * @return boolean
         */
-        public function getIsWow() { return $this->_isWow; }
+        public function wow() { return $this->_isWow; }
 
         /**
         * @param xTend\Core\App $app
         * @param string $view
         * @param string|boolean $version
         */
-        public function __construct($app, $view, $version = false) {
-            parent::__construct($app);
+        public function __construct($view, $version = false) {
             //view construct
             $this->_name = $view;
             //version
             $this->_version = $version;
             //get wow and php paths
-            $wowPath = $this->_app->getViewsDirectory()->file("$view.wow.php", 2);
-            $phpPath = $this->_app->getViewsDirectory()->file("$view.php");
+            $wowPath = App::views()->file($view.'.wow.php', 2);
+            $phpPath = App::views()->file($view.'.php');
             //check files
             if($wowPath->exists()) {
                 $this->_filePath = $wowPath;
@@ -68,12 +67,12 @@
             //this is what happens when a view is executed
             $path=$this->_filePath;
             if($this->_isWow) {
-                $path=$this->_app->getWowCompiler()->compileView($this->_filePath, $this->_app->getLayoutsDirectory(), $this->_app->getModulesDirectory());
+                $path=Wow::view($this->_filePath, App::layouts(), App::modules());
                 if($this->_version!==false) {
                     $dot_pos = strrpos($path, '.', -5);
                     $path = substr($path, 0, $dot_pos).'.v'.$this->_version.'.php';
                 }
             }
-            $this->_app->getFileManager()->includeFile($path);
+            FileManager::include($path);
         }
     }

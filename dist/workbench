@@ -5,8 +5,9 @@
     * entry point
     */
     namespace Application;
-    use \xTend\Workbench\Workbench as Workbench;
-    require_once("CLI/Workbench.php");
+    use xTend\Workbench;
+    require(__DIR__.'/CLI/Workbench.php');
+
     //set http default ignore errors
     stream_context_set_default([
         'http' => [
@@ -14,18 +15,15 @@
         ]
     ]);
     //load configuration
-    Workbench::loadConfiguration();
-    Workbench::setNamespace(__NAMESPACE__);
-    //include current
-    if(!Workbench::namespaceApplicationMatch()) { die("Current application doesn't match the workbench namespace\n"); }
-    if(!Workbench::currentApplicationExists()) { die("Application '".Workbench::getConfiguration('application')."' not found\n"); }
-    if(!Workbench::currentPublicExists()) { die("index.php not found in public directory '".Workbench::getConfiguration('public')."'\n"); }
-    //setup workbench further
-    Workbench::includeApplication();
-    $app=\xTend\Core\createNewApp(__NAMESPACE__, __DIR__, true);
-    $app->getFileHandler()->system("Config.App.App.php")->include();
-    Workbench::setApp($app);
-    Workbench::setArgv($argv);
-    Workbench::loadCommands();
-    $app->run();
+    Workbench::configuration();
+    Workbench::namespace(__NAMESPACE__);
+    //Do checks + include App core file
+    Workbench::start();
+    // Start app and workbench
+    Core\App::start(__DIR__, true);
+    Core\FileHandler::system('Config.App.App.php')->include();
+    Core\App::configuration([]);
+    Workbench::argv($argv);
+    Workbench::commands();
+    Core\App::run();
     Workbench::run();

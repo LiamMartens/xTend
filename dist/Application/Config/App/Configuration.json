@@ -1,8 +1,1 @@
-{
-    "Url": "http://localhost",
-    "DevelopmentStatus": false,
-    "BackupInterval": "1 week",
-    "BackupLimit": 10,
-    "LogLimit": 30,
-    "Environment": "production"
-}
+{"location":"\/","timezone":"UTC","environment":"production","backupInterval":"1 week","backupLimit":10,"logLimit":30}

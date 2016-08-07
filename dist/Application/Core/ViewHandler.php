@@ -1,23 +1,13 @@
 <?php
-    namespace xTend\Core;
-    use \xTend\Objects\View as View;
+    namespace Application\Core;
+    use Application\Objects\ViewHandler\View;
+
     /**
     * The ViewHandler handles loading views
     */
-    class ViewHandler
-    {
-        /** @var xTend\Core\App Current application */
-        private $_app;
+    class ViewHandler {
         /** @var array Contains all loaded views */
-        private $_views;
-
-        /**
-        * @param xTend\Core\App
-        */
-        public function __construct($app) {
-            $this->_app = $app;
-            $this->_views = [];
-        }
+        private static $_views=[];
 
         /**
         * Checks whether the view exists
@@ -26,11 +16,10 @@
         *
         * @return boolean
         */
-        public function exists($view) {
-            $fh = $this->_app->getFileHandler();
-            if($this->_app->getViewsDirectory()->file("$view.php")->exists()||$this->_app->getViewsDirectory()->file("$view.wow.php", 2)->exists())
+        public static function exists($view) {
+            if(App::views()->file($view.'.php')->exists()||App::views()->file($view.'.wow.php', 2)->exists()) {
                 return true;
-            return false;
+            } return false;
         }
 
         /**
@@ -43,24 +32,24 @@
         *
         * @return boolean
         */
-        public function loadView($view, $data = [], $version = false, $viewClass = false) {
-            if($this->exists($view)) {
+        public static function load($view, $data = [], $version = false, $viewClass = false) {
+            if(self::exists($view)) {
                 //by default the view object extends BaseDataView,
                 //you can define to use your own viewclass by setting the parameter
                 //this will be a name and namespace of a class to use custom view classes
                 //ex. xTend\FooBar
-                $this->_views[$view] = ($viewClass==false) ? (new View($this->_app, $view, $version)) : (new $viewClass($this->_app, $view, $version));
+                self::$_views[$view] = ($viewClass==false) ? (new View($view, $version)) : (new $viewClass($view, $version));
                 if(($data!=null)&&(count($data)>0)) {
-                    if(method_exists($this->_views[$view], "setData")) {
+                    if(method_exists(self::$_views[$view], 'set')) {
                         foreach ($data as $key => $value) {
-                            $this->_views[$view]->setData($key, $value);
+                            self::$_views[$view]->set($key, $value);
                         }
-                    } else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0003)->getException(); }
+                    }
                 }
                 //call view execute method
-                if(method_exists($this->_views[$view], "execute")) {
-                    $this->_views[$view]->execute();
-                } else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0004)->getException(); }
+                if(method_exists(self::$_views[$view], 'execute')) {
+                    self::$_views[$view]->execute();
+                }
             }
             return false;
         }
@@ -72,13 +61,13 @@
         *
         * @return view|boolean
         */
-        public function getView($viewName = false) {
+        public static function get($viewName = false) {
             //the controller name here also does not include any @ functions
-            if(($viewName==false)&&(count($this->_views)==1))
-                return $this->_views[array_keys($this->_views)[0]];
+            if(($viewName==false)&&(count(self::$_views)==1))
+                return self::$_views[array_keys(self::$_views)[0]];
             elseif($viewName==false) return false;
-            if(isset($this->_views[$viewName]))
-                return $this->_views[$viewName];
+            if(isset(self::$_views[$viewName]))
+                return self::$_views[$viewName];
             return false;
         }
     }

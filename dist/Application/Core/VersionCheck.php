@@ -1,5 +1,6 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
+
     /**
     * VersionCheck handles checking
     * packagist versions
@@ -33,7 +34,7 @@
         *
         * @return boolean
         */
-        private function isExact() {
+        private function exact() {
             return ($this->_expression==$this->_exact);
         }
 
@@ -42,7 +43,7 @@
         *
         * @return boolean
         */
-        private function isRange() {
+        private function range() {
             $or_expressions = explode('||', $this->_expression);
             foreach($or_expressions as $or_exp) {
                 $and_expressions = preg_split('/( |,)/', trim($or_exp));
@@ -67,7 +68,7 @@
         *
         * @return boolean
         */
-        private function isHyphenRange() {
+        private function hyphen() {
             $parts = explode('-', $this->_expression);
             if(!isset($parts[1])) { return false; }
             $rx_matches=[]; preg_match('/\.([0-9]+)/', $parts[1], $rx_matches);
@@ -83,7 +84,7 @@
         *
         * @return boolean
         */
-        private function isWildcard() {
+        private function wildcard() {
             $version_start = trim($this->_expression, '.*');
             $rx_matches=[]; preg_match('/([0-9]+)\.\*/', $this->_expression, $rx_matches);
             if(!isset($rx_matches[1])) { return false; }
@@ -97,7 +98,7 @@
         *
         * @return boolean
         */
-        private function isTilde() {
+        private function tilde() {
             if(substr($this->_expression, 0, 1)!=='~') { return false; }
             $version_start = substr($this->_expression, 1);
             $rx_matches=[]; preg_match('/([0-9]+)\.([0-9])+$/', $version_start, $rx_matches);
@@ -112,7 +113,7 @@
         *
         * @return boolean
         */
-        private function isCaret() {
+        private function caret() {
             if(substr($this->_expression, 0, 1)!=='^') { return false; }
             $version_start = substr($this->_expression, 1);
             $rx_matches=[]; preg_match('/([1-9][0-9]+|[1-9])/', $version_start, $rx_matches);
@@ -125,12 +126,12 @@
         /**
         * @return boolean
         */
-        public function isMatch() {
-            return ($this->isExact()||
-                    $this->isRange()||
-                    $this->isHyphenRange()||
-                    $this->isWildcard()||
-                    $this->isTilde()||
-                    $this->isCaret());
+        public function match() {
+            return ($this->exact()||
+                    $this->range()||
+                    $this->hyphen()||
+                    $this->wildcard()||
+                    $this->tilde()||
+                    $this->caret());
         }
     }

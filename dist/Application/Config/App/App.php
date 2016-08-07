@@ -1,10 +1,6 @@
 <?php
-    /**
-    * Configuration file of the current application
-    */
     namespace Application;
-    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
-    //application configuration
-    $app->configuration(json_decode($app->getFileHandler()->system("Config.App.Configuration.json")->read(), true));
-    //application directory setup
-    $app->directories(json_decode($app->getFileHandler()->system("Config.App.Directories.json")->read(), true));
+    use Application\Core\App;
+    use Application\Core\FileHandler;
+    App::configuration(json_decode(FileHandler::system('Config.App.configuration.json')->read(), true));
+    App::configuration(json_decode(FileHandler::system('Config.App.directories.json')->read(), true));

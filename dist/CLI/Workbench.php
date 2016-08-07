@@ -1,51 +1,7 @@
 <?php
-    namespace xTend\Workbench;
-    /**
-    * The Command class handles executing and
-    * matching a command
-    */
-    class Command {
-        /** @var xTend\Core\App Current application */
-        private $_app;
-        /** @var string Contains the regex for the command */
-        private $_rx;
-        /** @var callable Contains the command function */
-        private $_call;
+    namespace xTend;
+    use xTend\Workbench\Command;
 
-        /**
-        * @param xTend\Core\App $app
-        * @param string $rx
-        * @param function $call
-        */
-        public function __construct($app, $rx, $call) {
-            $this->_app = $app;
-            $this->_rx = "/$rx/";
-            $this->_call = $call;
-        }
-
-        /**
-        * Checks whether the command is a match
-        *
-        * @param string reference $command
-        *
-        * @return boolean
-        */
-        public function isMatch(&$command) {
-            return preg_match($this->_rx, $command);
-        }
-
-        /**
-        * Executes a command
-        *
-        * @param array reference $arguments
-        *
-        * @return mixed
-        */
-        public function execute(&$arguments) {
-            return call_user_func($this->_call, $this->_app, $arguments);
-        }
-    }
-    
     /**
     * The Workbench handles registering
     * and executing commands
@@ -53,8 +9,6 @@
     class Workbench {
         /** @var string Contains the application namespace */
         private static $_ns;
-        /** @var xTend\Core\App Current application */
-        private static $_app;
         /** @var array Contains the command line arguments */
         private static $_argv;
         /** @var xTend\Workbench\Command Contains the current executed command */
@@ -65,30 +19,12 @@
         private static $_configuration;
 
         /**
-        * Generates a key
-        *
-        * @return string
-        */
-        public static function generate() {
-            return sha1(random_bytes(8));
-        }
-
-        /**
         * Sets the workbench namespace
         *
         * @param string $ns
         */
-        public static function setNamespace($ns) {
+        public static function namespace($ns) {
             self::$_ns = $ns;
-        }
-
-        /**
-        * Sets the workbench application
-        *
-        * @param xTend\Core\App $app
-        */
-        public static function setApp($app) {
-            self::$_app=$app;
         }
 
         /**
@@ -96,7 +32,7 @@
         *
         * @param array $argv
         */
-        public static function setArgv($argv) {
+        public static function argv($argv) {
             self::$_argv = $argv;
             //set command
             self::$_command='';
@@ -107,15 +43,15 @@
             }
         }
 
-        public static function loadConfiguration() {
+        public static function configuration() {
             self::$_configuration = json_decode(file_get_contents(__DIR__.'/../.workbench'), true);
         }
 
-        public static function saveConfiguration() {
+        public static function save() {
             file_put_contents(__DIR__.'/../.workbench', json_encode(self::$_configuration));
         }
 
-        public static function loadCommands() {
+        public static function commands() {
             require_once(__DIR__."/../.commands");
         }
 
@@ -126,10 +62,10 @@
         * @param callable $call
         * @param string $name
         */
-        public static function registerCommand($rx, $call, $name = false) {
+        public static function register($rx, $call, $name = false) {
             if($name===false) {
-                self::$_commands[] = new Command(self::$_app, $rx, $call);
-            } else { self::$_commands[$name] = new Command(self::$_app, $rx, $call); }
+                self::$_commands[] = new Command($rx, $call);
+            } else { self::$_commands[$name] = new Command($rx, $call); }
         }
 
         /**
@@ -137,7 +73,7 @@
         *
         * @return mixed
         */
-        public static function getConfiguration($key) {
+        public static function get($key) {
             if(isset(self::$_configuration[$key])) {
                 return self::$_configuration[$key];
             }
@@ -145,51 +81,13 @@
         }
 
         /**
-        * @return string
-        */
-        public static function namespaceApplication() {
-            return str_replace('\\', '.', self::$_ns);
-        }
-
-        /**
-        * Checks whether the namespac is a match
-        *
-        * @return boolean
-        */
-        public static function namespaceApplicationMatch() {
-            return (self::$_configuration["application"]==self::namespaceApplication());
-        }
-
-        /**
-        * Checks whether the application exists
-        *
-        * @return boolean
-        */
-        public static function currentApplicationExists() {
-            return is_file(__DIR__.'/../'.self::getConfiguration('application').'/Core/App.php');
-        }
-
-        /**
-        * Checks whether the public directory exists
-        *
-        * @return boolean
-        */
-        public static function currentPublicExists() {
-            return is_file(__DIR__.'/../'.self::getConfiguration('public').'/index.php');
-        }
-
-        public static function includeApplication() {
-            require_once(__DIR__.'/../'.self::getConfiguration('application').'/Core/App.php');
-        }
-
-        /**
         * Checks whether an app match
         *
         * @return boolean
         */
-        public static function isAppMatch() {
-            if(isset(self::getConfiguration('applications')[self::namespaceApplication()])) {
-                $rsts = self::getConfiguration('applications')[self::namespaceApplication()];
+        public static function match() {
+            if(isset(self::$_configuration['applications'][self::$_ns])) {
+                $rsts = self::$_configuration['applications'][self::$_ns];
                 $domain_match = (($_SERVER['HTTP_HOST']|$_SERVER['SERVER_NAME']==trim($rsts["url"]))||($rsts["url"]=="*"));
                 $request = trim($_SERVER['REQUEST_URI'], '/');
                 $path = trim($rsts["path"], '/');
@@ -201,6 +99,23 @@
             return false;
         }
 
+        public static function start() {
+            // Include command class
+            require(__DIR__.'/Command.php');
+            // Check for Workbench integrity
+            if(self::$_configuration["application"]!=self::$_ns) {
+                die("Current application doesn't match the workbench namespace\n");
+            }
+            if(!is_file(__DIR__.'/../'.self::$_configuration['application'].'/Core/App.php')) {
+                die("Application '".self::$_configuration['application']."' not found\n");
+            }
+            if(!is_file(__DIR__.'/../'.self::$_configuration['public'].'/index.php')) {
+                die("index.php not found in public directory '".self::$_configuration['public']."'\n");
+            }
+            // Include the App file
+            require_once(__DIR__.'/../'.self::$_configuration['application'].'/Core/App.php');
+        }
+
         /**
         * Runs the workbench
         *
@@ -208,7 +123,7 @@
         */
         public static function run() {
             foreach(self::$_commands as $command) {
-                if($command->isMatch(self::$_command)) {
+                if($command->match(self::$_command)) {
                     return $command->execute(self::$_argv);
                 }
             }
@@ -224,13 +139,13 @@
         *
         * @return boolean
         */
-        public static function addApplication($name, $url, $path) {
-            if(!isset(self::getConfiguration('applications')[$name])) {
+        public static function add($name, $url, $path) {
+            if(!isset(self::$_configuration['applications'][$name])) {
                 self::$_configuration['applications'][$name] = [
                     "url" => $url,
                     "path" => $path
                 ];
-                self::saveConfiguration();
+                self::save();
                 return true;
             }
             return false;
@@ -243,10 +158,10 @@
         *
         * @return boolean
         */
-        public static function removeApplication($name) {
-            if(isset(self::getConfiguration('applications')[$name])) {
+        public static function remove($name) {
+            if(isset(self::$_configuration['applications'][$name])) {
                 unset(self::$_configuration['applications'][$name]);
-                self::saveConfiguration();
+                self::save();
                 return true;
             }
             return false;
@@ -257,9 +172,20 @@
         *
         * @param string $name
         */
-        public static function setApplication($name) {
+        public static function application($name) {
+            // replace current namespace line in .commands and workbench
+            $contents=file_get_contents(__DIR__.'/../.commands');
+            $contents=preg_replace('/namespace '.str_replace('.', '\\\\', self::$_configuration['application']).';/',
+                                        'namespace '.$name.';',
+                                        $contents);
+            file_put_contents(__DIR__.'/../.commands',$contents);
+            $contents=file_get_contents(__DIR__.'/../workbench');
+            $contents=preg_replace('/namespace '.str_replace('.', '\\\\', self::$_configuration['application']).';/',
+                                        'namespace '.$name.';',
+                                        $contents);
+            file_put_contents(__DIR__.'/../workbench',$contents);
             self::$_configuration['application'] = $name;
-            self::saveConfiguration();
+            self::save();
         }
 
         /**
@@ -267,8 +193,9 @@
         *
         * @param string $name
         */
-        public static function setPublic($public) {
+        public static function public($public) {
+            rename(self::$_configuration['public'], $public);
             self::$_configuration['public'] = $public;
-            self::saveConfiguration();
+            self::save();
         }
     }

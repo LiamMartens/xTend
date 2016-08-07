@@ -1,13 +1,12 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
     use \Defuse\Crypto\Crypto as Crypto;
 
     /**
     * The Session class handles setting and
     * encrypting Session values
     */
-    class Session
-    {
+    class Session {
         /** @var string Session encryption key */
         private static $_enckey;
 

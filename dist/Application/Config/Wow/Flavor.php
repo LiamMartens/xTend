@@ -4,8 +4,6 @@
     * and initializes the Wow engine
     */
     namespace Application;
-    use \xTend\Core\Wow as Wow;
-    $app=\xTend\Core\getCurrentApp(__NAMESPACE__);
-    $wow = $app->getWowCompiler();
-    $wow->setFlavor(Wow::COMBINED);
-    $wow->setInternalExpressions();
+    use Application\Core\Wow;
+    Wow::flavor(Wow::COMBINED);
+    Wow::start();

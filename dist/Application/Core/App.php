@@ -1,501 +1,378 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
+    use Application\Objects\StatusCodeHandler\StatusCode;
+    use Application\Objects\Router\Route;
+    use Application\Objects\DirectoryHandler\Directory;
+    use Application\Objects\FileHandler\File;
+
     /**
     * The App class contains the starting point
     * of the whole xTend application
     */
-    class App
-    {
+    class App {
+        //
+        //
+        // GENERAL CONFIGURATION VARIABLES
+        //
+        //
         /** @var string Contains the current xTend version */
-        private $_xTendVersion = '1.0.6';
-        /** @var string Contains the application's URL */
-        private $_url = "http://localhost";
-        /** @var boolean Contains the status of development mode */
-        private $_inDevelopment = false;
-        /** @var string|boolean Contains the backup inteval */
-        private $_backupInterval = '1 week';
-        /** @var integer Contains the log limit */
-        private $_backupLimit = 10;
-        /** @var integer Contains the log limit */
-        private $_logLimit = 30;
-        /** @var string Contains the current environment */
-        private $_environment = 'production';
-        /** @var string Contains the application's namespace */
-        private $_namespace = "Application";
+        private static $_xTendVersion = '1.1.0';
+        /** @var string Contains the path where xTend is hosted, can be absolute or relative */
+        private static $_location = '/'; // private $_location = 'http://localhost/' is also possible
+        /** @var string Contains the timezone locale */
+        private static $_timezone = 'UTC';
+        /** @var string Contains the environment (production, staging, development, ...) */
+        private static $_environment = 'production'; // if set to development or dev display_errors will be set on
+        /** @var string Contains the backup interval */
+        private static $_backupInterval = '1 week';
+        /** @var int Contains the limit of backup files */
+        private static $_backupLimit = 10;
+        /** @var int Contains the limit of logs files */
+        private static $_logLimit = 30;
+        /** @var boolean Contains the bootstrap mode status */
+        private static $_bootstrap = false;
+        /** @var string Contains the namespace of the application
+        * Used to divide applications and use more than one at
+        * the same time if necessary
+        */
+        private static $_namespace = 'Application';
+
         /**
-        * Returns the current xTend version
+        * Returns the xTend version
+        * !! No need to override the version -> no setter
         *
         * @return string
         */
-        public function getVersion() { return $this->_xTendVersion; }
+        public static function version() { return self::$_xTendVersion; }
+
         /**
-        * Returns the application's url
+        * Returns or sets the application location
+        *
+        * @param string:optional $location
         *
         * @return string
         */
-        public function getUrl() { return $this->_url; }
+        public static function location($location=null) {
+            if($location!==null) {
+                self::$_location=$location;
+            }
+            return self::$_location;
+        }
+
         /**
-        * Returns the application's development status
+        * Returns or sets the application timezone variable
+        *
+        * @param string:optional $zone
+        *
+        * @return string
+        */
+        public static function timezone($zone=null) {
+            if($zone!==null) {
+                self::$_timezone = $zone;
+                date_default_timezone_set($zone);
+            }
+            return self::$_timezone;
+        }
+
+        /**
+        * Returns or sets the application environment
+        *
+        * @param string:optional $env
+        *
+        * @return string
+        */
+        public static function environment($env=null) {
+            if($env!==null) {
+                self::$_environment=$env;
+            }
+            return self::$_environment;
+        }
+
+        /**
+        * Returns or sets the application backup interval
+        *
+        * @param string|false:optional $interval
+        *
+        * @return string|false
+        */
+        public static function backupInterval($interval=null) {
+            if($interval!==null) {
+                self::$_backupInterval=$interval;
+            }
+            return self::$_backupInterval;
+        }
+
+        /**
+        * Returns or sets the application backup limit
+        *
+        * @param int:optional $limit
+        *
+        * @return int
+        */
+        public static function backupLimit($limit=null) {
+            if($limit!==null) {
+                self::$_backupLimit=$limit;
+            }
+            return self::$_backupLimit;
+        }
+
+        /**
+        * Returns or sets the application log limit
+        *
+        * @param int:optional $limit
+        *
+        * @return int
+        */
+        public static function logLimit($limit=null) {
+            if($limit!==null) {
+                self::$_logLimit=$limit;
+            }
+            return self::$_logLimit;
+        }
+
+        /**
+        * Returns or sets the bootstrap mode
+        *
+        * @param boolean:optional $mode
         *
         * @return boolean
         */
-        public function getDevelopmentStatus() { return $this->_inDevelopment; }
-        /**
-        * Returns the backup interval
-        *
-        * @return string
-        */
-        public function getBackupInterval() { return $this->_backupInterval; }
-        /**
-        * Returns the limit of number of backups
-        *
-        * @return integer
-        */
-        public function getBackupLimit() { return $this->_backupLimit; }
-        /**
-        * Returns the limit of number of logs
-        *
-        * @return integer
-        */
-        public function getLogLimit() { return $this->_logLimit; }
-        /**
-        * Returns the current environment
-        *
-        * @return string
-        */
-        public function getEnvironment() { return $this->_environment; }
-        /**
-        * Returns the namespace of the application
-        *
-        * @return string
-        */
-        public function getNamespace() { return $this->_namespace; }
-        /**
-        * Sets the url of the application
-        *
-        * @param string $url
-        */
-        public function setUrl($url) { $this->_url = $url; }
-        /**
-        * Sets the development status of the application
-        *
-        * @param boolean $status
-        */
-        public function setDevelopmentStatus($status) { $this->_inDevelopment = $status; }
-        /**
-        * Sets the interval of backups
-        *
-        * @param string $interval
-        */
-        public function setBackupInterval($interval) { $this->_backupInterval = $interval; }
-        /**
-        * Sets the limit of number of backups
-        *
-        * @param integer $limit
-        */
-        public function setBackupLimit($limit) { $this->_backupLimit = $limit; }
-        /**
-        * Sets the limit of number of logs
-        *
-        * @param integer $limit
-        */
-        public function setLogLimit($limit) { $this->_logLimit = $limit; }
-        /**
-        * Sets the current environment
-        *
-        * @param string $environment
-        */
-        public function setEnvironment($environment) { $this->_environment = $environment; }
-        /**
-        * Sets application configuration values
-        *
-        * @param array $confvalues
-        */
-        public function configuration($confvalues) {
-            //set directory settings using an array
-            foreach ($confvalues as $key => $value) {
-                $f_name = 'set'.$key;
-                $this->$f_name($value);
+        public static function bootstrap($mode=null) {
+            if($mode!==null) {
+                self::$_bootstrap=$mode;
             }
+            return self::$_bootstrap;
         }
 
-        private $_dirBackups = "Backups";
         /**
-        * Sets the backup directory of the application
+        * Returns the namespace
+        * !! No need to set the namespace outside of the App itself
         *
-        * @param string $dir
+        * @return string
         */
-        public function setBackupsDirectory($dir) { $this->_dirBackups = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Gets the current backup directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getBackupsDirectory() { return $this->_dirBackups; }
-
-        private $_dirBlueprints = "Blueprints";
-        /**
-        * Sets the blueprints directory
-        *
-        * @param string $dir
-        */
-        public function setBlueprintsDirectory($dir) { $this->_dirBlueprints = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the current blueprints directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getBlueprintsDirectory() { return $this->_dirBlueprints; }
-
-        private $_dirConfig = "Config";
-        /**
-        * Sets the application's config directory
-        *
-        * @param string $dir
-        */
-        public function setConfigDirectory($dir) { $this->_dirConfig = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's config directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getConfigDirectory() { return $this->_dirConfig; }
-
-        private $_dirControllers = "Controllers";
-        /**
-        * Sets the application's controler directory
-        *
-        * @param string $dir
-        */
-        public function setControllersDirectory($dir) { $this->_dirControllers = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's config directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getControllersDirectory() { return $this->_dirControllers; }
-
-        private $_dirLayouts = "Layouts";
-        /**
-        * Sets the application's layouts directory
-        *
-        * @param string $dir
-        */
-        public function setLayoutsDirectory($dir) { $this->_dirLayouts = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's layouts directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getLayoutsDirectory() { return $this->_dirLayouts; }
-
-        private $_dirLibs = "Libs";
-        /**
-        * Sets the application's libs directory
-        *
-        * @param string $dir
-        */
-        public function setLibsDirectory($dir) { $this->_dirLibs = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's libs directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getLibsDirectory() { return $this->_dirLibs; }
-
-        private $_dirLogs = "Logs";
-        /**
-        * Sets the application's logs directory
-        *
-        * @param string $dir
-        */
-        public function setLogsDirectory($dir) { $this->_dirLogs = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's logs directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getLogsDirectory() { return $this->_dirLogs; }
-
-        private $_dirMeta = "Meta";
-        /**
-        * Sets the application's meta directory
-        *
-        * @param string $dir
-        */
-        public function setMetaDirectory($dir) { $this->_dirMeta = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's meta directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getMetaDirectory() { return $this->_dirMeta; }
-
-        private $_dirModels = "Models";
-        /**
-        * Sets the application's models directory
-        *
-        * @param string $dir
-        */
-        public function setModelsDirectory($dir) { $this->_dirModels = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's models directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getModelsDirectory() { return $this->_dirModels; }
-
-        private $_dirModules = "Modules";
-        /**
-        * Sets the application's modules directory
-        *
-        * @param string $dir
-        */
-        public function setModulesDirectory($dir) { $this->_dirModules = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's modules directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getModulesDirectory() { return $this->_dirModules; }
-
-        private $_dirObjects = "Objects";
-        /**
-        * Sets the application's objects directory
-        *
-        * @param string $dir
-        */
-        public function setObjectsDirectory($dir) { $this->_dirObjects = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's objects directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getObjectsDirectory() { return $this->_dirObjects; }
-
-        private $_dirViewOutput = "ViewOutput";
-        /**
-        * Sets the application's ViewOutput directory
-        *
-        * @param string $dir
-        */
-        public function setViewOutputDirectory($dir) { $this->_dirViewOutput = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's ViewOutput directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getViewOutputDirectory() { return $this->_dirViewOutput; }
-
-        private $_dirViews = "Views";
-        /**
-        * Sets the application's views directory
-        *
-        * @param string $dir
-        */
-        public function setViewsDirectory($dir) { $this->_dirViews = $this->getDirectoryHandler()->system($dir); }
-        /**
-        * Returns the application's views directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getViewsDirectory() { return $this->_dirViews; }
-
-        /**
-        * Set directory settings using an array
-        *
-        * @param array $dirvalues
-        */
-        public function directories($dirvalues) {
-            foreach ($dirvalues as $dir => $value) {
-                $f_name = 'set'.$dir.'Directory';
-                $this->$f_name($value);
-            }
+        public static function namespace() {
+            return self::$_namespace;
         }
 
-        private $_dirSystem;
-        private $_dirPublic;
+        //
+        //
+        // DIRECTORY CONFIGURATION VARIABLES (RELATIVE TO APP DIR)
+        //
+        //
+        /** @var string Contains the system or application directory */
+        private static $_directorySystem = 'Application';
+        /** @var string Contains the public directory */
+        private static $_directoryPublic = 'www';
+        /** @var string Contains the directory path where backups are stored */
+        private static $_directoryBackups = 'Backups';
+        /** @var string Contains the directory path where the blueprints are stored */
+        private static $_directoryBlueprints = 'Blueprints';
+        /** @var string Contains the directory path where the configuration files are stored */
+        private static $_directoryConfig = 'Config';
+        /** @var string Contains the directory path where the controllers are stored */
+        private static $_directoryControllers = 'Controllers';
+        /** @var string Contains the directory path where the layouts are stored */
+        private static $_directoryLayouts = 'Layouts';
+        /** @var string Contains the directory path where the libs are stored */
+        private static $_directoryLibs = 'Libs';
+        /** @var string Contains the directory path where the logs are stored */
+        private static $_directoryLogs = 'Logs';
+        /** @var string Contains the directory path where the meta files are stored */
+        private static $_directoryMeta = 'Meta';
+        /** @var string Contains the directory path where the models are stored */
+        private static $_directoryModels = 'Models';
+        /** @var string Contains the directory path where the Modules are stored */
+        private static $_directoryModules = 'Modules';
+        /** @var string Contains the directory path where the ViewOutput is stored */
+        private static $_directoryViewOutput = 'ViewOutput';
+        /** @var string Contains the directory path where the views are stored */
+        private static $_directoryViews = 'Views';
+        /** @var string Contains the directory where the Objects are stored */
+        private static $_directoryObjects = 'Objects';
+        
+        
+        /**
+        * Returns the application directory
+        *
+        * @return Directory|string
+        */
+        public static function system() { return self::$_directorySystem; }
 
         /**
-        * Returns the current application directory
+        * Returns the public directory
         *
-        * @return xTend\Core\DirectoryHandler\Directory
+        * @return Directory|string
         */
-        public function getSystemDirectory() { return $this->_dirSystem;}
-        /**
-        * Returns the current public directory
-        *
-        * @return xTend\Core\DirectoryHandler\Directory
-        */
-        public function getPublicDirectory() { return $this->_dirPublic;}
+        public static function public() { return self::$_directoryPublic; }
 
-        private $_bootstrapMode;
+        //
+        //
+        // NEVER SET DIRECTORIES AFTER APP RUN
+        //
+        //
         /**
-        * Returns the status of the bootstrap mode
+        * Gets or sets the backups directory
         *
-        * @return boolean
+        * @return Directory|string
         */
-        public function getBootstrapMode() { return $this->_bootstrapMode; }
+        public static function backups($value=null) {
+            if($value!==null) {
+                self::$_directoryBackups=$value;
+            }
+            return self::$_directoryBackups;
+        }
 
-        private $_settingsContainer;
         /**
-        * Returns the application's SettingsContainer
+        * Gets or sets the blueprints directory
         *
-        * @return xTend\Core\SettingsContainer
+        * @return Directory|string
         */
-        public function getSettingsContainer() { return $this->_settingsContainer; }
+        public static function blueprints($value=null) {
+            if($value!==null) {
+                self::$_directoryBlueprints=$value;
+            }
+            return self::$_directoryBlueprints;
+        }
 
-        private $_fileHandler;
         /**
-        * Returns the application's FileHandler
+        * Returns the config directory
+        * just like the Core directory the config directory shouldn't be changed
         *
-        * @return xTend\Core\FileHandler
+        * @return Directory|string
         */
-        public function getFileHandler() { return $this->_fileHandler; }
+        public static function config() { return self::$_directoryConfig; }
 
-        private $_directoryHandler;
         /**
-        * Returns the application's DirectoryHandler
+        * Gets or sets the controllers directory
         *
-        * @return xTend\Core\DirectoryHandler
+        * @return Directory|string
         */
-        public function getDirectoryHandler() { return $this->_directoryHandler; }
+        public static function controllers($value=null) {
+            if($value!==null) {
+                self::$_directoryControllers=$value;
+            }
+            return self::$_directoryControllers;
+        }
 
-        private $_statusCodeHandler;
         /**
-        * Returns the application's StatusCodeHandler
+        * Gets or sets the layouts directory
         *
-        * @return xTend\Core\StatusCodeHandler
+        * @return Directory|string
         */
-        public function getStatusCodeHandler() { return $this->_statusCodeHandler; }
+        public static function layouts($value=null) {
+            if($value!==null) {
+                self::$_directoryLayouts=$value;
+            }
+            return self::$_directoryLayouts;
+        }
+        
+        /**
+        * Gets or sets the libs directory
+        *
+        * @return Directory|string
+        */
+        public static function libs($value=null) { 
+            if($value!==null) {
+                self::$_directoryLibs=$value;
+            }
+            return self::$_directoryLibs;
+        }
 
-        private $_logHandler;
         /**
-        * Returns the application's LogHandler
+        * Gets or sets the logs directory
         *
-        * @return xTend\Core\LogHandler
+        * @return Directory|string
         */
-        public function getLogHandler() { return $this->_logHandler; }
+        public static function logs($value=null) { 
+            if($value!==null) {
+                self::$_directoryLogs=$value;
+            }
+            return self::$_directoryLogs;
+        }
 
-        private $_modelHandler;
         /**
-        * Returns the application's ModelHandler
+        * Gets or sets the meta directory
         *
-        * @return xTend\Core\ModelHandler
+        * @return Directory|string
         */
-        public function getModelHandler() { return $this->_modelHandler; }
+        public static function meta($value=null) { 
+            if($value!==null) {
+                self::$_directoryMeta=$value;
+            }
+            return self::$_directoryMeta;
+        }
 
-        private $_controllerHandler;
         /**
-        * Returns the application's ControllerHandler
+        * Gets or sets the models directory
         *
-        * @return xTend\Core\ControllerHandler
+        * @return Directory|string
         */
-        public function getControllerHandler() { return $this->_controllerHandler; }
+        public static function models($value=null) {
+            if($value!==null) {
+                self::$_directoryModels=$value;
+            }
+            return self::$_directoryModels;
+        }
 
-        private $_viewHandler;
         /**
-        * Returns the application's ViewHandler
+        * Gets or sets the modules directory
         *
-        * @return xTend\Core\ViewHandler
+        * @return Directory|string
         */
-        public function getViewHandler() { return $this->_viewHandler; }
+        public static function modules($value=null) {
+            if($value!==null) {
+                self::$_directoryModules=$value;
+            }
+            return self::$_directoryModules;
+        }
 
-        private $_UrlHandler;
         /**
-        * Returns the application's UrlHandler
+        * Gets or sets the views directory
         *
-        * @return xTend\Core\UrlHandler
+        * @return Directory|string
         */
-        public function getUrlHandler() { return $this->_UrlHandler; }
+        public static function views($value=null) {
+            if($value!==null) {
+                self::$_directoryViews=$value;
+            }
+            return self::$_directoryViews;
+        }
 
-        private $_router;
         /**
-        * Returns the application's Router
+        * Gets or sets the viewoutput directory
         *
-        * @return xTend\Core\Router
+        * @return Directory|string
         */
-        public function getRouter() { return $this->_router; }
+        public static function viewOutput($value=null) {
+            if($value!==null) {
+                self::$_directoryViewOutput=$value;
+            }
+            return self::$_directoryViewOutput;
+        }
 
-        private $_backupManager;
         /**
-        * Returns the application's BackupManager
+        * Gets or sets the objects directory
         *
-        * @return xTend\Core\BackupManager
+        * @return Directory|string
         */
-        public function getBackupManager() { return $this->_backupManager; }
+        public static function objects($value=null) {
+            if($value!==null) {
+                self::$_directoryObjects=$value;
+            }
+            return self::$_directoryObjects;
+        }
 
-        private $_fileManager;
         /**
-        * Returns the application's FileManager
+        * Sets configuration using an array of variables (directories / config variables)
+        * only set directories differently if you know what you are doing
         *
-        * @return xTend\Core\FileManager
+        * @param array $values
         */
-        public function getFileManager() { return $this->_fileManager; }
-
-        private $_sortHelper;
-        /**
-        * Returns the application's SortHelper
-        *
-        * @return xTend\Core\SortHelper
-        */
-        public function getSortHelper() { return $this->_sortHelper; }
-
-        private $_wowCompiler;
-        /**
-        * Returns the application's Wow templating engine
-        *
-        * @return xTend\Core\Wow
-        */
-        public function getWowCompiler() { return $this->_wowCompiler; }
-
-        private $_requestDataHandler;
-        /**
-        * Returns the application's RequestDataHandler
-        *
-        * @return xTend\Core\RequestDataHandler
-        */
-        public function getRequestDataHandler() { return $this->_requestDataHandler; }
-
-        private $_htmlHandler;
-        /**
-        * Returns the application's HTMLHandler
-        *
-        * @return xTend\Core\HTMLHandler
-        */
-        public function getHTMLHandler() { return $this->_htmlHandler; }
-
-        private $_formTokenHandler;
-        /**
-        * Returns the application's FormTokenHandler
-        *
-        * @return xTend\Core\FormTokenHandler
-        */
-        public function getFormTokenHandler() { return $this->_formTokenHandler; }
-
-        private $_packagistHandler;
-        /**
-        * Returns the application's PackagistHandler
-        *
-        * @return xTend\Core\PackagistHandler
-        */
-        public function getPackagistHandler() { return $this->_packagistHandler; }
-
-        private $_requestHandler;
-        /**
-        * Returns the application's RequestHandler
-        *
-        * @return xTend\Core\RequestHandler
-        */
-        public function getRequestHandler() { return $this->_requestHandler; }
-
-        private $_orm;
-        /**
-        * Returns the app's PDO ORM wrapper
-        *
-        * @return xTend\Core\xORM
-        */
-        public function orm() { return $this->_orm; }
+        public static function configuration($values) {
+            foreach($values as $key => $value) {
+                self::$key($value);
+            }
+        }
 
         /**
         * Throws an application error and sets an HTTP code
@@ -504,191 +381,153 @@
         *
         * @return boolean
         */
-        public function throwError($code) {
+        public static function throw($code) {
             header("HTTP/1.0 $code");
-            $error = $this->_statusCodeHandler->findStatus($code);
+            $error = StatusCodeHandler::find($code);
             if($error instanceof StatusCode) {
-                $this->_logHandler->write($error, $_SERVER["REQUEST_URI"]."\t".$_SERVER["REMOTE_ADDR"]);
-                return $this->_router->throwError($code);
+                LogHandler::write($error, Request::path()."\t".$_SERVER["REMOTE_ADDR"]);
+                return Router::throw($code);
             }
             return false;
         }
 
-        private $_preConfigMethods;
         /**
-        * Adds a pre configuration method
+        * @param xTend\Objects\Route|string $route
+        * @param array $parameters
+        * @param array $data
         *
-        * @param function $fn
+        * @return boolean
         */
-        public function addPreconfigurationMethod($fn) {$this->_preConfigMethods[]=$fn; }
-
-        private $_postConfigMethods;
-        /**
-        * Adds a post configuration method
-        *
-        * @param function $fn
-        */
-        public function addPostConfigurationMethod($fn) {$this->_postConfigMethods[]=$fn; }
-
-        /**
-        * Runs directory checks and PHP version
-        */
-        private function applicationIntegrityCheck() {
-            //check php version
-            if (version_compare(phpversion(), '7.0.0', '<')) {
-                die("You need PHP 7 to use xTend");
+        public function to($route, $parameters = [], $data = []) {
+            Session::set('xt-data', json_encode($data));
+            $handle='';
+            if(is_string($route)) {
+                //by route name
+                $handle=Router::alias($route)->handle();
+            } elseif(($route instanceof Route)&&is_string($route->handle())) {
+                //by route object
+                $handle=$route->handle();
             }
-            //check directories
-            $directories = [$this->_dirBackups,
-                            $this->_dirBlueprints,
-                            $this->_dirConfig,
-                            $this->_dirControllers,
-                            $this->_dirLayouts,
-                            $this->_dirLogs,
-                            $this->_dirModels,
-                            $this->_dirModules,
-                            $this->_dirObjects,
-                            $this->_dirViewOutput,
-                            $this->_dirViews,
-                            $this->_dirMeta,
-                            $this->_dirLibs];
-            $writable_system_directories = [$this->_dirBackups,$this->_dirLogs,$this->_dirViewOutput,$this->_dirMeta];
-            $can_write = is_writable($this->_dirSystem);
-            $integrity_success = true;
-            foreach ($directories as $dir) {
-                if(!$dir->exists()) {
-                    if((($can_write)&&($dir->create()===false))||(!$can_write)) {
-                        echo ("Failed to create System directory ".$dir."<br>"); $integrity_success=false;
+            $url = ''; $parts = explode('/', $handle);
+            foreach ($parts as $part) {
+                $match=[];
+                if(preg_match("/^(rx)(\{)([a-zA-Z0-9_]+)(\})(\{)(.*)(\})$/", $part, $match)) {
+                    if(isset($parameters[$match[3]])) {
+                        $url.='/'.$parameters[$match[3]];
                     }
-                }
+                } elseif(preg_match("/^(\{)([a-zA-Z0-9_]+)(\})$/", $part, $match)) {
+                    if(isset($parameters[$match[2]])) {
+                        $url.='/'.$parameters[$match[2]];
+                    }
+                } else { $url.="/$part"; }
             }
-            foreach ($writable_system_directories as $dir) {
-                $dir = $this->getDirectoryHandler()->system("$dir");
-                if($dir->exists()&&!$dir->writable()) {
-                    echo $dir." is not writable<br>"; $integrity_success=false;
-                }
-            }
-            if(!$integrity_success)
-                die("<br>Integrity check failed");
+            header('Location: '.Request::url().App::location().'/'.$url);
+            return true;
         }
 
         /**
-        * @param string $ns
-        * @param string $public_directory
-        * @param boolean $bootstrap_mode
+        * @param xTend\Objects\Route|string $route
+        * @param array $data
+        * @param boolean $inc_url
         */
-        public function __construct($ns, $public_directory, $bootstrap_mode = false) {
-            //check variables and enter temp
-            if(!isset($_SERVER['HTTP_USER_AGENT']))
+        public function navigate($request, $data = [], $inc_url = true) {
+            //set temp data and time to live
+            Session::set('xt-data', json_encode($data));
+            $host=Request::url();
+            if(is_string($request)) {
+                header('Location: '.(($inc_url) ? ($host.'/') : '').$request);
+            } elseif(($request instanceof Route)&&is_string($request->handle())) {
+                header('Location: '.$host.'/'.$request->handle()); }
+        }
+
+        /**
+        * Initiates the App (configure should be called before start)
+        *
+        * @param string $public Public directory
+        * @param boolean $bootstrap Bootstrap mode on|off
+        */
+        public static function start($public, $bootstrap=false) {
+            // check server variables and put temp ones in 
+            // if none are present when in cli mode
+            if(php_sapi_name()==='cli') {
                 $_SERVER['HTTP_USER_AGENT']=sha1(uniqid().microtime());
-            if(!isset($_SERVER['REMOTE_ADDR']))
                 $_SERVER['REMOTE_ADDR']=sha1(uniqid().microtime());
-            //set namespace
-            $this->_namespace=$ns;
-            //the directives are set automatically since they are very important to the application itself
-            //set system directory
-            $this->_dirSystem = substr(__DIR__,0,strlen(__DIR__)-5);
-            //set public directory
-            $this->_dirPublic = $public_directory;
-            //set default time zone to UTC
-            date_default_timezone_set("UTC");
-            //set error and exception handlers are gone here since they can't be handled using mutliple apps since they can only call one method
-            //the logging class remains for App specific logs
-            //set bootstrap mode here
-            $this->_bootstrapMode = $bootstrap_mode;
-            //include ClassManager for further class inclusion
-            require_once($this->_dirSystem."/Core/ClassManager.php");
-            //using ClassManager include further needed classes
-            //include and initialize SettingsContainer class
-            ClassManager::includeClasses([
-                [ "xTend\\Core\\SettingsContainer", $this->_dirSystem."/Core/SettingsContainer.php" ],
-                [ "xTend\\Core\\Archive", $this->_dirSystem."/Core/Archive.php" ],
-                [ "xTend\\Core\\StatusCodeHandler", $this->_dirSystem."/Core/StatusCodeHandler.php" ],
-                [ "xTend\\Core\\FileHandler", $this->_dirSystem."/Core/FileHandler.php" ],
-                [ "xTend\\Core\\DirectoryHandler", $this->_dirSystem."/Core/DirectoryHandler.php" ]
-            ]);
-            $this->_settingsContainer = new SettingsContainer();
-            $this->_statusCodeHandler = new StatusCodeHandler();
-            $this->_directoryHandler = new DirectoryHandler($this);
-            $this->_dirSystem = new DirectoryHandler\Directory($this, $this->_dirSystem);
-            $this->_dirPublic = new DirectoryHandler\Directory($this, $this->_dirPublic);
-            //set directory settings as they are strings by default -> can't access necessary classes yet
-            $this->setBackupsDirectory($this->getBackupsDirectory());
-            $this->setBlueprintsDirectory($this->getBlueprintsDirectory());
-            $this->setConfigDirectory($this->getConfigDirectory());
-            $this->setControllersDirectory($this->getControllersDirectory());
-            $this->setLayoutsDirectory($this->getLayoutsDirectory());
-            $this->setLibsDirectory($this->getLibsDirectory());
-            $this->setLogsDirectory($this->getLogsDirectory());
-            $this->setMetaDirectory($this->getMetaDirectory());
-            $this->setModelsDirectory($this->getModelsDirectory());
-            $this->setModulesDirectory($this->getModulesDirectory());
-            $this->setObjectsDirectory($this->getObjectsDirectory());
-            $this->setViewOutputDirectory($this->getViewOutputDirectory());
-            $this->setViewsDirectory($this->getViewsDirectory());
-            ClassManager::includeClasses([
-                [ "xTend\\Core\\LogHandler", $this->_dirSystem."/Core/LogHandler.php" ],
-                [ "xTend\\Core\\ModelHandler", $this->_dirSystem."/Core/ModelHandler.php" ],
-                [ "xTend\\Core\\ControllerHandler", $this->_dirSystem."/Core/ControllerHandler.php" ],
-                [ "xTend\\Blueprints\\BaseView", $this->_dirBlueprints->file("BaseView.php") ],
-                [ "xTend\\Blueprints\\BaseDataView", $this->_dirBlueprints->file("BaseDataView.php") ],
-                [ "xTend\\Objects\\View",  $this->_dirObjects->file("View.php") ],
-                [ "xTend\\Core\\ViewHandler", $this->_dirSystem."/Core/ViewHandler.php" ],
-                [ "xTend\\Blueprints\\BaseDataExtension", $this->_dirBlueprints->file("BaseDataExtension.php") ],
-                [ "xTend\\Core\\UrlHandler", $this->_dirSystem."/Core/UrlHandler.php" ],
-                [ "xTend\\Objects\\Route", $this->_dirObjects->file("Route.php") ],
-                [ "xTend\\Core\\Router", $this->_dirSystem."/Core/Router.php" ],
-                [ "xTend\\Core\\BackupManager", $this->_dirSystem."/Core/BackupManager.php" ],
-                [ "Defuse\\Crypto\\CryptoLoader", $this->_dirSystem."/Core/Crypto/CryptoLoader.php" ],
-                [ "xTend\\Core\\Session", $this->_dirSystem."/Core/Session.php" ],
-                [ "xTend\\Core\\SessionHandler", $this->_dirSystem."/Core/SessionHandler.php" ],
-                [ "xTend\\Core\\Cookie", $this->_dirSystem."/Core/Cookie.php" ],
-                [ "xTend\\Core\\FileManager", $this->_dirSystem."/Core/FileManager.php" ],
-                [ "xTend\\Core\\SortHelper", $this->_dirSystem."/Core/SortHelper.php" ],
-                [ "xTend\\Core\\Wow", $this->_dirSystem."/Core/Wow.php" ],
-                [ "xTend\\Core\\RequestDataHandler", $this->_dirSystem."/Core/RequestDataHandler.php" ],
-                [ "xTend\\Core\\HTMLHandler", $this->_dirSystem."/Core/HTMLHandler.php" ],
-                [ "xTend\\Core\\FormTokenHandler", $this->_dirSystem."/Core/FormTokenHandler.php" ],
-                [ "xTend\\Core\\VersionCheck", $this->_dirSystem."/Core/VersionCheck.php" ],
-                [ "xTend\\Core\\PackagistHandler", $this->_dirSystem."/Core/PackagistHandler.php" ],
-                [ "xTend\\Core\\RequestHandler", $this->_dirSystem."/Core/RequestHandler.php" ],
-                [ "xTend\\Core\\xORM", $this->_dirSystem."/Core/xORM.php" ],
-                [ "xTend\\Blueprints\\BaseController", $this->_dirBlueprints->file("BaseController.php") ],
-                [ "xTend\\Blueprints\\BaseDataController", $this->_dirBlueprints->file("BaseDataController.php") ],
-                [ "xTend\\Blueprints\\BaseModel", $this->_dirBlueprints->file("BaseModel.php") ],
-                [ "xTend\\Blueprints\\BaseDataModel", $this->_dirBlueprints->file("BaseDataModel.php") ],
-                [ "xTend\\Blueprints\\BaseRespondController", $this->_dirBlueprints->file("BaseRespondController.php") ],
-                [ "xTend\\Objects\\Request", $this->_dirObjects->file("Request.php") ],
-            ]);
-            $this->_fileHandler = new FileHandler($this);
-            $this->_logHandler = new LogHandler($this);
-            $this->_modelHandler = new ModelHandler($this);
-            $this->_controllerHandler = new ControllerHandler($this);
-            $this->_viewHandler = new ViewHandler($this);
-            $this->_UrlHandler = new UrlHandler($this);
-            $this->_router = new Router($this);
-            $this->_backupManager = new BackupManager($this);
-            \Defuse\Crypto\CryptoLoader::load();
-            $this->_fileManager = new FileManager();
-            $this->_sortHelper = new SortHelper();
-            $this->_wowCompiler = new Wow($this);
-            $this->_requestDataHandler = new RequestDataHandler($this);
-            $this->_htmlHandler = new HTMLHandler($this);
-            $this->_formTokenHandler = new FormTokenHandler($this);
-            $this->_packagistHandler = new PackagistHandler($this);
-            $this->_requestHandler = new RequestHandler($this);
-            $this->_orm = new xORM($this);
-            //set post and pre config arrays
-            $this->_preConfigMethods = [];
-            $this->_postConfigMethods = [];
+                $_SERVER['REQUEST_URI']=sha1(uniqid().microtime());
+            }
+
+            // Set default timezone (UTC by default)
+            self::timezone(self::$_timezone);
+
+            // set the application namespace using the namespace
+            // in the file
+            self::$_namespace = substr(__NAMESPACE__, 0, strpos(__NAMESPACE__, '\\'));
+
+            // Set system and public directories
+            self::$_directorySystem = '/'.trim(trim(__DIR__, '/Core'), '/');
+            self::$_directoryPublic = $public;
+
+            // Set bootstrap mode
+            self::$_bootstrap = $bootstrap;
+
+            // Include FileManager
+            require(self::$_directorySystem.'/Core/FileManager.php');
+            // Include other class files using the classmanager
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/StatusCode.php');
+            FileManager::include(self::$_directorySystem.'/Core/StatusCodeHandler.php');
+            // Include Crypto, SessionHandler, Session and Cookie
+            FileManager::include(self::$_directorySystem.'/Core/Crypto/CryptoLoader.php');
+            FileManager::include(self::$_directorySystem.'/Core/SessionHandler.php');
+            FileManager::include(self::$_directorySystem.'/Core/Session.php');
+            FileManager::include(self::$_directorySystem.'/Core/Cookie.php');
+            // Include file and directory handlers
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/File.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Directory.php');
+            FileManager::include(self::$_directorySystem.'/Core/FileHandler.php');
+            FileManager::include(self::$_directorySystem.'/Core/DirectoryHandler.php');
+            // Include Archive and BackupManager
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Archive.php');
+            FileManager::include(self::$_directorySystem.'/Core/BackupManager.php');
+            // Include LogHandler
+            FileManager::include(self::$_directorySystem.'/Core/LogHandler.php');
+            // Include ModelHandler
+            FileManager::include(self::$_directorySystem.'/Core/ModelHandler.php');
+            // Include WOW
+            FileManager::include(self::$_directorySystem.'/Core/Wow.php');
+            // Include data ext view and view handler
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticDataExtension.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/DataExtension.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/View.php');
+            FileManager::include(self::$_directorySystem.'/Core/ViewHandler.php');
+            // Include HTML stuff
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/HTMLHandler.php');
+            FileManager::include(self::$_directorySystem.'/Core/HTMLHandler.php');
+            // Include the Request
+            FileManager::include(self::$_directorySystem.'/Core/Request.php');
+            // Include FormTokenHandler
+            FileManager::include(self::$_directorySystem.'/Core/FormTokenHandler.php');
+            // Include VersionCheck
+            FileManager::include(self::$_directorySystem.'/Core/VersionCheck.php');
+            // Include PackagistHandler
+            FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
+            // Include ORM
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/xORM.php');
+            FileManager::include(self::$_directorySystem.'/Core/xORM.php');
+            // Include other blueprints
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Controller.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/RespondController.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticRespondController.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Model.php');
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticModel.php');
+            // Include Router and Route object if not in bootstrap mode
+            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Route.php');
+            FileManager::include(self::$_directorySystem.'/Core/Router.php');
         }
 
         /**
         * Includes configuration files
         */
-        public function configure() {
-            $filemanager = $this->getFileManager();
-            $confdir = $this->getConfigDirectory();
+        public static function configure() {
+            $confdir = self::config();
             $files = $confdir->files(true);
             //check .exclude files
             $excludes=[]; foreach($files as $key => $file) {
@@ -714,7 +553,7 @@
             }
             foreach($ignores as $ignore) {
                 $lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
-                $ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
+                $ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new File($ignore->parent()."/$line"); }
                 foreach($files as $key => $file) {
                     if(array_search($file, $ignore_files)!==false) {
                         unset($files[$key]);
@@ -732,10 +571,10 @@
                 $lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
                 $included_files = [$order];
                 foreach($lines as $line) {
-                    $order_file = new FileHandler\File($this, $order->parent()."/$line");
+                    $order_file = new File($order->parent()."/$line");
                     if($order_file->exists()) {
                         $included_files[] = $order_file;
-                        $filemanager->includeFile($order_file); }
+                        FileManager::include($order_file); }
                 }
                 //filter out the already included ones
                 foreach($files as $key => $file) {
@@ -753,9 +592,8 @@
         /**
         * Includes library files
         */
-        public function loadLibraries() {
-            $filemanager = $this->getFileManager();
-            $libsdir = $this->getLibsDirectory();
+        public static function libraries() {
+            $libsdir = self::libs();
             $files = $libsdir->files(true);
             //check .exclude files
             $excludes=[]; foreach($files as $key => $file) {
@@ -781,7 +619,7 @@
             }
             foreach($ignores as $ignore) {
                 $lines = preg_split("/\\r\\n|\\r|\\n/", $ignore->read());
-                $ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new FileHandler\File($this, $ignore->parent()."/$line"); }
+                $ignore_files = [$ignore]; foreach($lines as $line) { $ignore_files[] = new File($ignore->parent()."/$line"); }
                 foreach($files as $key => $file) {
                     if(array_search($file, $ignore_files)!==false) {
                         unset($files[$key]);
@@ -799,10 +637,10 @@
                 $lines = preg_split("/\\r\\n|\\r|\\n/", $order->read());
                 $included_files = [$order];
                 foreach($lines as $line) {
-                    $order_file = new FileHandler\File($this, $order->parent()."/$line");
+                    $order_file = new File($order->parent()."/$line");
                     if($order_file->exists()) {
                         $included_files[] = $order_file;
-                        $filemanager->includeFile($order_file); }
+                        FileManager::include($order_file); }
                 }
                 //filter out the already included ones
                 foreach($files as $key => $file) {
@@ -817,69 +655,86 @@
             }
         }
 
-        /**
-        * Runs the whole application
-        */
-        public function run() {
-            if($this->_inDevelopment) { ini_set('display_errors', 1); }
-            //integrity check
-            $this->applicationIntegrityCheck();
-            //start a session
-            SessionHandler::configuration(json_decode($this->_fileHandler->system("Config.Sessions.Sessions.json")->read(), true));
-            SessionHandler::start();
-            //execute data handler parser
-            if(!$this->_bootstrapMode) {
-                $this->_app->getRequestDataHandler()->parse();
+        private static function integrity() {
+            //check php version
+            if (version_compare(phpversion(), '7.0.0', '<')) {
+                // For using the random_bytes
+                die("You need PHP 7 to use xTend");
             }
-            //run library inclusion
-            $this->loadLibraries();
-            //run preconfig methods
-            foreach ($this->_preConfigMethods as $method) { $method($this); }
-            //include config
-            $this->configure();
-            //run post config methhods
-            foreach ($this->_postConfigMethods as $method) { $method($this); }
-            //create backup if necessary
-            $this->_backupManager->create();
-            //start the router
-            if(!$this->_bootstrapMode) {
-                $this->_router->execute();
+            //check directories
+            $directories = [self::$_directoryBackups,
+                            self::$_directoryBlueprints,
+                            self::$_directoryConfig,
+                            self::$_directoryControllers,
+                            self::$_directoryLayouts,
+                            self::$_directoryLogs,
+                            self::$_directoryModels,
+                            self::$_directoryModules,
+                            self::$_directoryObjects,
+                            self::$_directoryViewOutput,
+                            self::$_directoryViews,
+                            self::$_directoryMeta,
+                            self::$_directoryMeta];
+            $writable_system_directories = [
+                self::$_directoryViewOutput,
+                self::$_directoryMeta
+            ];
+            if((self::$_backupInterval!==false)||(self::$_backupLimit>0)) { $writable_system_directories[]=self::$_directoryBackups; }
+            if(self::$_logLimit>0) { $writable_system_directories[]=self::$_directoryLogs; }
+            $can_write = is_writable(self::$_directorySystem);
+            $integrity_success = true;
+            foreach ($directories as $dir) {
+                if(!$dir->exists()) {
+                    if((($can_write)&&($dir->create()===false))||(!$can_write)) {
+                        echo ("Failed to create System directory ".$dir."<br>"); $integrity_success=false;
+                    }
+                }
+            }
+            foreach ($writable_system_directories as $dir) {
+                if($dir->exists()&&!$dir->writable()) {
+                    echo $dir." is not writable<br>"; $integrity_success=false;
+                }
+            }
+            if(!$integrity_success) {
+                die("<br>Integrity check failed");
             }
         }
-    }
 
-    if(!function_exists("getCurrentApp")) {
         /**
-        * Returns an application by namespace
-        *
-        * @param string $ns
-        *
-        * @return xTend\Core\App | boolean
+        * Runs the app
         */
-        function getCurrentApp($ns) {
-            //get system directory
-            global $apps;
-            if(is_array($apps)&&isset($apps[$ns])) {
-                return $apps[$ns];
-            } return false;
-        }
-    }
-    if(!function_exists("createNewApp")) {
-        /**
-        * Creates a new application by namespace
-        *
-        * @param string $ns
-        * @param string $public_directory
-        * @param boolean $bootstrap_mode
-        *
-        * @return xTend\Core\App
-        */
-        function createNewApp($ns, $public_directory, $bootstrap_mode = false) {
-            global $apps;
-            if(!is_array($apps))
-                $apps=[];
-            //create new app instance
-            $apps[$ns]=new App($ns, $public_directory, $bootstrap_mode);
-            return $apps[$ns];
+        public static function run() {
+            // set display errors
+            // upon development environment
+            if((self::$_environment=='development')||(self::$_environment=='dev')) {
+                ini_set('display_errors', 1);
+            }
+            // Set directories
+            self::$_directoryBackups = new Directory(self::$_directorySystem.'/'.self::$_directoryBackups);
+            self::$_directoryBlueprints = new Directory(self::$_directorySystem.'/'.self::$_directoryBlueprints);
+            self::$_directoryConfig = new Directory(self::$_directorySystem.'/'.self::$_directoryConfig);
+            self::$_directoryControllers = new Directory(self::$_directorySystem.'/'.self::$_directoryControllers);
+            self::$_directoryLayouts = new Directory(self::$_directorySystem.'/'.self::$_directoryLayouts);
+            self::$_directoryLibs = new Directory(self::$_directorySystem.'/'.self::$_directoryLibs);
+            self::$_directoryLogs = new Directory(self::$_directorySystem.'/'.self::$_directoryLogs);
+            self::$_directoryMeta = new Directory(self::$_directorySystem.'/'.self::$_directoryMeta);
+            self::$_directoryModels = new Directory(self::$_directorySystem.'/'.self::$_directoryModels);
+            self::$_directoryModules = new Directory(self::$_directorySystem.'/'.self::$_directoryModules);
+            self::$_directoryViewOutput = new Directory(self::$_directorySystem.'/'.self::$_directoryViewOutput);
+            self::$_directoryViews = new Directory(self::$_directorySystem.'/'.self::$_directoryViews);
+            self::$_directoryObjects = new Directory(self::$_directorySystem.'/'.self::$_directoryObjects);
+            self::$_directorySystem = new Directory(self::$_directorySystem);
+            self::$_directoryPublic = new Directory(self::$_directoryPublic);
+            // run
+            self::integrity();
+            SessionHandler::start();
+            PackagistHandler::start();
+            Request::start();
+            self::configure();
+            self::libraries();
+            BackupManager::create();
+            if(self::$_bootstrap!==true) {
+                Router::start();
+            }
         }
     }

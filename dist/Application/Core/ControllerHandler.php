@@ -1,5 +1,6 @@
 <?php
-    namespace xTend\Core;
+    namespace Application\Core;
+
     /**
     * The ControllerHandler handles
     * loading and executing
@@ -7,21 +8,10 @@
     */
     class ControllerHandler
     {
-        /** @var xTend\Core\App Current application */
-        private $_app;
         /** @var array Set of controllers */
-        public $_controllers;
+        private static $_controllers=[];
         /** @var array Containing controller names */
-        private $_controllers_names;
-
-        /**
-        * @param xTend\Core\App $app
-        */
-        public function __construct($app) {
-            $this->_app = $app;
-            $this->_controllers = [];
-            $this->_controllers_names = [];
-        }
+        private static $_controllers_names=[];
 
         /**
         * Checks whether a controller exists
@@ -30,9 +20,9 @@
         *
         * @return boolean
         */
-        public function exists($controllerName) {
+        public static function exists($controllerName) {
             //controllerName excluding @ function call
-            return $this->_app->getControllersDirectory()->file("$controllerName.php")->exists();
+            return App::controllers()->file($controllerName.'.php')->exists();
         }
 
         /**
@@ -45,57 +35,57 @@
         *
         * @return controller|boolean
         */
-        public function loadController($controllerName, $data = [], $ns = false, $createInstance = true) {
+        public function load($controllerName, $data = [], $ns = false, $createInstance = false) {
             //
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
             //
             //set default namespace
             $at_index=strpos($controllerName, '@');
             $registerName=($at_index===false) ? $controllerName : substr($controllerName, 0, $at_index);
-            if($ns===false) $ns=$this->_app->getNamespace();
+            if($ns===false) $ns=App::namespace();
             //extract directive
-            $dot_pos = strrpos($controllerName, ".");
+            $dot_pos = strrpos($controllerName, '.');
             $directive = ($dot_pos!==false) ? substr($controllerName, 0, $dot_pos) : false;
-            if($directive!==false) { $directive.="."; }
+            if($directive!==false) { $directive.='.'; }
             if($dot_pos!==false) { $controllerName=substr($controllerName, $dot_pos+1); }
             //extract namespace
-            $back_pos = strrpos($controllerName, "\\");
+            $back_pos = strrpos($controllerName, '\\');
             $namespace = ($back_pos!==false) ? substr($controllerName, 0, $back_pos) : false;
             if($back_pos!==false) { $controllerName=substr($controllerName, $back_pos+1); }
             //extract function calls and real controller name
-            $split = explode("@", $controllerName);
+            $split = explode('@', $controllerName);
             $controllerClassName = (($namespace!==false) ? $namespace : $ns)."\\".$split[0];
             //start inclusion
             $controllerPath = $directive.$split[0];
             //start inclusion
-            if($this->exists($controllerPath)) {
-                ClassManager::includeClass($controllerClassName, $this->_app->getControllersDirectory()->file("$controllerPath.php"));
+            if(self::exists($controllerPath)) {
+                FileManager::include(App::controllers()->file($controllerPath.'.php'));
                 if($createInstance) {
                     //create an instance in the controllers
                     //if not you'll have to instantiate it yourself
                     //the function @ call will be ignored if an instance is not being created
                     //app reference is passed
-                    $this->_controllers[$controllerClassName] = new $controllerClassName($this->_app, $this->_app->getModelHandler()->getModelsNames());
-                    $this->_controllers_names[$controllerPath] = &$this->_controllers[$controllerClassName];
+                    self::$_controllers[$controllerClassName] = new $controllerClassName(ModelHandler::names());
+                    self::$_controllers_names[$controllerPath] = &self::$_controllers[$controllerClassName];
                     //data was passed
                     if(($data!=null)&&(count($data)>0)) {
-                        if(method_exists($this->_controllers[$controllerClassName], "setData")) {
+                        if(method_exists(self::$_controllers[$controllerClassName], 'setData')) {
                             foreach ($data as $key => $value) {
-                                $this->_controllers[$controllerClassName]->setData($key,$value);
+                                self::$_controllers[$controllerClassName]->setData($key,$value);
                             }
-                        } else { throw $this->_app->getStatusCodeHandler()->getStatus(0x0002)->getException(); }
+                        }
                     }
                     //execute requested @ functions
                     //Multiple methods can be called using multiple @ symboles
                     //class@funcA@funcB
                     $totalclassparts = count($split);
                     $i=1; while($i<$totalclassparts) {
-                        if(method_exists($this->_controllers[$controllerClassName], $split[$i])) {
-                            $return_data = $this->_controllers[$controllerClassName]->{$split[$i]}($this->_app->getRequestHandler()->getRequest());
+                        if(method_exists(self::$_controllers[$controllerClassName], $split[$i])) {
+                            $return_data = self::$_controllers[$controllerClassName]->{$split[$i]}(ModelHandler::names());
                             if(is_array($return_data)) { echo json_encode($return_data); }
                         } ++$i;
                     }
-                    return $this->_controllers[$controllerClassName];
+                    return self::$_controllers[$controllerClassName];
                 }
                 return true;
             }
@@ -109,15 +99,15 @@
         *
         * @return controller|boolean
         */
-        public function getController($controllerName=false) {
+        public function get($controllerName=false) {
             //the controller name here also does not include any @ functions
-            if(($controllerName==false)&&(count($this->_controllers)>0))
-                return $this->_controllers[array_keys($this->_controllers)[0]];
+            if(($controllerName==false)&&(count(self::$_controllers)>0))
+                return self::$_controllers[array_keys(self::$_controllers)[0]];
             elseif($controllerName==false) return false;
-            if(isset($this->_controllers[$controllerName]))
-                return $this->_controllers[$controllerName];
-            elseif(isset($this->_controllers[$this->_app->getNamespace()."\\$controllerName"]))
-                return $this->_controllers[$this->_app->getNamespace()."\\$controllerName"];
+            if(isset(self::$_controllers[$controllerName]))
+                return self::$_controllers[$controllerName];
+            elseif(isset(self::$_controllers[App::namespace().'\\'.$controllerName]))
+                return self::$_controllers[App::namespace().'\\'.$controllerName];
             return false;
         }
 
@@ -126,8 +116,8 @@
         *
         * @return array
         */
-        public function getControllers() {
-            return $this->_controllers;
+        public static function all() {
+            return self::$_controllers;
         }
 
         /**
@@ -135,7 +125,7 @@
         *
         * @return array
         */
-        public function getControllersNames() {
-            return $this->_controllers_names;
+        public static function names() {
+            return self::$_controllers_names;
         }
     }
