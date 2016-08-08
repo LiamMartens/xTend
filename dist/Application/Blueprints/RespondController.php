@@ -3,7 +3,7 @@
     use Application\Core\Request;
     use Application\Core\StatusCodeHandler;
 
-    class RespondController extends Controller {
+    class StaticRespondController extends StaticDataExtension {
         /**
         * Respond function to echo json with status and data
         *
@@ -13,7 +13,7 @@
         *
         * @return array
         */
-        protected function respond($success, $status = false, $data = false) {
+        protected static function respond($success, $status = false, $data = false) {
             Request::contentType('application/json');
             $reply=[ 'success' => $success ];
             $reply['multiple']=false;

@@ -515,9 +515,7 @@
             // Include other blueprints
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Controller.php');
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/RespondController.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticRespondController.php');
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Model.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticModel.php');
             // Include Router and Route object if not in bootstrap mode
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Route.php');
             FileManager::include(self::$_directorySystem.'/Core/Router.php');

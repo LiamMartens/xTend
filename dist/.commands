@@ -214,33 +214,6 @@
     });
 
     /**
-    * Creates a new controller which inherits the StaticRespondController
-    */
-    Workbench::register('^new:respondcontroller ([a-zA-Z0-9\_\.]+) static$', function($argv) {
-        $dot_pos = strrpos($argv[2], '.');
-        $ns_suffix='';
-        $class_name=$argv[2];
-        if($dot_pos!==false) {
-            $dir = Core\App::controllers()->directory(substr($argv[2], 0, $dot_pos));
-            if(!$dir->exists()) {
-                $dir->create();
-            }
-            $class_name=substr($argv[2], $dot_pos+1);
-        }
-        $controller = Core\App::controllers()->file($argv[2].'.php');
-        $controller->write('<?php
-    namespace '.Workbench::get('application').';
-    class '.$class_name.' extends Blueprints\\StaticRespondController {
-        //The StaticRespondController adds a protected static method called respond
-        //which you can use to return JSON data with a success parameter (boolean)
-        //a status parameter with a code, hex code, status name and status message
-        //and a data parameter which you can use to pass extra data
-        //all info about the RespondController can be found in the documentation
-    }'
-        );
-    });
-
-    /**
     * Creates a new model which inherits the initiated blueprint Model
     */
     Workbench::register('^new:model ([a-zA-Z0-9\_\.]+)$', function($argv) {
@@ -285,29 +258,6 @@
 
     }'
         );
-    });
-
-    /**
-    * Creates a new model which doesn't inherit the blueprint
-    */
-    Workbench::register('^new:model ([a-zA-Z0-9\_\.]+) static$', function($argv) {
-        $dot_pos = strrpos($argv[2], '.');
-        $ns_suffix='';
-        $class_name=$argv[2];
-        if($dot_pos!==false) {
-            $dir = Core\App::models()->directory(substr($argv[2], 0, $dot_pos));
-            if(!$dir->exists()) {
-                $dir->create();
-            }
-            $class_name=substr($argv[2], $dot_pos+1);
-        }
-        $controller = Core\App::models()->file($argv[2].'.php');
-        $controller->write('<?php
-    namespace '.Workbench::get('application').';
-    class '.$class_name.' extends Blueprints\\StaticModel {
-        protected static $_table = \''.str_replace('.', '_', $argv[2]).'\';
-        protected static $_id_column = \'id\';
-    }');
     });
 
     /**
@@ -532,10 +482,8 @@
             "new:controller [ControllerName]" => "Creates a new controller. Example:\n\tnew:controller Main.HomeController - will create a controller in Controllers/Main called HomeController.php",
             "new:controller [ControllerName] empty" => "Creates a new controller which  does not inherit the Controller blueprint",
             "new:respondcontroller [ControllerName]" => "Creates a new controller which extends the BaseRespondController. Can be useful for creating an API controller",
-            "new:respondcontroller [ControllerName] static" => "Creates a new respond controller for static use instead of initiated use",
             "new:model [ModelName]" => "Creates a new model. Example:\n\tnew:model Api.User - will create a model in Models/Api called User.php",
             "new:model [ModelName] empty" => "Creates a new model which doesn't extend the Model blueprint",
-            "new:model [ModelName] static" => "Creates a new model for static use instead of initiated use",
             "new:layout [LayoutName]" => "Creates a new basic layout",
             "new:view [ViewName]" => "Creates a new basic view",
             "new:view [ViewName] [LayoutName]" => "Creates a new basic view which extends a layout",
