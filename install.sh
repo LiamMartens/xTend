@@ -37,7 +37,7 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
         fi
         echo -n "Do you want to set the environment? (production by default, but staging and development also possible. Leave empty to keep default setting): ";
         read INPUT;
-        if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
+        if [[ $INPUT != '' ]]; then
             php workbench config environment $INPUT;
         fi
         echo -n "Do you want to change the backup interval? (1 week by default, false to disable, empty to keep default): ";
