@@ -1,5 +1,7 @@
 <?php
     namespace Application\Core;
+    use Application\Blueprints\DataExtension;
+    use Application\Blueprints\StaticDataExtension;
 
     /**
     * The ControllerHandler handles
@@ -8,9 +10,7 @@
     */
     class ControllerHandler
     {
-        /** @var array Set of controllers */
-        private static $_controllers=[];
-        /** @var array Containing controller names */
+        /** @var array Containing controller register names and their class names */
         private static $_controllers_names=[];
 
         /**
@@ -35,7 +35,7 @@
         *
         * @return controller|boolean
         */
-        public function load($controllerName, $data = [], $ns = false, $createInstance = false) {
+        public function load($controllerName, $data = [], $ns = false) {
             //
             //  controller => "My.Directive.My\Namespace\ControllerName@function@function
             //
@@ -60,64 +60,28 @@
             //start inclusion
             if(self::exists($controllerPath)) {
                 FileManager::include(App::controllers()->file($controllerPath.'.php'));
-                if($createInstance) {
-                    //create an instance in the controllers
-                    //if not you'll have to instantiate it yourself
-                    //the function @ call will be ignored if an instance is not being created
-                    //app reference is passed
-                    self::$_controllers[$controllerClassName] = new $controllerClassName(ModelHandler::names());
-                    self::$_controllers_names[$controllerPath] = &self::$_controllers[$controllerClassName];
-                    //data was passed
-                    if(($data!=null)&&(count($data)>0)) {
-                        if(method_exists(self::$_controllers[$controllerClassName], 'setData')) {
-                            foreach ($data as $key => $value) {
-                                self::$_controllers[$controllerClassName]->setData($key,$value);
-                            }
+                self::$_controllers_names[$controllerPath] = $controllerClassName;
+                //data was passed
+                if(($data!=null)&&(count($data)>0)) {
+                    if(method_exists($controllerClassName, 'set')) {
+                        foreach ($data as $key => $value) {
+                            call_user_func([ $controllerClassName, 'set' ], $key, $value);
                         }
                     }
-                    //execute requested @ functions
-                    //Multiple methods can be called using multiple @ symboles
-                    //class@funcA@funcB
-                    $totalclassparts = count($split);
-                    $i=1; while($i<$totalclassparts) {
-                        if(method_exists(self::$_controllers[$controllerClassName], $split[$i])) {
-                            $return_data = self::$_controllers[$controllerClassName]->{$split[$i]}(ModelHandler::names());
-                            if(is_array($return_data)) { echo json_encode($return_data); }
-                        } ++$i;
-                    }
-                    return self::$_controllers[$controllerClassName];
+                }
+                //execute requested @ functions
+                //Multiple methods can be called using multiple @ symboles
+                //class@funcA@funcB
+                $totalclassparts = count($split);
+                $i=1; while($i<$totalclassparts) {
+                    if(method_exists([ $controllerClassName, $split[$i] ])) {
+                        $return_data = call_user_func([ $controllerClassName, $split[$i] ], ModelHandler::names());
+                        if(is_array($return_data)) { echo json_encode($return_data); }
+                    } ++$i;
                 }
                 return true;
             }
             return false;
-        }
-
-        /**
-        * Returns a controller by name or the first one
-        *
-        * @param string|boolean $controllerName
-        *
-        * @return controller|boolean
-        */
-        public function get($controllerName=false) {
-            //the controller name here also does not include any @ functions
-            if(($controllerName==false)&&(count(self::$_controllers)>0))
-                return self::$_controllers[array_keys(self::$_controllers)[0]];
-            elseif($controllerName==false) return false;
-            if(isset(self::$_controllers[$controllerName]))
-                return self::$_controllers[$controllerName];
-            elseif(isset(self::$_controllers[App::namespace().'\\'.$controllerName]))
-                return self::$_controllers[App::namespace().'\\'.$controllerName];
-            return false;
-        }
-
-        /**
-        * Gets all controller instances
-        *
-        * @return array
-        */
-        public static function all() {
-            return self::$_controllers;
         }
 
         /**

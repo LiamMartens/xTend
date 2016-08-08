@@ -6,9 +6,7 @@
     * models
     */
     class ModelHandler {
-        /** @var array Contains all loaded models */
-        private static $_models=[];
-        /** @var array Contains model names */
+        /** @var array Containing model register names and their class names */
         private static $_models_names=[];
 
         /**
@@ -31,7 +29,7 @@
         *
         * @return model|boolean
         */
-        public static function load($modelName, $ns = false, $createInstance = false) {
+        public static function load($modelName, $ns = false) {
             //if create instance is set to false their will not be an instance of the model available
             //any reference to this model inclusion is also lost except for the fact that the file has been required
             //keep in mind also that the modelName also includes any directives you need to enter
@@ -53,42 +51,10 @@
             $className = (($namespace!==false) ? $namespace : $ns).'\\'.$modelName;
             if(self::exists($modelPath)) {
                 FileManager::include(App::models()->file($modelPath.'.php'));
-                if($createInstance) {
-                    self::$_models[$className] = new $className();
-                    self::$_models_names[$modelName] = &self::$_models[$className];
-                    return self::$_models[$className];
-                }
+                self::$_models_names[$modelName] = $className;
                 return true;
             }
             return false;
-        }
-
-        /**
-        * Gets a model by name or gets the first model
-        * (only those of whom an instance is available)
-        *
-        * @param boolean|string $modelName
-        *
-        * @param model|boolean
-        */
-        public static function get($modelName=false) {
-            if(($modelName==false)&&(count(self::$_models)>0))
-                return self::$_models[array_keys(self::$_models)[0]];
-            elseif($modelName==false) return false;
-            if(isset(self::$_models[$modelName]))
-                return self::$_models[$modelName];
-            elseif(isset(self::$_models[App::namespace().'\\'.$modelName]))
-                return self::$_models[App::namespace().'\\'.$modelName];
-            return false;
-        }
-
-        /**
-        * Gets all model instances
-        *
-        * @return array
-        */
-        public static function all() {
-            return self::$_models;
         }
 
         /**
