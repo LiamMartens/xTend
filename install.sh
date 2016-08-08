@@ -32,28 +32,28 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
         echo -n "Enter the location you want to configure for xTend (/ by default, leave empty to keep default setting): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config:location $INPUT;
-            echo "xTend configured with `php workbench config:location`";
+            php workbench config location $INPUT;
+            echo "xTend configured with `php workbench config location`";
         fi
         echo -n "Do you want to set the environment? (production by default, but staging and development also possible. Leave empty to keep default setting): ";
         read INPUT;
         if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
-            php workbench config:environment $INPUT;
+            php workbench config environment $INPUT;
         fi
         echo -n "Do you want to change the backup interval? (1 week by default, false to disable, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config:backupInterval $INPUT;
+            php workbench config backupInterval $INPUT;
         fi
         echo -n "Do you want to change the backup limit? (10 by default, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config:backupLimit $INPUT;
+            php workbench config backupLimit $INPUT;
         fi
         echo -n "Do you want to change the log limit? (30 by default, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config:logLimit $INPUT;
+            php workbench config logLimit $INPUT;
         fi
         echo -n "Do you want to change the public directory? (www by default, empty to keep default): ";
         read INPUT;
