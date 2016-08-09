@@ -50,7 +50,7 @@
         */
         public function navigate($data = [], $inc_url = true) {
             if(is_string($this->_handle)) {
-                return App::navigate($this->_handle);
+                return App::navigate($this->_handle, $data, $inc_url);
             }
             return false;
         }

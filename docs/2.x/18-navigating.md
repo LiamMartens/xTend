@@ -1,6 +1,8 @@
 # Navigating
 You can use your app to navigate to certain handles or url's by using either the `to()` or the `navigate()` method. Both have their own use.
 
+*Notice the `Route` object has the `to()` and `navigate()` methods as well but they lack the first parameter*
+
 ## to
 You can use the `to()` method to navigate to route handles. You can pass between 1 to 3 parameters to the method. The first one is the URL handle, you can also pass a route to it when you get it from the router for example, the second one are the parameters you want to fill in, for URL variables, and the third one is the data you want to pass (we've covered getting the navigation data in the section about the `Request` object)
 ```

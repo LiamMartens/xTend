@@ -69,6 +69,6 @@
         * Closes a ZipArchive
         */
         public function save() {
-            $res = $this->_zip->close();
+            return $this->_zip->close();
         }
     }
