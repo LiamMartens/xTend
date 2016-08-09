@@ -9,8 +9,10 @@
         private $_name;
         /** @var array Contains the attributes of the element */
         private $_attributes;
-        /** @var string Contains the text of the element */
-        private $_text;
+        /** @var string Contains the text of the element (before children) */
+        private $_text_before;
+        /** @var string Contains the text of the element (after children) */
+        private $_text_after;
         /** @var array Contains eventual child elements */
         protected $_elements;
 
@@ -33,7 +35,7 @@
         *
         * @return xTend\Core\HTMLHandler\HTMLElement
         */
-        public function createElement($name, $attributes=[]) {
+        public function create($name, $attributes=[]) {
             $el = new HTMLElement($name, $attributes);
             $this->_elements[] = $el;
             return $el;
@@ -46,7 +48,7 @@
         *
         * @return xTend\Core\HTMLHandler\HTMLElement|boolean
         */
-        public function addElement($el) {
+        public function add($el) {
             if($el instanceof HTMLElement) {
                 $this->_elements[] = $el;
                 return $el;
@@ -60,8 +62,10 @@
         *
         * @return xTend\Core\HTMLHandler\HTMLElement
         */
-        public function addText($text) {
-            $this->_text .= $text;
+        public function text($text, $after = false) {
+            if($after===false) {
+                $this->_text_before = $text;
+            } else { $this->_text_after = $text; }
             return $this;
         }
 
@@ -84,11 +88,13 @@
                     else $html.="\"$value\"";
                 } $html.=">";
             }
-            //add text content
-            $html.=$this->_text;
+            //add text content before
+            $html.=$this->_text_before;
             //add children
             foreach ($this->_elements as $el) {
                 $html.=$el->write(); }
+            //add text content after
+            $html.=$this->_text_after;
             //close
             $html.= ($this->_name===false) ? "" : "</".$this->_name.">";
             if($output)

@@ -32,7 +32,7 @@
         }
 
         public static function start() {
-            self::configuration(json_decode(App::config()->file('Sessions.Sessions.json')->read(), true));
+            self::configuration(json_decode(App::config()->file('Sessions.sessions.json')->read(), true));
             if(session_status()==PHP_SESSION_NONE) {
                 ini_set('session.cookie_httponly', true);
                 //start session

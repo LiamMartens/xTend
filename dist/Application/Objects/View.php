@@ -39,7 +39,6 @@
         public function wow() { return $this->_isWow; }
 
         /**
-        * @param xTend\Core\App $app
         * @param string $view
         * @param string|boolean $version
         */

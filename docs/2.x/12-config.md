@@ -1,0 +1,2 @@
+# Config
+By default all php files in your `Config` directory are included, but there is support for file modifiers just like in your `Libs` directory. Important to note is that the `Libs` are loaded before the `Config`.

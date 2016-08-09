@@ -69,7 +69,7 @@
             //or directly pass a route object as the handle
             //ignoring the route and alias parameters completely
             $h; if(is_string($handle)&&($route!==false)) {
-                $h = new Route($handle, $route, $alias);
+                $h = new Route(App::location().'/'.$handle, $route, $alias);
             } elseif($handle instanceof Route) { $h=$handle; }
             if(($override===true)||(!isset($routes[$h->handle()]))) {
                 //add route to the post

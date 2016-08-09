@@ -8,7 +8,7 @@
     * Initializes the session keys
     */
     Workbench::register('^init$', function($argv) {
-        $conf = Core\App::config()->file('Sessions.Sessions.json');
+        $conf = Core\App::config()->file('Sessions.sessions.json');
         $session_config = json_decode($conf->read(), true);
         $session_config['sessionName'] = sha1(random_bytes(8));
         $session_config['initiatedKey'] = sha1(random_bytes(8));
@@ -23,7 +23,7 @@
     * Shows the current application's session keys
     */
     Workbench::register('^init show$', function($argv) {
-        $conf = Core\App::config()->file('Sessions.Sessions.json');
+        $conf = Core\App::config()->file('Sessions.sessions.json');
         $session_config = json_decode($conf->read(), true);
         echo "\n"; foreach($session_config as $key => $value) {
             echo str_pad($key, 30).$value."\n";

@@ -27,7 +27,6 @@
         private function set($path) { $this->_path = $this->clean($path); }
 
         /**
-        * @param xTend\Core\App $app
         * @param string $path
         */
         public function __construct($path) {

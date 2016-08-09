@@ -14,7 +14,7 @@
         *
         * @return xTend\Core\HTMLHandler\HTMLDocument
         */
-        public static function createDocument($fullDoc = false) {
+        public static function create($fullDoc = false) {
             $doc = new HTMLDocument($fullDoc);
             self::$_documents[] = $doc;
             return $doc;
