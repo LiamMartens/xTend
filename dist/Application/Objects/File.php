@@ -58,18 +58,21 @@
             // tokenize it
             $tokens = token_get_all($contents);
             // for class and namespace building
-            $current_ns = ''; $namespace_build=false;
+            $current_ns = ''; $namespace_build=false; $skip_used=false;
             $current_class = ''; $class_build=false;
             // loop through tokens
             foreach($tokens as $token) {
+                $end_build=false;
                 if(!is_string($token)) {
                     if($token[0]===T_NAMESPACE) {
                         $current_ns='';
                         $namespace_build=true;
+                        $skip_used=false;
                     }
                     if($token[0]===T_CLASS) {
                         $current_class='';
                         $class_build=true;
+                        $skip_used=false;
                     }
                     if(($token[0]===T_STRING)||($token[0]===T_NS_SEPARATOR)) {
                         if($namespace_build) {
@@ -78,9 +81,21 @@
                             $current_class.=$token[1];
                         }
                     }
+                    if($token[0]===T_WHITESPACE) {
+                        if($skip_used) {
+                            $end_build=true;
+                        } else { $skip_used=true; }
+                    }
                 } elseif(($token==';')||($token=='{')) {
+                    $end_build=true;
+                }
+                // end build if necessary after ; { or whitespace
+                if($end_build) {
                     if($class_build) {
-                        $classes[]=$current_ns.'\\'.$current_class;
+                        $classes[]=$current_ns.$current_class;
+                    }
+                    if($namespace_build) {
+                        $current_ns.='\\';
                     }
                     $namespace_build=false;
                     $class_build=false;
