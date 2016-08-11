@@ -137,8 +137,37 @@
                         echo "A previously installed version was detected and removed from the autoload.json in favor of the new version. The package files still exist in Libs/Packagist/$name/$prev_version_found\n";
                     }
                     //add autoload
+                    $classmap=[];
                     if(isset($to_install['autoload'])) {
-                        self::$_autoload["$name-$id"] = $to_install["autoload"]; }
+                        // go through autoload
+                        foreach($to_install['autoload'] as $spec => $mapping) {
+                            if($spec=='classmap') {
+                                // loop through the files and fetch the fully qualified classnames
+                                // through regex
+                                foreach($mapping as $file) {
+                                    $f=$package_sub->file($file, substr_count($file, '.'));
+                                    $classes=$f->classes();
+                                    foreach($classes as $class) {
+                                        $classmap[$class]=$file;
+                                    }
+                                }
+                            } else {
+                                // psr -> go through mapping
+                                foreach($mapping as $prefix => $source) {
+                                    // get all files in source
+                                    $directory=$package_sub->directory($source);
+                                    $files=$directory->files(true);
+                                    // loop through files and add to class mapping
+                                    foreach($files as $file) {
+                                        $classes=$file->classes();
+                                        foreach($classes as $class) {
+                                            $classmap[$class]=$source.substr($file, strlen($directory));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        self::$_autoload["$name-$id"] = $classmap; }
                     self::save();
                     return true;
                 }

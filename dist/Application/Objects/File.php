@@ -46,6 +46,50 @@
         }
 
         /**
+        * Returns an array of defined classes in the file
+        *
+        * @return array
+        */
+        public function classes() {
+            // array for all classnames
+            $classes = [];
+            // get contents of the file
+            $contents = $this->read();
+            // tokenize it
+            $tokens = token_get_all($contents);
+            // for class and namespace building
+            $current_ns = ''; $namespace_build=false;
+            $current_class = ''; $class_build=false;
+            // loop through tokens
+            foreach($tokens as $token) {
+                if(!is_string($token)) {
+                    if($token[0]===T_NAMESPACE) {
+                        $current_ns='';
+                        $namespace_build=true;
+                    }
+                    if($token[0]===T_CLASS) {
+                        $current_class='';
+                        $class_build=true;
+                    }
+                    if(($token[0]===T_STRING)||($token[0]===T_NS_SEPARATOR)) {
+                        if($namespace_build) {
+                            $current_ns.=$token[1];
+                        } elseif($class_build) {
+                            $current_class.=$token[1];
+                        }
+                    }
+                } elseif(($token==';')||($token=='{')) {
+                    if($class_build) {
+                        $classes[]=$current_ns.'\\'.$current_class;
+                    }
+                    $namespace_build=false;
+                    $class_build=false;
+                }
+            }
+            return $classes;
+        }
+
+        /**
         * Returns whether the file is writable
         *
         * @return boolean
