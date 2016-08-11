@@ -40,5 +40,5 @@ Use `readable()` to get the human name of your status code.
 ### status
 Use `getStatus()` to get a full description of your error. This is a combination of the hex code, the name and the readable name.
 
-### exception
-Use `exception()` to get an `Exception` object for your status code.
+### Throwing an exception
+Since the `StatusCode` object extends the `Exception` class you can `throw` any `StatusCode` to generate an error.

@@ -1,7 +1,7 @@
 <?php
     namespace Application\Objects\StatusCodeHandler;
     use \Exception;
-    class StatusCode {
+    class StatusCode extends Exception {
         /** @var integer Code of the status code */
         protected $_code;
         /** @var string The name of the status */
@@ -40,14 +40,7 @@
         * @return boolean
         */
         public function match($key) { return (($key===$this->code())||($key===$this->name())||($key==$this->hex())); }
-
-        /**
-        * Gets an exception from the statuscode
-        *
-        * @return Exception
-        */
-        public function exception() { return new Exception($this->error(), $this->code()); }
-
+        
         /**
         * @param integer $code
         * @param string $name
@@ -57,5 +50,15 @@
             $this->_code = $code;
             $this->_name = $name;
             $this->_readableName = $readable;
+            parent::__construct($readable, $code, null);
+        }
+
+        /**
+        * Returns the to string
+        *
+        * @return string
+        */
+        public function __toString() {
+            return substr(__CLASS__, strlen(__NAMESPACE__)+1).": ".$this->status();
         }
     }

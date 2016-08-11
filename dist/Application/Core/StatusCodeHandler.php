@@ -46,8 +46,8 @@
         * @return xTend\Core\StatusCode
         */
         public static function register($code, $name, $readable = '') {
-            if(!is_numeric($code)) { throw self::find(0x0000)->exception(); }
-            if(strlen($name)==0) { throw self::find(0x0001)->exception(); }
+            if(!is_numeric($code)) { throw self::find(0x0000); }
+            if(strlen($name)==0) { throw self::find(0x0001); }
             self::$_statusCodes[$code]=new StatusCode($code,$name,$readable);
         }
     }
