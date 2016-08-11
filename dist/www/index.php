@@ -21,7 +21,6 @@
         if(__NAMESPACE__==$matched_application) {
             Core\App::start(__DIR__);
             Core\FileHandler::system('Config.App.App.php')->include();
-            Core\App::configuration([]);
             Core\App::run();
         }
     }

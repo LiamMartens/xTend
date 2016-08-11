@@ -22,7 +22,6 @@
     // Start app and workbench
     Core\App::start(__DIR__, true);
     Core\FileHandler::system('Config.App.App.php')->include();
-    Core\App::configuration([]);
     Workbench::argv($argv);
     Workbench::commands();
     Core\App::run();
