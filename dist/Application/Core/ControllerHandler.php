@@ -10,9 +10,6 @@
     */
     class ControllerHandler
     {
-        /** @var array Containing controller register names and their class names */
-        private static $_controllers_names=[];
-
         /**
         * Checks whether a controller exists
         *
@@ -36,60 +33,47 @@
         * @return controller|boolean
         */
         public function load($controllerName, $data = [], $ns = false) {
-            //
-            //  controller => "My.Directive.My\Namespace\ControllerName@function@function
-            //
-            //set default namespace
-            $at_index=strpos($controllerName, '@');
-            $registerName=($at_index===false) ? $controllerName : substr($controllerName, 0, $at_index);
-            if($ns===false) $ns=App::namespace();
-            //extract directive
-            $dot_pos = strrpos($controllerName, '.');
-            $directive = ($dot_pos!==false) ? substr($controllerName, 0, $dot_pos) : false;
-            if($directive!==false) { $directive.='.'; }
+            // explode it on @ -> 0 will be the directive + namespace + classname
+            // >1 index will be methods
+            $at_explode=explode('@', $controllerName);
+            $controllerName=$at_explode[0];
+            // remove the model name from the array
+            array_splice($at_explode, 0, 1);
+            // set default namespace
+            if($ns===false) { $ns=App::namespace(); }
+            // extract directive
+            $dot_pos=strrpos($controllerName, '.');
+            $directive=($dot_pos===false) ? false : substr($controllerName, 0, $dot_pos).'.';
+            // now only contains the classname and namespace
             if($dot_pos!==false) { $controllerName=substr($controllerName, $dot_pos+1); }
-            //extract namespace
-            $back_pos = strrpos($controllerName, '\\');
-            $namespace = ($back_pos!==false) ? substr($controllerName, 0, $back_pos) : false;
+            // extract namespace and classname
+            $back_pos=strrpos($controllerName, '\\');
+            // namespace now contains default namespace or specified namespace
+            $ns=($back_pos===false) ? $ns : substr($controllerName, 0, $back_pos);
+            // modelName now contains the classname
             if($back_pos!==false) { $controllerName=substr($controllerName, $back_pos+1); }
-            //extract function calls and real controller name
-            $split = explode('@', $controllerName);
-            $controllerClassName = (($namespace!==false) ? $namespace : $ns)."\\".$split[0];
-            //start inclusion
-            $controllerPath = $directive.$split[0];
-            //start inclusion
-            if(self::exists($controllerPath)) {
-                FileManager::include(App::controllers()->file($controllerPath.'.php'));
-                self::$_controllers_names[$controllerPath] = $controllerClassName;
+            // get file path and start inclusion
+            $modelPath=$directive.$controllerName;
+            if(self::exists($modelPath)) {
+                FileManager::include(App::models()->file($modelPath.'.php'));
                 //data was passed
+                $className=trim($ns, '\\').'\\'.$controllerName;
                 if(($data!=null)&&(count($data)>0)) {
-                    if(method_exists($controllerClassName, 'set')) {
+                    if(method_exists([$controllerClassName, 'set'])) {
                         foreach ($data as $key => $value) {
                             call_user_func([ $controllerClassName, 'set' ], $key, $value);
                         }
                     }
                 }
-                //execute requested @ functions
-                //Multiple methods can be called using multiple @ symboles
-                //class@funcA@funcB
-                $totalclassparts = count($split);
-                $i=1; while($i<$totalclassparts) {
-                    if(method_exists([ $controllerClassName, $split[$i] ])) {
-                        $return_data = call_user_func([ $controllerClassName, $split[$i] ], ModelHandler::names());
-                        if(is_array($return_data)) { echo json_encode($return_data); }
-                    } ++$i;
+                // execute requested @ functions
+                // multiple methods can be called using multiple @ symbols
+                foreach($at_explode as $method) {
+                    if(method_exists([ $className, $method ])) {
+                        call_user_func([ $className, $method ]);
+                    }
                 }
                 return true;
             }
             return false;
-        }
-
-        /**
-        * Gets all controller instances by registered name
-        *
-        * @return array
-        */
-        public static function names() {
-            return self::$_controllers_names;
         }
     }

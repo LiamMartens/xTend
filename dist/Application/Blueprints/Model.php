@@ -7,7 +7,7 @@
     * Default Model which allows for database interaction
     * using the built in ORM
     */
-    class StaticModel {
+    class Model {
         /** @var string Name of the table of the model. By default the plural lowercase version of the class name is used */
         protected static $_table = false;
         /** @var string Column name of the primary key */

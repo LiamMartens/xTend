@@ -230,8 +230,8 @@
         $controller->write('<?php
     namespace '.Workbench::get('application').';
     class '.$class_name.' extends Blueprints\\Model {
-        protected $_table = \''.str_replace('.', '_', $argv[2]).'\';
-        protected $_id_column = \'id\';
+        protected static $_table = \''.str_replace('.', '_', $argv[2]).'\';
+        protected static $_id_column = \'id\';
     }'
         );
     });
