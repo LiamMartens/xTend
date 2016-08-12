@@ -103,9 +103,7 @@
         * @return xTend\Core\xORM\Select
         */
         public static function select($column, $is_id_col = false) {
-            $s = new Select($column);
-            if($is_id_col) { $s->primary($column); }
-            return $s;
+            return new Select($column, $is_id_col);
         }
 
         /**

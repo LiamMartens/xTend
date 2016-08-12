@@ -666,12 +666,9 @@
         /**
         * @param string|array If the column is an array the second element is the alias
         */
-        public function __construct($column) {
+        public function __construct($column, $is_id_col=false) {
             parent::__construct();
-            if(is_array($column)) {
-                $this->_columns[] = $column[0];
-                $this->_alias[$column[0]] = $column[1];
-            } else { $this->_columns[] = $column; }
+            self::select($column, $is_id_col);
         }
 
         /**
@@ -682,9 +679,14 @@
         * @return xTend\Core\xORM\Select Own instance
         */
         public function select($column, $is_id_col = false) {
-            if(is_array($column)) {
-                $this->_columns[] = $column[0];
-                $this->_alias[$column[0]] = $column[1];
+            if(is_array($column)&&(count($column)>0)) {
+                // if is_array of arrays
+                if(is_array($column[0])) {
+                    foreach($column as $c) { self::select($c); }
+                } else {
+                    $this->_columns[] = $column[0];
+                    $this->_alias[$column[0]] = $column[1];
+                }
             } else { $this->_columns[] = $column; }
             if($is_id_col) { $this->primary($column); }
             return $this;
@@ -1060,7 +1062,13 @@
         * @return xTend\Core\xORM\Raw Own instance
         */
         public function primary($column) {
-            $this->_id_column = $column;
+            if(is_string($column)) {
+                $this->_id_column = $column;
+            } elseif(is_array($column)&&(count($column)>1)) {
+                $this->_id_column=$column[1];
+            } elseif(is_array($column)&&(count($column)>0)) {
+                $this->_id_column=$column[0]
+            }
             return $this;
         }
 

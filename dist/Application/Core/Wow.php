@@ -241,10 +241,10 @@
         private static function compile($content, $modules_dir = false) {
             //remove @version, @compile, @layout and @section flags as these
             //should not be repaced by anything, they should be ignored
-            $content = preg_replace(self::_rx_version, '', $content);
-            $content = preg_replace(self::_rx_layout, '', $content);
-            $content = preg_replace(self::_rx_flag, '', $content);
-            $content = preg_replace(self::_rx_section, '', $content);
+            $content = preg_replace(self::$_rx_version, '', $content);
+            $content = preg_replace(self::$_rx_layout, '', $content);
+            $content = preg_replace(self::$_rx_flag, '', $content);
+            $content = preg_replace(self::$_rx_section, '', $content);
             //split into modules if any
             $final_content='';
             $mod_split = preg_split(self::$_rx_module_extract, $content, NULL, PREG_SPLIT_DELIM_CAPTURE);

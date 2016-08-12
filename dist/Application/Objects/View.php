@@ -3,6 +3,7 @@
     use Application\Core\App;
     use Application\Blueprints\DataExtension;
     use Application\Core\Wow;
+    use Application\Core\FileManager;
     /**
     * The View object contains the
     * current View
