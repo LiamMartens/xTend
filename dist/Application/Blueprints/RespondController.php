@@ -3,7 +3,7 @@
     use Application\Core\Request;
     use Application\Core\StatusCodeHandler;
 
-    class StaticRespondController extends StaticDataExtension {
+    class RespondController extends StaticDataExtension {
         /**
         * Respond function to echo json with status and data
         *
