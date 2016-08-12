@@ -398,7 +398,7 @@
         *
         * @return boolean
         */
-        public function to($route, $parameters = [], $data = []) {
+        public static function to($route, $parameters = [], $data = []) {
             Session::set('xt-data', json_encode($data));
             $handle='';
             if(is_string($route)) {
@@ -430,7 +430,7 @@
         * @param array $data
         * @param boolean $inc_url
         */
-        public function navigate($request, $data = [], $inc_url = true) {
+        public static function navigate($request, $data = [], $inc_url = true) {
             //set temp data and time to live
             Session::set('xt-data', json_encode($data));
             $host=Request::url();

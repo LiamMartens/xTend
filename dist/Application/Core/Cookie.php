@@ -27,7 +27,7 @@
         * @param integer|boolean $time
         * @param string $domain
         */
-        public function set($key, $value, $time=false, $domain='/') {
+        public static function set($key, $value, $time=false, $domain='/') {
             if($time===false) $time=time()+3600*24; //one day
             try {
                 setcookie(sha1($key), Crypto::encrypt($value, self::$_enckey), $time, $domain);
