@@ -491,6 +491,8 @@
             FileManager::include(self::$_directorySystem.'/Core/LogHandler.php');
             // Include ModelHandler
             FileManager::include(self::$_directorySystem.'/Core/ModelHandler.php');
+            // Include ControllerHandler
+            FileManager::include(self::$_directorySystem.'/Core/ControllerHandler');
             // Include WOW
             FileManager::include(self::$_directorySystem.'/Core/Wow.php');
             // Include data ext view and view handler
