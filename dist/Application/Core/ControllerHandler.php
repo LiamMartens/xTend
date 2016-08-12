@@ -8,8 +8,7 @@
     * loading and executing
     * controllers
     */
-    class ControllerHandler
-    {
+    class ControllerHandler  {
         /**
         * Checks whether a controller exists
         *
@@ -32,7 +31,7 @@
         *
         * @return controller|boolean
         */
-        public function load($controllerName, $data = [], $ns = false) {
+        public static function load($controllerName, $data = [], $ns = false) {
             // explode it on @ -> 0 will be the directive + namespace + classname
             // >1 index will be methods
             $at_explode=explode('@', $controllerName);
