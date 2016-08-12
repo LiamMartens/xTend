@@ -59,7 +59,7 @@
                 //data was passed
                 $className=trim($ns, '\\').'\\'.$controllerName;
                 if(($data!=null)&&(count($data)>0)) {
-                    if(method_exists([$controllerClassName, 'set'])) {
+                    if(method_exists($controllerClassName, 'set')) {
                         foreach ($data as $key => $value) {
                             call_user_func([ $controllerClassName, 'set' ], $key, $value);
                         }
@@ -68,7 +68,7 @@
                 // execute requested @ functions
                 // multiple methods can be called using multiple @ symbols
                 foreach($at_explode as $method) {
-                    if(method_exists([ $className, $method ])) {
+                    if(method_exists($className, $method)) {
                         call_user_func([ $className, $method ]);
                     }
                 }

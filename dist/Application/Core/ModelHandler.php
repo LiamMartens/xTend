@@ -54,7 +54,7 @@
                 // multiple methods can be called using multiple @ symbols
                 $className=trim($ns, '\\').'\\'.$modelName;
                 foreach($at_explode as $method) {
-                    if(method_exists([ $className, $method ])) {
+                    if(method_exists($className, $method)) {
                         call_user_func([ $className, $method ]);
                     }
                 }
