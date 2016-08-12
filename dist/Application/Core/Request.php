@@ -13,11 +13,11 @@
         /** @var string Contains the current trimmed path */
         private static $_path=false;
         /** @var array GET data */
-        public static $get;
+        public static $get=[];
         /** @var array POST data */
-        public static $post;
+        public static $post=[];
         /** @var array navigation pass data */
-        public static $data;
+        public static $data=[];
         /** @var Route contains the route that has been executed */
         private static $_route;
 
