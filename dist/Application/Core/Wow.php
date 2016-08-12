@@ -238,7 +238,7 @@
         *
         * @return string
         */
-        private function compile($content, $modules_dir = false) {
+        private static function compile($content, $modules_dir = false) {
             //remove @version, @compile, @layout and @section flags as these
             //should not be repaced by anything, they should be ignored
             $content = preg_replace(self::_rx_version, '', $content);
@@ -295,7 +295,7 @@
         *
         * @return string
         */
-        public function view($file, $layout_dir = false, $modules_dir = false) {
+        public static function view($file, $layout_dir = false, $modules_dir = false) {
             //file hash
             $file_hash = hash('sha256', $file);
             //get file name 'name'

@@ -2,6 +2,7 @@
     namespace Application\Objects\ViewHandler;
     use Application\Core\App;
     use Application\Blueprints\DataExtension;
+    use Application\Core\Wow;
     /**
     * The View object contains the
     * current View
