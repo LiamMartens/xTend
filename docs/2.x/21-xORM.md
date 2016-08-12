@@ -23,7 +23,15 @@ use Application\Core\xORM;
 xORM::select('username', true);
 
 //SELECT email AS mail
-xORM::select(['email', 'mail']);
+xORM::select([
+    'email' => 'mail'
+]);
+
+//SELECT multiple
+xORM::select([
+    'email' => 'mail',
+    'username'
+])
 ``` 
 
 ### Setting the primary key afterwards
