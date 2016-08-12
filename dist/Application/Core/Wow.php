@@ -45,7 +45,7 @@
         * @return int
         */
         public static function flavor($fl=null) {
-            if(self::$_flavor!==null) {
+            if($fl!==null) {
                 self::$_flavor=$fl;
             }
             return self::$_flavor;
