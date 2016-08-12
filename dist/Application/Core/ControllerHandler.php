@@ -66,11 +66,20 @@
                 }
                 // execute requested @ functions
                 // multiple methods can be called using multiple @ symbols
+                $return_data=[]; $return_data_keys=[];
                 foreach($at_explode as $method) {
                     if(method_exists($className, $method)) {
-                        call_user_func([ $className, $method ]);
+                        $return=call_user_func([ $className, $method ]);
+                        if(is_array($return)) {
+                            $return_data[$method]=$return;
+                            $return_data_keys[]=$method;
+                        }
                     }
                 }
+                // echo array if any data
+                $return_data_count=count($return_data); if($return_data_count==1) {
+                    echo json_encode($return_data[$return_data_keys[0]]);
+                } elseif($return_data_count>1) { echo json_encode($return_data); }
                 return true;
             }
             return false;
