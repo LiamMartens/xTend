@@ -6,6 +6,11 @@
     * models
     */
     class ModelHandler {
+        /** @var array Contains the register names */
+        private static $_names = [];
+        /** @var array Contains the register names and their classname */
+        private static $_name_bindings = [];
+        
         /**
         * Checks whether a model exists
         *
@@ -30,7 +35,7 @@
             // explode it on @ -> 0 will be the directive + namespace + classname
             // >1 index will be methods
             $at_explode=explode('@', $modelName);
-            $modelName=$at_explode[0];
+            $modelName=$at_explode[0]; $registerName=$modelName;
             // remove the model name from the array
             array_splice($at_explode, 0, 1);
             // set default namespace
@@ -49,16 +54,34 @@
             // get file path and start inclusion
             $modelPath=$directive.$modelName;
             if(self::exists($modelPath)) {
+                $className=trim($ns, '\\').'\\'.$modelName;
                 FileManager::include(App::models()->file($modelPath.'.php'));
+                self::$_names[] = $registerName;
+                self::$_name_bindings[$registerName] = $className;
                 // execute requested @ functions
                 // multiple methods can be called using multiple @ symbols
-                $className=trim($ns, '\\').'\\'.$modelName;
                 foreach($at_explode as $method) {
                     if(method_exists($className, $method)) {
                         call_user_func([ $className, $method ]);
                     }
                 }
                 return true;
+            }
+            return false;
+        }
+
+        /**
+        * Finds a model class name
+        *
+        * @param string $name
+        *
+        * @return string(className)
+        */
+        public static function find($name=null) {
+            if(($name===null)&&(count(self::$_names)>0)) {
+                return self::$_name_bindings[self::$_names[0]];
+            } elseif(isset(self::$_name_bindings[$name])) {
+                return self::$_name_bindings[$name];
             }
             return false;
         }

@@ -9,6 +9,11 @@
     * controllers
     */
     class ControllerHandler  {
+        /** @var array Contains the register names */
+        private static $_names = [];
+        /** @var array Contains the register names and their classnames */
+        private static $_name_bindings = [];
+
         /**
         * Checks whether a controller exists
         *
@@ -35,7 +40,7 @@
             // explode it on @ -> 0 will be the directive + namespace + classname
             // >1 index will be methods
             $at_explode=explode('@', $controllerName);
-            $controllerName=$at_explode[0];
+            $controllerName=$at_explode[0]; $registerName=$controllerName;
             // remove the model name from the array
             array_splice($at_explode, 0, 1);
             // set default namespace
@@ -54,9 +59,11 @@
             // get file path and start inclusion
             $modelPath=$directive.$controllerName;
             if(self::exists($modelPath)) {
-                FileManager::include(App::controllers()->file($modelPath.'.php'));
-                //data was passed
                 $className=trim($ns, '\\').'\\'.$controllerName;
+                FileManager::include(App::controllers()->file($modelPath.'.php'));
+                self::$_names[] = $registerName;
+                self::$_name_bindings[$registerName]=$className;
+                //data was passed
                 if(($data!=null)&&(count($data)>0)) {
                     if(method_exists($controllerClassName, 'set')) {
                         foreach ($data as $key => $value) {
@@ -81,6 +88,23 @@
                     echo json_encode($return_data[$return_data_keys[0]]);
                 } elseif($return_data_count>1) { echo json_encode($return_data); }
                 return true;
+            }
+            return false;
+        }
+
+
+        /**
+        * Finds a controller class name
+        *
+        * @param string $name
+        *
+        * @return string(className)
+        */
+        public static function find($name=null) {
+            if(($name===null)&&(count(self::$_names)>0)) {
+                return self::$_name_bindings[self::$_names[0]];
+            } elseif(isset(self::$_name_bindings[$name])) {
+                return self::$_name_bindings[$name];
             }
             return false;
         }
