@@ -31,7 +31,7 @@
                 return self::$_statusCodes[$key];
             } elseif(is_string($key)) {
                 foreach (self::$_statusCodes as $c) {
-                    if($c->isStatus($key)) return $c;
+                    if($c->match($key)) return $c;
                 }
             }
         }
