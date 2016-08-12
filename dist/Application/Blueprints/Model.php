@@ -19,7 +19,8 @@
         * @return string
         */
         private static function tableName() {
-            $table = self::$_table;
+            $class=get_called_class();
+            $table = $class::$_table;
             if($table===false) {
                 $class = get_called_class();
                 $back_pos = strrpos($class, "\\");
