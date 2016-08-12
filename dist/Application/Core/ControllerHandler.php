@@ -54,7 +54,7 @@
             // get file path and start inclusion
             $modelPath=$directive.$controllerName;
             if(self::exists($modelPath)) {
-                FileManager::include(App::models()->file($modelPath.'.php'));
+                FileManager::include(App::controllers()->file($modelPath.'.php'));
                 //data was passed
                 $className=trim($ns, '\\').'\\'.$controllerName;
                 if(($data!=null)&&(count($data)>0)) {
