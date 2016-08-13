@@ -61,7 +61,7 @@
         *
         * @return view|boolean
         */
-        public static function get($viewName = false) {
+        public static function find($viewName = false) {
             //the controller name here also does not include any @ functions
             if(($viewName==false)&&(count(self::$_views)==1))
                 return self::$_views[array_keys(self::$_views)[0]];

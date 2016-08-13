@@ -222,19 +222,19 @@
         //
         Wow::register(
             Wow::rx("\<controller\>(.+?)\<\/controller\>","i"),
-            "<?php echo Core\ControllerHandler::get()->$1; ?>"
+            "<?php echo Core\ControllerHandler::find()::$1; ?>"
         );
         Wow::register(
             Wow::rx("\<controller\s+name=\"(.+?)\"\s*\>(.+?)\<\/controller\>","i"),
-            "<?php echo Core\ControllerHandler::get('$1')->$2; ?>"
+            "<?php echo Core\ControllerHandler::find('$1')::$2; ?>"
         );
         Wow::register(
             Wow::rx("\<controller\s+inject\s*\>(.+?)\<\/controller\>","i"),
-            "Core\ControllerHandler::get()->$1"
+            "Core\ControllerHandler::find()::$1"
         );
         Wow::register(
             Wow::rx("\<controller\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/controller\>","i"),
-            "Core\ControllerHandler::get('$1')->$2"
+            "Core\ControllerHandler::find('$1')::$2"
         );
 
         //
@@ -242,19 +242,19 @@
         //
         Wow::register(
             Wow::rx("\<view\>(.+?)\<\/view\>", "i"),
-            "<?php echo Core\ViewHandler::get()->$1; ?>"
+            "<?php echo Core\ViewHandler::find()->$1; ?>"
         );
         Wow::register(
             Wow::rx("\<view\s+name=\"(.+?)\"\s*\>(.+?)\<\/view\>", "i"),
-            "<?php echo Core\ViewHandler::get('$1')->$2; ?>"
+            "<?php echo Core\ViewHandler::find('$1')->$2; ?>"
         );
         Wow::register(
             Wow::rx("\<view\s+inject\s*\>(.+?)\<\/view\>", "i"),
-            "Core\ViewHandler::get()->$1"
+            "Core\ViewHandler::find()->$1"
         );
         Wow::register(
             Wow::rx("\<view\s+(?:(?:inject\s+name=\"(.+?)\")|(?:name=\"(.+?)\"\s+inject))\s*\>(.+?)\<\/view\>", "i"),
-            "Core\ViewHandler::get('$1')->$2"
+            "Core\ViewHandler::find('$1')->$2"
         );
 
         //
@@ -448,11 +448,11 @@
         //
         Wow::register(
             Wow::rx('@controller:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "<?php echo Core\ControllerHandler::get()->$1; ?>"
+            "<?php echo Core\ControllerHandler::find()::$1; ?>"
         );
         Wow::register(
             Wow::rx('@icontroller:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "Core\ControllerHandler::get()->$1"
+            "Core\ControllerHandler::find()::$1"
         );
 
         //
@@ -460,11 +460,11 @@
         //
         Wow::register(
             Wow::rx('@controller_(.+?):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "<?php echo Core\ControllerHandler::get('$1')->$2; ?>"
+            "<?php echo Core\ControllerHandler::find('$1')::$2; ?>"
         );
         Wow::register(
             Wow::rx('@icontroller_(.+?):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "Core\ControllerHandler::get('$1')->$2"
+            "Core\ControllerHandler::find('$1')::$2"
         );
 
         //
@@ -472,11 +472,11 @@
         //
         Wow::register(
             Wow::rx('@view:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "<?php echo Core\ViewHandler::get()->$1; ?>"
+            "<?php echo Core\ViewHandler::find()->$1; ?>"
         );
         Wow::register(
             Wow::rx('@iview:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "Core\ViewHandler::get()->$1"
+            "Core\ViewHandler::find()->$1"
         );
 
         //
@@ -484,11 +484,11 @@
         //
         Wow::register(
             Wow::rx('@view_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "<?php echo Core\ViewHandler::get('$1')->$2; ?>"
+            "<?php echo Core\ViewHandler::find('$1')->$2; ?>"
         );
         Wow::register(
             Wow::rx('@iview_('.Wow::PHP_NAME_RX.'):\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
-            "Core\ViewHandler::get('$1')->$2"
+            "Core\ViewHandler::find('$1')->$2"
         );
 
         //

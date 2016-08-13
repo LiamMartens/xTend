@@ -40,7 +40,7 @@
             // explode it on @ -> 0 will be the directive + namespace + classname
             // >1 index will be methods
             $at_explode=explode('@', $controllerName);
-            $controllerName=$at_explode[0]; $registerName=$controllerName;
+            $controllerName=$at_explode[0];
             // remove the model name from the array
             array_splice($at_explode, 0, 1);
             // set default namespace
@@ -50,6 +50,8 @@
             $directive=($dot_pos===false) ? false : substr($controllerName, 0, $dot_pos).'.';
             // now only contains the classname and namespace
             if($dot_pos!==false) { $controllerName=substr($controllerName, $dot_pos+1); }
+            // register name should be the classname and namespace of the original load
+            $registerName=$controllerName;
             // extract namespace and classname
             $back_pos=strrpos($controllerName, '\\');
             // namespace now contains default namespace or specified namespace
@@ -65,9 +67,9 @@
                 self::$_name_bindings[$registerName]=$className;
                 //data was passed
                 if(($data!=null)&&(count($data)>0)) {
-                    if(method_exists($controllerClassName, 'set')) {
+                    if(method_exists($className, 'set')) {
                         foreach ($data as $key => $value) {
-                            call_user_func([ $controllerClassName, 'set' ], $key, $value);
+                            call_user_func([ $className, 'set' ], $key, $value);
                         }
                     }
                 }

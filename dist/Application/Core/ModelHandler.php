@@ -35,7 +35,7 @@
             // explode it on @ -> 0 will be the directive + namespace + classname
             // >1 index will be methods
             $at_explode=explode('@', $modelName);
-            $modelName=$at_explode[0]; $registerName=$modelName;
+            $modelName=$at_explode[0]; 
             // remove the model name from the array
             array_splice($at_explode, 0, 1);
             // set default namespace
@@ -45,6 +45,8 @@
             $directive=($dot_pos===false) ? false : substr($modelName, 0, $dot_pos).'.';
             // now only contains the classname and namespace
             if($dot_pos!==false) { $modelName=substr($modelName, $dot_pos+1); }
+            // register name should be the classname and namespace of the original load
+            $registerName=$modelName;
             // extract namespace and classname
             $back_pos=strrpos($modelName, '\\');
             // namespace now contains default namespace or specified namespace
