@@ -730,8 +730,8 @@
             SessionHandler::start();
             PackagistHandler::start();
             Request::start();
-            self::configure();
             self::libraries();
+            self::configure();
             BackupManager::create();
             if(self::$_bootstrap!==true) {
                 Router::start();
