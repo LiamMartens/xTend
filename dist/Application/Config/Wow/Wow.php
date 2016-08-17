@@ -286,7 +286,7 @@
         //    @echo:$username
         //
         Wow::register(
-            Wow::rx("@echo:(.+)", "i"),
+            Wow::rx("@echo:(.+?);", "i"),
             "<?php echo $1; ?>"
         );
 

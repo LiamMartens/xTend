@@ -82,7 +82,7 @@ Use the `echo` expression to echo out a PHP statement or variable
 ```
 OR
 ```
-@echo:$variable
+@echo:$variable;
 ```
 
 ### php
