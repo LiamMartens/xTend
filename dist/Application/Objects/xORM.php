@@ -227,6 +227,15 @@
         }
 
         /**
+        * Returns the user data as an array
+        *
+        * @return array
+        */
+        public static function toArray() {
+            return self::$_values;
+        }
+
+        /**
         * Returns a data member
         *
         * @param string $name
