@@ -232,7 +232,7 @@
         * @return array
         */
         public function toArray() {
-            return self::$_values;
+            return $this->_values;
         }
 
         /**
