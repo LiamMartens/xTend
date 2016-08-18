@@ -231,7 +231,7 @@
         *
         * @return array
         */
-        public static function toArray() {
+        public function toArray() {
             return self::$_values;
         }
 
