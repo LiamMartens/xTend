@@ -63,7 +63,7 @@
         * @return PDOStatement
         */
         public static function execute($query, $values) {
-            $q = self::$_instance->prepare($query);
+            $q=self::$_instance->prepare($query);
             $q->execute($values);
             $info = $q->errorInfo();
             if($info[0]!='00000') { throw (new Exception($info[2], $info[1])); }

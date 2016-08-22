@@ -1,6 +1,6 @@
 <?php
     namespace Application\Core;
-    use \Application\Objects\StatusCodeHandler\StatusCode;   
+    use Application\Objects\StatusCodeHandler\StatusCode;   
     /**
     * The StatusCodeHandler handles registering
     * and managing status codes

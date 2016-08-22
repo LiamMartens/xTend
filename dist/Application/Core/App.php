@@ -463,7 +463,7 @@
             self::$_namespace = substr(__NAMESPACE__, 0, strpos(__NAMESPACE__, '\\'));
 
             // Set system and public directories
-            self::$_directorySystem = '/'.trim(trim(__DIR__, '/Core'), '/');
+            self::$_directorySystem = '/'.trim(substr(__DIR__, 0, strlen(__DIR__) - 5), '/');
             self::$_directoryPublic = $public;
 
             // Set bootstrap mode

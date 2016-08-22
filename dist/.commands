@@ -135,7 +135,7 @@
     /**
     * Sets the public directory
     */
-    Workbench::register('^set:public ([a-zA-Z0-9\.]+)$', function($argv) {
+    Workbench::register('^set:public ([a-zA-Z0-9\.\_]+)$', function($argv) {
         Workbench::public($argv[2]);
     });
 
