@@ -41,7 +41,7 @@
         }
     }', FILE_APPEND);
         // replace old namespaces (default Application)
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($name)) as $file) {
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(Workbench::$directory.'/'.$name)) as $file) {
             // skip if not file / if not PHP file
             if((!is_file($file))||(substr($file, strrpos($file, '.'))!=='.php')) { continue; };
             Workbench::filespace($file, 'Application', $namespace);

@@ -15,6 +15,7 @@
             'set:application [Name]' => 'Sets the current workbench application',
             'new [AppName] [Domain or any] [Path or any]' => 'Creates a new application in the current project by certain domain or path restrictions',
             'remove [AppName]' => 'Removes an application',
+            'rename [AppName]' => 'Renames your application',
             'new:controller [ControllerName]' => 'Creates a new default controller',
             'new:controller [ControllerName] empty' => 'Creates a new empty controller',
             'new:controller [ControllerName] json' => 'Creates a new respond contoller',
