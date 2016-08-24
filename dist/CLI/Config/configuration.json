@@ -1,1 +1,10 @@
-{"application":"Application","applications":{"Application":{"url":"*","path":"*"}},"public":"public"}
+{
+    "application": "Application",
+    "applications": {
+        "Application": {
+            "url": "*",
+            "path": "*"
+        }
+    },
+    "public": "www"
+}
