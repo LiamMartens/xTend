@@ -5,8 +5,8 @@
     * entry point
     */
     namespace Application;
-    use xTend\Workbench;
-    require(__DIR__.'/CLI/Workbench.php');
+    use xTend\Workbench\Workbench;
+    require('CLI/Core/Workbench.php');
 
     //set http default ignore errors
     stream_context_set_default([
@@ -14,15 +14,15 @@
             'ignore_errors' => true
         ]
     ]);
-    //load configuration
-    Workbench::configuration();
-    Workbench::namespace(__NAMESPACE__);
-    //Do checks + include App core file
-    Workbench::start();
-    // Start app and workbench
+    // load configuration
+    Workbench::configure();
+    // load commands
+    Workbench::commands();
+    // includes application
+    Workbench::application();
+    // start app, configure and run
     Core\App::start(__DIR__, true);
     Core\FileHandler::system('Config.App.App.php')->include();
-    Workbench::argv($argv);
-    Workbench::commands();
     Core\App::run();
-    Workbench::run();
+    // run workbench
+    Workbench::run($argv);
