@@ -13,8 +13,6 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
     mv "$CURRENT_DIR/dist/Application" "$INSTALL_DIR/Application";
     mv "$CURRENT_DIR/dist/CLI" "$INSTALL_DIR/CLI";
     mv "$CURRENT_DIR/dist/www" "$INSTALL_DIR/www";
-    mv "$CURRENT_DIR/dist/.commands" "$INSTALL_DIR/.commands";
-    mv "$CURRENT_DIR/dist/.workbench" "$INSTALL_DIR/.workbench";
     mv "$CURRENT_DIR/dist/workbench" "$INSTALL_DIR/workbench";
     echo -n "Want to remove xTend git directory? (Y/n): ";
     read INPUT;
