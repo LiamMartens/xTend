@@ -16,15 +16,16 @@
     * Sets the workbench application
     */
     Workbench::register('^set:application ([a-zA-Z0-9\.\_]+)$', function($argv) {
-        if(is_dir(self::$directory.'/'.$argv[1])&&
-            isset(Workbench::get('applications')[$argv[1]])) {
-            Workbench::set('application', $argv[1]);
+        $name=$argv[1]; $namespace=Workbench::namespace($name);
+        if(is_dir(Workbench::$directory.'/'.$name)&&
+            isset(Workbench::get('applications')[$name])) {
+            Workbench::set('application', $name);
             Workbench::save();
             // rename namespaces in commmand files and so on
-            $commands=array_diff(scandir(self::$directory.'/CLI/Commands'), ['.', '..']);
+            $commands=array_diff(scandir(Workbench::$directory.'/CLI/Commands'), ['.', '..']);
             foreach($commands as $command) {
-                Workbench::filespace(self::$directory.'/CLI/Commands/'.$command, 'Application', $argv[1]);
+                Workbench::filespace(Workbench::$directory.'/CLI/Commands/'.$command, 'Application', $namespace);
             }
-            Workbench::filespace(self::$directory.'/workbench');
-        } else { die('The application \''.$argv[1].'\' does not exist'); }
+            Workbench::filespace(Workbench::$directory.'/workbench', 'Application', $namespace);
+        } else { die('The application \''.$name.'\' does not exist'); }
     }, 'set:application');
