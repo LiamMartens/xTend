@@ -5,6 +5,7 @@
     use Application\Objects\DirectoryHandler\Directory;
     use Application\Objects\FileHandler\File;
 
+
     /**
     * The App class contains the starting point
     * of the whole xTend application
@@ -31,11 +32,14 @@
         private static $_logLimit = 30;
         /** @var boolean Contains the bootstrap mode status */
         private static $_bootstrap = false;
+        /** @var array Contains bootstrap methods */
+        private static $_straps = [];
         /** @var string Contains the namespace of the application
         * Used to divide applications and use more than one at
         * the same time if necessary
         */
         private static $_namespace = 'Application';
+
 
         /**
         * Returns the xTend version
@@ -44,6 +48,7 @@
         * @return string
         */
         public static function version() { return self::$_xTendVersion; }
+
 
         /**
         * Returns or sets the application location
@@ -58,6 +63,7 @@
             }
             return self::$_location;
         }
+
 
         /**
         * Returns or sets the application timezone variable
@@ -74,6 +80,7 @@
             return self::$_timezone;
         }
 
+
         /**
         * Returns or sets the application environment
         *
@@ -87,6 +94,7 @@
             }
             return self::$_environment;
         }
+
 
         /**
         * Returns or sets the application backup interval
@@ -102,6 +110,7 @@
             return self::$_backupInterval;
         }
 
+
         /**
         * Returns or sets the application backup limit
         *
@@ -115,6 +124,7 @@
             }
             return self::$_backupLimit;
         }
+
 
         /**
         * Returns or sets the application log limit
@@ -130,6 +140,7 @@
             return self::$_logLimit;
         }
 
+
         /**
         * Returns or sets the bootstrap mode
         *
@@ -144,6 +155,7 @@
             return self::$_bootstrap;
         }
 
+
         /**
         * Returns the namespace
         * !! No need to set the namespace outside of the App itself
@@ -153,6 +165,7 @@
         public static function namespace() {
             return self::$_namespace;
         }
+
 
         //
         //
@@ -190,7 +203,9 @@
         /** @var string Contains the directory where the Objects are stored */
         private static $_directoryObjects = 'Objects';
         
+
         
+
         /**
         * Returns the application directory
         *
@@ -198,12 +213,14 @@
         */
         public static function system() { return self::$_directorySystem; }
 
+
         /**
         * Returns the public directory
         *
         * @return Directory|string
         */
         public static function public() { return self::$_directoryPublic; }
+
 
         //
         //
@@ -222,6 +239,7 @@
             return self::$_directoryBackups;
         }
 
+
         /**
         * Gets or sets the blueprints directory
         *
@@ -234,6 +252,7 @@
             return self::$_directoryBlueprints;
         }
 
+
         /**
         * Returns the config directory
         * just like the Core directory the config directory shouldn't be changed
@@ -241,6 +260,7 @@
         * @return Directory|string
         */
         public static function config() { return self::$_directoryConfig; }
+
 
         /**
         * Gets or sets the controllers directory
@@ -254,6 +274,7 @@
             return self::$_directoryControllers;
         }
 
+
         /**
         * Gets or sets the layouts directory
         *
@@ -266,41 +287,45 @@
             return self::$_directoryLayouts;
         }
         
+
         /**
         * Gets or sets the libs directory
         *
         * @return Directory|string
         */
-        public static function libs($value=null) { 
+        public static function libs($value=null) {
             if($value!==null) {
                 self::$_directoryLibs=$value;
             }
             return self::$_directoryLibs;
         }
 
+
         /**
         * Gets or sets the logs directory
         *
         * @return Directory|string
         */
-        public static function logs($value=null) { 
+        public static function logs($value=null) {
             if($value!==null) {
                 self::$_directoryLogs=$value;
             }
             return self::$_directoryLogs;
         }
 
+
         /**
         * Gets or sets the meta directory
         *
         * @return Directory|string
         */
-        public static function meta($value=null) { 
+        public static function meta($value=null) {
             if($value!==null) {
                 self::$_directoryMeta=$value;
             }
             return self::$_directoryMeta;
         }
+
 
         /**
         * Gets or sets the models directory
@@ -314,6 +339,7 @@
             return self::$_directoryModels;
         }
 
+
         /**
         * Gets or sets the modules directory
         *
@@ -325,6 +351,7 @@
             }
             return self::$_directoryModules;
         }
+
 
         /**
         * Gets or sets the views directory
@@ -338,6 +365,7 @@
             return self::$_directoryViews;
         }
 
+
         /**
         * Gets or sets the viewoutput directory
         *
@@ -349,6 +377,7 @@
             }
             return self::$_directoryViewOutput;
         }
+
 
         /**
         * Gets or sets the objects directory
@@ -362,6 +391,7 @@
             return self::$_directoryObjects;
         }
 
+
         /**
         * Sets configuration using an array of variables (directories / config variables)
         * only set directories differently if you know what you are doing
@@ -373,6 +403,7 @@
                 self::$key($value);
             }
         }
+
 
         /**
         * Throws an application error and sets an HTTP code
@@ -390,6 +421,7 @@
             }
             return false;
         }
+
 
         /**
         * @param xTend\Objects\Route|string $route
@@ -425,6 +457,7 @@
             return true;
         }
 
+
         /**
         * @param xTend\Objects\Route|string $route
         * @param array $data
@@ -440,6 +473,7 @@
                 header('Location: '.$host.'/'.$request->handle()); }
         }
 
+
         /**
         * Initiates the App (configure should be called before start)
         *
@@ -447,7 +481,7 @@
         * @param boolean $bootstrap Bootstrap mode on|off
         */
         public static function start($public, $bootstrap=false) {
-            // check server variables and put temp ones in 
+            // check server variables and put temp ones in
             // if none are present when in cli mode
             if(php_sapi_name()==='cli') {
                 $_SERVER['HTTP_USER_AGENT']=sha1(uniqid().microtime());
@@ -455,19 +489,24 @@
                 $_SERVER['REQUEST_URI']=sha1(uniqid().microtime());
             }
 
+
             // Set default timezone (UTC by default)
             self::timezone(self::$_timezone);
+
 
             // set the application namespace using the namespace
             // in the file
             self::$_namespace = substr(__NAMESPACE__, 0, strpos(__NAMESPACE__, '\\'));
 
+
             // Set system and public directories
             self::$_directorySystem = '/'.trim(substr(__DIR__, 0, strlen(__DIR__) - 5), '/');
             self::$_directoryPublic = $public;
 
+
             // Set bootstrap mode
             self::$_bootstrap = $bootstrap;
+
 
             // Include FileManager
             require(self::$_directorySystem.'/Core/FileManager.php');
@@ -522,6 +561,7 @@
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Route.php');
             FileManager::include(self::$_directorySystem.'/Core/Router.php');
         }
+
 
         /**
         * Includes configuration files
@@ -589,6 +629,7 @@
             }
         }
 
+
         /**
         * Includes library files
         */
@@ -655,6 +696,7 @@
             }
         }
 
+
         private static function integrity() {
             //check php version
             if (version_compare(phpversion(), '7.0.0', '<')) {
@@ -698,6 +740,30 @@
             if(!$integrity_success) {
                 die("<br>Integrity check failed");
             }
+        }
+
+        /**
+        * Registers a boostrap method
+        *
+        * @param string $name
+        * @param callable $fn
+        */
+        public static function register($name, $fn) {
+            self::$_straps[$name] = $fn;
+        }
+
+        /**
+        * Executes a boostrap method
+        *
+        * @param string $name
+        *
+        * @return mixed
+        */
+        public static function strap($name) {
+            if(isset(self::$_straps[$name])) {
+                return call_user_func_array(self::$_straps[$name], array_values(array_slice(func_get_args(), 1)));
+            }
+            return false;
         }
 
         /**
