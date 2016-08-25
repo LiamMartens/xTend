@@ -16,6 +16,8 @@
             if((!is_file($file))||(substr($file, strrpos($file, '.'))!=='.php')) { continue; };
             Workbench::filespace($file, 'Application', $namespace);
         }
+        // replace in index.php
+        Workbench::filespace(Workbench::$directory.'/'.Workbench::get('public').'/index.php', 'Application', $namespace);
         // rename application in configuration
         $restrictions=Workbench::get('applications')[Workbench::get('application')];
         unset(Workbench::$configuration['applications'][Workbench::get('application')]);

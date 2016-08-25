@@ -185,15 +185,17 @@
         * @param sring $new
         */
         public static function filespace($fileName, $old, $new) {
-            $file=fopen($fileName, 'rw'); $new_content='';
+            $file=fopen($fileName, 'r+'); $new_content='';
             while(!feof($file)) {
                 $line=fgets($file);
                 $whs=[]; preg_match('/^(\s*)/', $line, $whs);
                 $line=trim($line);
-                $line=preg_replace('/^(namespace|use)\s+'.$old.';/', '$1 '.$new.'$2', $line);
-                $line=preg_replace('/^(namespace|use)\s+'.$old.'\s+{/', '$1 '.$new.'$2', $line);
-                $new_content.=$whs[0].$line;
+                $line=preg_replace('/^(namespace|use)\s+'.$old.'((?:(?:\\\\.+?)|\s*)*);/', '$1 '.$new.'$2;', $line);
+                $line=preg_replace('/^(namespace|use)\s+'.$old.'((?:(?:\\\\.+?)|\s*)*)\s*{/', '$1 '.$new.'$2 {', $line);
+                $new_content.=$whs[0].$line.PHP_EOL;
             }
+            // reset file pointer to beginning to truncate file
+            rewind($file); ftruncate($file, 0);
             fwrite($file, $new_content);
             return fclose($file);
         }
