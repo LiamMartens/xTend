@@ -1,5 +1,5 @@
 <?php
-    namespace Application\Objects\HTMLHandler;
+    namespace Cargo\Objects\HTMLHandler;
     /**
     * The HTMLElement class
     * wraps a HTML DOM element
@@ -16,6 +16,7 @@
         /** @var array Contains eventual child elements */
         protected $_elements;
 
+
         /**
         * @param string $name
         * @param array $attributes
@@ -27,13 +28,14 @@
             $this->_elements = [];
         }
 
+
         /**
         * Creates an HTML element
         *
         * @param string $name
         * @param array $attributes
         *
-        * @return xTend\Core\HTMLHandler\HTMLElement
+        * @return HTMLElement
         */
         public function create($name, $attributes=[]) {
             $el = new HTMLElement($name, $attributes);
@@ -41,12 +43,13 @@
             return $el;
         }
 
+
         /**
         * Adds an element to the current one
         *
-        * @param xTend\Core\HTMLHandler\HTMLElement $el
+        * @param HTMLElement $el
         *
-        * @return xTend\Core\HTMLHandler\HTMLElement|boolean
+        * @return HTMLElement|boolean
         */
         public function add($el) {
             if($el instanceof HTMLElement) {
@@ -55,17 +58,31 @@
             } return false;
         }
 
+
         /**
         * Adds text to the element
         *
         * @param string $text
         *
-        * @return xTend\Core\HTMLHandler\HTMLElement
+        * @return HTMLElement
         */
         public function text($text, $after = false) {
             if($after===false) {
                 $this->_text_before = $text;
             } else { $this->_text_after = $text; }
+            return $this;
+        }
+
+        /**
+        * Adds an attribute to the element
+        *
+        * @param string $name
+        * @param mixed $value
+        *
+        * @return HTMLElement
+        */
+        public function attribute($name, $value) {
+            $this->_attributes[$name]=$value;
             return $this;
         }
 
@@ -105,12 +122,14 @@
     class HTMLDocument extends HTMLElement {
         private $_fullDoc;
 
+
         /**
         * @param boolean $fullDoc
         */
         public function __construct($fullDoc = false) {
             $this->_fullDoc = $fullDoc;
             $this->_elements = []; }
+
 
         /**
         * Writes out the document
