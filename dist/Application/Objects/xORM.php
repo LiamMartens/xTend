@@ -1,7 +1,7 @@
 <?php
-    namespace Application\Objects\xORM;
+    namespace Cargo\Objects\xORM;
     use \ArrayAccess;
-    use Application\Core\xORM;
+    use Cargo\Core\xORM;
     class Where {
         const OPERATOR_NE = '!=';
         const OPERATOR_GT = '>';
@@ -11,6 +11,7 @@
         const OPERATOR_IN = ' IN ';
         const OPERATOR_BETWEEN = ' BETWEEN ';
 
+
         /** @var string Left hand side of the where clause */
         private $_column_left;
         /** @var string Operator between the columns */
@@ -18,12 +19,14 @@
         /** @var string Right hand side of the where clause */
         private $_value;
 
+
         public function __construct($col_left, $operator, $value) {
             //check column left ` characters
             $this->_column_left = $col_left;
             $this->_operator = $operator;
             $this->_value = $value;
         }
+
 
         /**
         * Builds the query and returns it
@@ -33,6 +36,7 @@
         public function query() {
             return xORM::addBrackets($this->_column_left).$this->_operator.'?';
         }
+
 
         /**
         * Returns the value of the where clause
@@ -44,6 +48,7 @@
         }
     }
 
+
     class Join {
         const TYPE_INNER  = 'INNER JOIN';
         const TYPE_LEFT = 'LEFT JOIN';
@@ -51,6 +56,7 @@
         const TYPE_FULL = 'FULL OUTER JOIN';
         const TYPE_LEFT_OUTER = 'LEFT OUTER JOIN';
         const TYPE_RIGHT_OUTER = 'RIGHT OUTER JOIN';
+
 
         /** @var string Type of the join */
         private $_join;
@@ -61,12 +67,14 @@
         /** @var string|boolean Contains an alias or false */
         private $_alias;
 
+
         public function __construct($type, $table, $on, $alias = false) {
             $this->_join = $type;
             $this->_table = $table;
             $this->_on = $on;
             $this->_alias = $alias;
         }
+
 
         public function  query() {
             return $this->_join." ".
@@ -77,24 +85,29 @@
         }
     }
 
+
     class Order {
         const ASC = 'ASC';
         const DESC = 'DESC';
+
 
         /** @var string Name of the column to order by */
         private $_column;
         /** @var string Type of the order (ASC or DESC) */
         private $_type;
 
+
         public function __construct($column, $type) {
             $this->_column = $column;
             $this->_type = $type;
         }
 
+
         public function query() {
             return xORM::addBrackets($this->_column)." ".$this->_type;
         }
     }
+
 
     class Aggregate {
         const TYPE_AVG = 'AVG';
@@ -106,6 +119,7 @@
         const TYPE_UPPER = 'UPPER';
         const TYPE_LOWER = 'LOWER';
 
+
         /** @var string Type of function */
         private $_type;
         /** @var string Name of column to take aggregate of */
@@ -113,15 +127,18 @@
         /** @var string Alias of the function */
         private $_alias;
 
+
         public function __construct($type, $column, $alias = false) {
             $this->_type = $type;
             $this->_column = $column;
             $this->_alias = $alias;
         }
 
+
         public function hasAlias() {
             return ($this->_alias!==false);
         }
+
 
         public function query() {
             return $this->_type."(".xORM::addBrackets($this->_column).") ".
@@ -129,13 +146,16 @@
         }
     }
 
+
     abstract class WhereGroup {
         /** @var array Contains wheres */
         protected $_wheres=[];
 
+
         public function __construct($wheres=[]) {
             $this->_wheres = $wheres;
         }
+
 
         /**
         * Returns the count of the wheres
@@ -145,6 +165,7 @@
         public function count() {
             return count($this->_wheres);
         }
+
 
         /**
         * Cuts of the last couple of elements starting at index and returns it
@@ -157,6 +178,7 @@
             return array_splice($this->_wheres, $start);
         }
 
+
         /**
         * Adds a where clause
         *
@@ -166,6 +188,7 @@
             $this->_wheres[] = $where;
             return $this;
         }
+
 
         /**
         * Returns the values of the where clauses
@@ -178,6 +201,7 @@
             } return $array_map_result;
         }
     }
+
 
     class WhereGroupOr extends WhereGroup {
         /**
@@ -194,6 +218,7 @@
         }
     }
 
+
     class WhereGroupAnd extends WhereGroup {
         /**
         * Builds the query and returns it
@@ -209,6 +234,7 @@
         }
     }
 
+
     class ResultObject implements ArrayAccess {
         /** @var array The data of the result */
         protected $_values;
@@ -219,12 +245,14 @@
         /** @var string Name of the primary key column */
         protected $_id_column = 'id';
 
+
         public function __construct($data, $table, $columns, $id_column) {
             $this->_values = $data;
             $this->_table = $table;
             $this->_column_bindings = $columns;
             $this->_id_column = $id_column;
         }
+
 
         /**
         * Returns the user data as an array
@@ -234,6 +262,7 @@
         public function toArray() {
             return $this->_values;
         }
+
 
         /**
         * Returns a data member
@@ -249,6 +278,7 @@
             return $this->{$name};
         }
 
+
         /**
         * Sets a data member
         *
@@ -260,6 +290,7 @@
         public function __set($name, $value) {
             return $this->_values[$name] = $value;
         }
+
 
         /**
         * For ArrayAccess setting
@@ -273,6 +304,7 @@
             }
         }
 
+
         /**
         * For ArrayAccess isset
         *
@@ -284,6 +316,7 @@
             return isset($this->_values[$offset]);
         }
 
+
         /**
         * For ArrayAccess unset
         *
@@ -292,6 +325,7 @@
         public function offsetUnset($offset) {
             unset($this->_values[$offset]);
         }
+
 
         /**
         * For ArrayAccess get
@@ -304,6 +338,7 @@
             return $this->_values[$offset];
         }
 
+
         private function primaryKeyValue() {
             $col_name = $this->_id_column; if(isset($this->_column_bindings[$col_name])) {
                 $col_name = $this->_column_bindings[$col_name];
@@ -313,6 +348,7 @@
             }
             return false;
         }
+
 
         /**
         * Return the update query of the result
@@ -329,6 +365,7 @@
                     implode(',', $set_arr)." WHERE ".xORM::addBrackets($this->_id_column)."=?";
         }
 
+
         /**
         * Returns the delete query of the result
         *
@@ -338,6 +375,7 @@
             return "DELETE FROM ".xORM::addBrackets($this->_table).
                     " WHERE ".xORM::addBrackets($this->_id_column)."=?";
         }
+
 
         /**
         * Returns the insert statement query of the result
@@ -355,6 +393,7 @@
                     trim(str_repeat("?,", count($this->_values)), ",").")";
         }
 
+
         /**
         * Returns the query parameters
         *
@@ -367,18 +406,22 @@
             return $vals;
         }
 
+
         public function save() {
             return xORM::execute($this->query_update(), $this->values());
         }
+
 
         public function delete() {
             return xORM::execute($this->query_delete(), [$this->primaryKeyValue()]);
         }
 
+
         public function insert() {
             return xORM::execute($this->query_insert(), $this->values());
         }
     }
+
 
     abstract class Query {
         /** @var string The table name to select from */
@@ -398,10 +441,12 @@
         /** @var array wrapped where or groups */
         protected $_wheresWrapOr=[];
 
+
         public function __construct() {
             $this->_wheresAnd = new WhereGroupAnd();
             $this->_wheresOr = new WhereGroupOr();
         }
+
 
         /**
         * Sets the primary key of the query for saving records after
@@ -416,6 +461,7 @@
             } else { $this->_id_column = $column; }
             return $this;
         }
+
 
         /**
         * Base where wrap function
@@ -442,6 +488,7 @@
             return $this;
         }
 
+
         /**
         * Starts a where wrap and
         *
@@ -453,6 +500,7 @@
             return $this->_wrap($this->_wheresWrapAnd, $fn);
         }
 
+
         /**
         * Starts a where wrap or
         *
@@ -463,6 +511,7 @@
         public function orWrap($fn) {
             return $this->_wrap($this->_wheresWrapOr, $fn);
         }
+
 
         /**
         * Adds where statement =
@@ -477,6 +526,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement !=
         *
@@ -489,6 +539,7 @@
             $this->_wheresAnd->where(new Where($column, Where::OPERATOR_NE, $value));
             return $this;
         }
+
 
         /**
         * Adds where statement >
@@ -503,6 +554,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement <
         *
@@ -515,6 +567,7 @@
             $this->_wheresAnd->where(new Where($column, Where::OPERATOR_LT, $value));
             return $this;
         }
+
 
         /**
         * Adds where statement LIKE
@@ -529,6 +582,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement IN
         *
@@ -541,6 +595,7 @@
             $this->_wheresAnd->where(new Where($column, Where::OPERATOR_IN, $value));
             return $this;
         }
+
 
                 /**
         * Adds where statement BETWEEN
@@ -555,6 +610,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement =
         *
@@ -567,6 +623,7 @@
             $this->_wheresOr->where(new Where($column, Where::OPERATOR_EQ, $value));
             return $this;
         }
+
 
         /**
         * Adds where statement !=
@@ -581,6 +638,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement >
         *
@@ -593,6 +651,7 @@
             $this->_wheresOr->where(new Where($column, Where::OPERATOR_GT, $value));
             return $this;
         }
+
 
         /**
         * Adds where statement <
@@ -607,6 +666,7 @@
             return $this;
         }
 
+
         /**
         * Adds where statement LIKE
         *
@@ -619,6 +679,7 @@
             $this->_wheresOr->where(new Where($column, Where::OPERATOR_LIKE, $value));
             return $this;
         }
+
 
         /**
         * Adds where statement IN
@@ -633,6 +694,7 @@
             return $this;
         }
 
+
                 /**
         * Adds where statement BETWEEN
         *
@@ -646,6 +708,7 @@
             return $this;
         }
 
+
         /**
         * Returns the values of the query parameters
         *
@@ -655,6 +718,7 @@
             return array_merge($this->_wheresAnd->values(), $this->_wheresOr->values());
         }
     }
+
 
     class Select extends Query {
         /** @var boolean Whether the select should execute distinct */
@@ -672,6 +736,7 @@
         /** @var array Group By columns */
         private $_group = [];
 
+
         /**
         * @param string|array If the column is an array the second element is the alias
         */
@@ -679,6 +744,7 @@
             parent::__construct();
             self::select($column, $is_id_col);
         }
+
 
         /**
         * Adds columns to the select statement
@@ -704,6 +770,7 @@
             return $this;
         }
 
+
         /**
         * Enables distinct
         *
@@ -713,6 +780,7 @@
             $this->_is_distinct = true;
             return $this;
         }
+
 
         /**
         * Adds order by asc
@@ -724,6 +792,7 @@
             return $this;
         }
 
+
         /**
         * Adds order by desc
         *
@@ -733,6 +802,7 @@
             $this->_orders[] = new Order($column, Order::DESC);
             return $this;
         }
+
 
         /**
         * Sets SQL's LIMIT keyword
@@ -746,6 +816,7 @@
             return $this;
         }
 
+
         /**
         * Sets SQL's OFFSET keyword
         *
@@ -758,6 +829,7 @@
             return $this;
         }
 
+
         /**
         * Adds INNER JOIN
         *
@@ -767,6 +839,7 @@
             $this->_join[] = new Join(Join::TYPE_INNER, $table, $on, $alias);
             return $this;
         }
+
 
         /**
         * Adds LEFT JOIN
@@ -778,6 +851,7 @@
             return $this;
         }
 
+
         /**
         * Adds LEFT OUTER JOIN
         *
@@ -787,6 +861,7 @@
             $this->_join[] = new Join(Join::TYPE_LEFT_OUTER, $table, $on, $alias);
             return $this;
         }
+
 
         /**
         * Adds RIGHT JOIN
@@ -798,6 +873,7 @@
             return $this;
         }
 
+
         /**
         * Adds RIGHT OUTER JOIN
         *
@@ -807,6 +883,7 @@
             $this->_join[] = new Join(Join::TYPE_RIGHT_OUTER, $table, $on, $alias);
             return $this;
         }
+
 
         /**
         * Adds FULL OUTER JOIN
@@ -819,6 +896,7 @@
             return $this;
         }
 
+
         /**
         * Adds AVG function
         *
@@ -828,6 +906,7 @@
             $this->_aggregate[$column] = new Aggregate(Aggregate::TYPE_AVG, $column, $alias);
             return $this;
         }
+
 
         /**
         * Adds COUNT function
@@ -839,6 +918,7 @@
             return $this;
         }
 
+
         /**
         * Adds MAX function
         *
@@ -848,6 +928,7 @@
             $this->_aggregate[$column] = new Aggregate(Aggregate::TYPE_MAX, $column, $alias);
             return $this;
         }
+
 
         /**
         * Adds MIN function
@@ -859,6 +940,7 @@
             return $this;
         }
 
+
         /**
         * Adds SUM function
         *
@@ -868,6 +950,7 @@
             $this->_aggregate[$column] = new Aggregate(Aggregate::TYPE_SUM, $column, $alias);
             return $this;
         }
+
 
         /**
         * Adds LEN function
@@ -879,6 +962,7 @@
             return $this;
         }
 
+
         /**
         * Adds UPPER function
         *
@@ -888,6 +972,7 @@
             $this->_aggregate[$column] = new Aggregate(Aggregate::TYPE_UPPER, $column, $alias);
             return $this;
         }
+
 
         /**
         * Adds LOWER function
@@ -899,6 +984,7 @@
             return $this;
         }
 
+
         /**
         * Adds group by column
         *
@@ -908,6 +994,7 @@
             $this->_group[] = $column;
             return $this;
         }
+
 
         /**
         * Sets the table member of the select query
@@ -920,6 +1007,7 @@
             $this->_table = $tableName;
             return $this;
         }
+
 
         /**
         * Builds the query and returns it
@@ -946,8 +1034,6 @@
             $array_map_result=[]; foreach($this->_join as $join) {
                 $array_map_result[] = $join->query();
             } $query.=" ".implode(" ", $array_map_result);;
-            if($this->_limit!==false) { $query.=" LIMIT ".$this->_limit; }
-            if($this->_offset!==false) { $query.=" OFFSET ".$this->_offset; }
             //insert where statements here
             //wrapped where and groups
             $total_group_count=0;
@@ -973,8 +1059,11 @@
                     $total_group_count++;
                 }
                 $query.=implode(" OR ", $array_map_result);
+                if($this->_limit!==false) { $query.=" LIMIT ".$this->_limit; }
+                if($this->_offset!==false) { $query.=" OFFSET ".$this->_offset; }
             }
             
+
             //non wrapped groups + group / order
             if($total_group_count>0) {
                 $query.=" AND ";
@@ -987,6 +1076,8 @@
             $query.=((count($this->_group)>0) ? " GROUP BY ".implode(",", $this->_group) : '');
             return $query;
         }
+
+
 
 
         /**
@@ -1004,6 +1095,8 @@
                             $this->_alias,
                             $this->_id_column);
         }
+
+
 
 
         /**
@@ -1024,6 +1117,7 @@
         }
     }
 
+
     class Raw {
         /** @var string containing the table name if you need to save afterwards */
         protected $_table = false;
@@ -1036,10 +1130,12 @@
         /** @var array Contains the PDO params */
         protected $_parameters;
 
+
         public function __construct($sql, $params=[]) {
             $this->_sql = $sql;
             $this->_parameters = $params;
         }
+
 
         /**
         * Sets the table name
@@ -1053,6 +1149,7 @@
             return $this;
         }
 
+
         /**
         * Binds an alias
         *
@@ -1065,6 +1162,7 @@
             $this->_column_bindings[$column] = $alias;
             return $this;
         }
+
 
         /**
         * Sets the id column
@@ -1083,9 +1181,11 @@
             return $this;
         }
 
+
         public function execute() {
             return xORM::execute($this->_sql, $this->_parameters);
         }
+
 
         public function findOne($as_array=false) {
             $values=xORM::findOne($this->_sql, $this->_parameters);
@@ -1097,7 +1197,9 @@
                 $this->_column_bindings,
                 $this->_id_column);
 
+
         }
+
 
         public function findMany($as_array=false) {
             $results = xORM::findMany($this->_sql, $this->_parameters);
