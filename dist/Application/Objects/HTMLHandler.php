@@ -1,5 +1,5 @@
 <?php
-    namespace Cargo\Objects\HTMLHandler;
+    namespace Application\Objects\HTMLHandler;
     /**
     * The HTMLElement class
     * wraps a HTML DOM element

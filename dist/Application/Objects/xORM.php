@@ -1,7 +1,7 @@
 <?php
-    namespace Cargo\Objects\xORM;
+    namespace Application\Objects\xORM;
     use \ArrayAccess;
-    use Cargo\Core\xORM;
+    use Application\Core\xORM;
     class Where {
         const OPERATOR_NE = '!=';
         const OPERATOR_GT = '>';

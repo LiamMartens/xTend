@@ -6,11 +6,13 @@
     namespace Application;
     use Application\Core\Wow;
 
+
     //general echo
     Wow::register(
         Wow::rx("{{(.+?)}}", "i"),
         "<?php echo $1; ?>"
     );
+
 
     if(Wow::flavor()<=Wow::COMBINED) {
         //
@@ -20,6 +22,7 @@
             Wow::rx("\<echo\>(.+?)\<\/echo\>", "i"),
             "<?php echo $1; ?>"
         );
+
 
         //
         //    <php>
@@ -32,6 +35,7 @@
             Wow::rx("\<php\>(.+?)\<\/php\>", "is"),
             "<?php $1 ?>"
         );
+
 
         //
         //    <if>
@@ -46,6 +50,7 @@
             "<?php if($1) { ?>$2<?php } ?>"
         );
 
+
         //
         //    Can only be used inside an if
         //    <elseif>
@@ -57,6 +62,7 @@
             Wow::rx("\<elseif\>\s*\<condition\>(.+?)\<\/condition\>(.+?)", "is"),
             "<?php } elseif($1) { ?>$2"
         );
+
 
         //
         //    Can only be used inside an if
@@ -70,6 +76,8 @@
         );
 
 
+
+
         //
         //    <for>
         //        <loop>$i=0;...++$i</loop>
@@ -80,6 +88,7 @@
             Wow::rx("\<for\>\s*\<loop\>(.+?)\<\/loop\>(.+?)\<\/for\>", "is"),
             "<?php for($1) { ?>$2<?php } ?>"
         );
+
 
         //
         //    <foreach>
@@ -92,6 +101,7 @@
             "<?php foreach($1) { ?>$2<?php } ?>"
         );
 
+
         //
         //    <while>
         //        <condition>$i < 10</condition>
@@ -102,6 +112,7 @@
             Wow::rx("\<while\>\s*\<condition\>(.+?)\<\/condition\>(.+?)\<\/while\>", "is"),
             "<?php while($1) { ?>$2<?php } ?>"
         );
+
 
         //
         //    <css href="/css/style.css"/>
@@ -117,6 +128,7 @@
             Wow::rx("\<css\>(.+?)\<\/css\>","is"),
             '<link rel="stylesheet" href="$1" type="text/css">'
         );
+
 
         //
         //    . file notation can be used but is not necessary
@@ -135,6 +147,7 @@
             '<style type="text/css"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></style>'
         );
 
+
         //
         //    <css external-embed="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
         //
@@ -149,6 +162,7 @@
             Wow::rx("\<css\s+external-embed\s*\>(.+?)\<\/css\>","i"),
             '<style type="text/css"><?php echo file_get_contents(\'$1\'); ?></style>'
         );
+
 
         //
         //    <js src="js/file.js"/>
@@ -165,6 +179,7 @@
             '<script type="text/javascript" src="$1"></script>'
         );
 
+
         //
         //    . file notation can be used but is not necessary
         //    <js embed="js/file.js"/>
@@ -177,6 +192,7 @@
             Wow::rx("\<js\s+embed\s*\>(.+?)\<\/js\>","is"),
             '<script type="text/javascript"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></script>'
         );
+
 
         //
         //    <js external-embed="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
@@ -193,17 +209,19 @@
             '<script type="text/javascript"><?php echo file_get_contents(\'$1\'); ?></script>'
         );
 
+
         //
         //    <url />
         //
         Wow::register(
             Wow::rx("\<url\s*\/\>","i"),
-            "<?php echo Core\Request::url().Core\App::location(); ?>"
+            "<?php echo Core\App::url(); ?>"
         );
         Wow::register(
             Wow::rx("\<url\s+inject\s*\/\>","i"),
-            "Core\Request::url().Core\App::location()"
+            "Core\App::url()"
         );
+
 
         //
         //    <app>environment()</app>
@@ -216,6 +234,7 @@
             Wow::rx("\<app\s+inject\s*\>(.+?)\<\/app\>", "i"),
             "Core\App::$1"
         );
+
 
         //
         //    <controller name="..." (optional)>COMMAND</controller>
@@ -237,6 +256,7 @@
             "Core\ControllerHandler::find('$1')::$2"
         );
 
+
         //
         // <view name=".." (optional)>COMMAND</view>
         //
@@ -257,6 +277,7 @@
             "Core\ViewHandler::find('$1')->$2"
         );
 
+
         //
         //    <spoof method="DELETE" />
         //
@@ -265,6 +286,7 @@
             '<input type="hidden" name="_method" value="$1" />'
         );
 
+
         //
         //    <formtoken name="..." />
         //
@@ -272,6 +294,7 @@
             Wow::rx("\<formtoken\s+name=\"(.+?)\"\s*\/?\>", "i"),
             '<input type="hidden" data-component="token.$1" name="token-$1" value="<?php echo Core\FormTokenHandler::generate("$1"); ?>" />'
         );
+
 
         //
         //    <formtoken name="..." />
@@ -290,6 +313,7 @@
             "<?php echo $1; ?>"
         );
 
+
         //
         //    @php:
         //
@@ -302,6 +326,7 @@
             "<?php $1 ?>"
         );
 
+
         //
         //    Used to end statements such as if, foreach, ...
         //    @end
@@ -310,6 +335,7 @@
             Wow::rx("@end", "is"),
             "<?php } ?>"
         );
+
 
         //
         //    @if:true
@@ -321,6 +347,7 @@
             "<?php if($1) { ?>"
         );
 
+
         //
         //    Can only be used after an @if before the @end
         //    @elseif:true
@@ -330,6 +357,7 @@
             Wow::rx("@elseif:(.+)", "i"),
             "<?php } elseif($1) { ?>"
         );
+
 
         //
         //    Can only be used after an @if before the @end
@@ -341,6 +369,7 @@
             "<?php } else { ?>"
         );
 
+
         //
         //    @for:$i=0;$i<10;++$i
         //        <li></li>
@@ -350,6 +379,7 @@
             Wow::rx("@for:(.+)", "i"),
             "<?php for($1) { ?>"
         );
+
 
         //
         //    @foreach:$items as $item
@@ -361,6 +391,7 @@
             "<?php foreach($1) { ?>"
         );
 
+
         //
         //    @while:$i<10
         //        <li></li>
@@ -371,6 +402,7 @@
             "<?php while($1) { ?>"
         );
 
+
         //
         //    @css:/css/style.css
         //
@@ -378,6 +410,7 @@
             Wow::rx("@css:(.+)", "i"),
             '<link rel="stylesheet" type="text/css" href="$1">'
         );
+
 
         //
         //    @css_embed:css.style.css
@@ -387,6 +420,7 @@
             '<style type="text/css"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></style>'
         );
 
+
         //
         //    @css_external:http://....js
         //
@@ -394,6 +428,7 @@
             Wow::rx("@css_external:(.+)", "i"),
             '<style type="text/css"><?php echo file_get_contents(\'$1\'); ?></style>'
         );
+
 
         //
         //    @js:js/file.js
@@ -403,6 +438,7 @@
             '<script type="text/javascript" src="$1"></script>'
         );
 
+
         //
         //    @js_embed:js.file.js
         //
@@ -410,6 +446,7 @@
             Wow::rx("@js_embed:(.+)", "i"),
             '<script type="text/javascript"><?php echo file_get_contents(\'$1\'); ?></script>'
         );
+
 
         //
         //    @js_external:js.file.js
@@ -419,17 +456,19 @@
             '<script type="text/javascript"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></script>'
         );
 
+
         //
         //    @url
         //
         Wow::register(
             Wow::rx("@url", "i"),
-            '<?php echo Core\Request::url().Core\App::location(); ?>'
+            '<?php echo Core\App::url(); ?>'
         );
         Wow::register(
             Wow::rx("@iurl", "i"),
-            'Core\Request::url().Core\App::location()'
+            'Core\App::url()'
         );
+
 
         //
         //    @app:getDevelopmentStatus()
@@ -443,6 +482,7 @@
             'Core\App::$1'
         );
 
+
         //
         //    @controller:method()
         //
@@ -454,6 +494,7 @@
             Wow::rx('@icontroller:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
             "Core\ControllerHandler::find()::$1"
         );
+
 
         //
         //    @controller_Pages.HomeController:method()
@@ -467,6 +508,7 @@
             "Core\ControllerHandler::find('$1')::$2"
         );
 
+
         //
         //    @view:method()
         //
@@ -478,6 +520,7 @@
             Wow::rx('@iview:\$?('.Wow::PHP_NAME_RX.'\(.*?\)|'.Wow::PHP_NAME_RX.')', "i"),
             "Core\ViewHandler::find()->$1"
         );
+
 
         //
         //    @view_index:method()
@@ -491,6 +534,7 @@
             "Core\ViewHandler::find('$1')->$2"
         );
 
+
         //
         //    @spoof_method:DELETE
         //
@@ -498,6 +542,7 @@
             Wow::rx("@spoof_method:([a-zA-Z]+)","i"),
             '<input type="hidden" name="_method" value="$1" />'
         );
+
 
         //
         //    @formtoken:name
@@ -507,6 +552,7 @@
             '<input type="hidden" name="token-$1" value="<?php echo Core\FormTokenHandler::generate("$1"); ?>" />'
         );
 
+
         //
         //    @formtoken_persistent:name
         //
@@ -515,3 +561,4 @@
             '<input type="hidden" name="token-$1" value="<?php echo Core\FormTokenHandler::persistent("$1"); ?>" />'
         );
     }
+

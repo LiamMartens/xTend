@@ -1,9 +1,9 @@
 <?php
-    namespace Cargo\Core;
-    use Cargo\Objects\StatusCodeHandler\StatusCode;
-    use Cargo\Objects\Router\Route;
-    use Cargo\Objects\DirectoryHandler\Directory;
-    use Cargo\Objects\FileHandler\File;
+    namespace Application\Core;
+    use Application\Objects\StatusCodeHandler\StatusCode;
+    use Application\Objects\Router\Route;
+    use Application\Objects\DirectoryHandler\Directory;
+    use Application\Objects\FileHandler\File;
 
 
     /**
@@ -430,6 +430,14 @@
             return false;
         }
 
+        /**
+        * Returns full app path with domain
+        *
+        * @return string
+        */
+        public static function url() {
+            return Request::url().self::$_location;
+        }
 
         /**
         * @param xTend\Objects\Route|string $route
@@ -461,7 +469,7 @@
                     }
                 } else { $url.="/$part"; }
             }
-            header('Location: '.Request::url().App::location().'/'.$url);
+            header('Location: '.self::url().'/'.$url);
             return true;
         }
 
@@ -474,7 +482,8 @@
         public static function navigate($request, $data = [], $inc_url = true) {
             //set temp data and time to live
             Session::set('xt-data', json_encode($data));
-            $host=Request::url();
+            $host=self::url();
+            die($host);
             if(is_string($request)) {
                 header('Location: '.(($inc_url) ? ($host.'/') : '').$request);
             } elseif(($request instanceof Route)&&is_string($request->handle())) {
