@@ -436,7 +436,7 @@
         * @return string
         */
         public static function url() {
-            return Request::url().self::$_location;
+            return rtrim(Request::url().self::$_location, '/');
         }
 
         /**
