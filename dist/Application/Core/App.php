@@ -1,9 +1,9 @@
 <?php
-    namespace Application\Core;
-    use Application\Objects\StatusCodeHandler\StatusCode;
-    use Application\Objects\Router\Route;
-    use Application\Objects\DirectoryHandler\Directory;
-    use Application\Objects\FileHandler\File;
+    namespace Cargo\Core;
+    use Cargo\Objects\StatusCodeHandler\StatusCode;
+    use Cargo\Objects\Router\Route;
+    use Cargo\Objects\DirectoryHandler\Directory;
+    use Cargo\Objects\FileHandler\File;
 
 
     /**
@@ -11,6 +11,14 @@
     * of the whole xTend application
     */
     class App {
+        //
+        // GLOBALS
+        //
+        /** @var int modifier for no routing */
+        const NO_ROUTING = 1;
+        /** @var int modifier for barebone loading -> only core files for bootstrapping + certain config files */
+        const BAREBONES = 2;
+
         //
         //
         // GENERAL CONFIGURATION VARIABLES
@@ -30,8 +38,8 @@
         private static $_backupLimit = 10;
         /** @var int Contains the limit of logs files */
         private static $_logLimit = 30;
-        /** @var boolean Contains the bootstrap mode status */
-        private static $_bootstrap = false;
+        /** @var int Contains application modifier */
+        private static $_modifier = false;
         /** @var array Contains bootstrap methods */
         private static $_straps = [];
         /** @var string Contains the namespace of the application
@@ -142,17 +150,17 @@
 
 
         /**
-        * Returns or sets the bootstrap mode
+        * Returns or sets the application modifier
         *
-        * @param boolean:optional $mode
+        * @param int:optional $modifier
         *
-        * @return boolean
+        * @return int
         */
-        public static function bootstrap($mode=null) {
-            if($mode!==null) {
-                self::$_bootstrap=$mode;
+        public static function modifier($modifier=null) {
+            if($modifier!==null) {
+                self::$_modifier=$modifier;
             }
-            return self::$_bootstrap;
+            return self::$_modifier;
         }
 
 
@@ -478,9 +486,9 @@
         * Initiates the App (configure should be called before start)
         *
         * @param string $public Public directory
-        * @param boolean $bootstrap Bootstrap mode on|off
+        * @param int $modifier Application modifier (NO_ROUTING / BAREBONES)
         */
-        public static function start($public, $bootstrap=false) {
+        public static function start($public, $modifier=false) {
             // check server variables and put temp ones in
             // if none are present when in cli mode
             if(php_sapi_name()==='cli') {
@@ -504,8 +512,8 @@
             self::$_directoryPublic = $public;
 
 
-            // Set bootstrap mode
-            self::$_bootstrap = $bootstrap;
+            // Set modifier
+            self::$_modifier = $modifier;
 
 
             // Include FileManager
@@ -513,11 +521,15 @@
             // Include other class files using the classmanager
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/StatusCode.php');
             FileManager::include(self::$_directorySystem.'/Core/StatusCodeHandler.php');
-            // Include Crypto, SessionHandler, Session and Cookie
-            FileManager::include(self::$_directorySystem.'/Core/Crypto/CryptoLoader.php');
-            FileManager::include(self::$_directorySystem.'/Core/SessionHandler.php');
-            FileManager::include(self::$_directorySystem.'/Core/Session.php');
-            FileManager::include(self::$_directorySystem.'/Core/Cookie.php');
+
+            // Include Crypto, SessionHandler, Session and Cookie (IF NOT BAREBONES)
+            if(self::$_modifier<App::BAREBONES) {
+                FileManager::include(self::$_directorySystem.'/Core/Crypto/CryptoLoader.php');
+                FileManager::include(self::$_directorySystem.'/Core/SessionHandler.php');
+                FileManager::include(self::$_directorySystem.'/Core/Session.php');
+                FileManager::include(self::$_directorySystem.'/Core/Cookie.php');
+            }
+
             // Include file and directory handlers
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/File.php');
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Directory.php');
@@ -528,38 +540,46 @@
             FileManager::include(self::$_directorySystem.'/Core/BackupManager.php');
             // Include LogHandler
             FileManager::include(self::$_directorySystem.'/Core/LogHandler.php');
-            // Include ModelHandler
-            FileManager::include(self::$_directorySystem.'/Core/ModelHandler.php');
-            // Include ControllerHandler
-            FileManager::include(self::$_directorySystem.'/Core/ControllerHandler.php');
-            // Include WOW
-            FileManager::include(self::$_directorySystem.'/Core/Wow.php');
-            // Include data ext view and view handler
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticDataExtension.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/DataExtension.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/View.php');
-            FileManager::include(self::$_directorySystem.'/Core/ViewHandler.php');
-            // Include HTML stuff
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/HTMLHandler.php');
-            FileManager::include(self::$_directorySystem.'/Core/HTMLHandler.php');
-            // Include the Request
-            FileManager::include(self::$_directorySystem.'/Core/Request.php');
-            // Include FormTokenHandler
-            FileManager::include(self::$_directorySystem.'/Core/FormTokenHandler.php');
-            // Include VersionCheck
-            FileManager::include(self::$_directorySystem.'/Core/VersionCheck.php');
+
+            if(self::$_modifier<App::BAREBONES) {
+                // Include ModelHandler
+                FileManager::include(self::$_directorySystem.'/Core/ModelHandler.php');
+                // Include ControllerHandler
+                FileManager::include(self::$_directorySystem.'/Core/ControllerHandler.php');
+                // Include WOW
+                FileManager::include(self::$_directorySystem.'/Core/Wow.php');
+                // Include data ext view and view handler
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/StaticDataExtension.php');
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/DataExtension.php');
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/View.php');
+                FileManager::include(self::$_directorySystem.'/Core/ViewHandler.php');
+                // Include HTML stuff
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/HTMLHandler.php');
+                FileManager::include(self::$_directorySystem.'/Core/HTMLHandler.php');
+                // Include the Request
+                FileManager::include(self::$_directorySystem.'/Core/Request.php');
+                // Include FormTokenHandler
+                FileManager::include(self::$_directorySystem.'/Core/FormTokenHandler.php');
+                // Include VersionCheck
+                FileManager::include(self::$_directorySystem.'/Core/VersionCheck.php');
+                // Include other blueprints
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Controller.php');
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/RespondController.php');
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Model.php');
+            }
+
             // Include PackagistHandler
             FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
+
             // Include ORM
             FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/xORM.php');
             FileManager::include(self::$_directorySystem.'/Core/xORM.php');
-            // Include other blueprints
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Controller.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/RespondController.php');
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Model.php');
-            // Include Router and Route object if not in bootstrap mode
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Route.php');
-            FileManager::include(self::$_directorySystem.'/Core/Router.php');
+            
+            if(self::$_modifier<App::BAREBONES) {
+                // Include Router and Route object
+                FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/Route.php');
+                FileManager::include(self::$_directorySystem.'/Core/Router.php');
+            }
         }
 
 
@@ -626,6 +646,19 @@
             //include remaining files
             foreach($files as $file) {
                 if($file->extension()=='php') { $file->include(); }
+            }
+        }
+
+        /**
+        * Includes bare config files
+        */
+        public static function bareconfig() {
+            $confdir = self::config();
+            $bare = preg_split("/\\r\\n|\\r|\\n/", $confdir->file('.bare', 1)->read());
+            foreach($bare as $file) {
+                if($file!="") {
+                    FileManager::include($confdir.'/'.$file);
+                }
             }
         }
 
@@ -761,7 +794,8 @@
         */
         public static function strap($name) {
             if(isset(self::$_straps[$name])) {
-                return call_user_func_array(self::$_straps[$name], array_values(array_slice(func_get_args(), 1)));
+                $args=func_get_args(); array_splice($args, 0, 1);
+                return call_user_func_array(self::$_straps[$name], $args);
             }
             return false;
         }
@@ -793,13 +827,21 @@
             self::$_directoryPublic = new Directory(self::$_directoryPublic);
             // run
             self::integrity();
-            SessionHandler::start();
-            PackagistHandler::start();
-            Request::start();
+            
             self::libraries();
-            self::configure();
+            if(self::$_modifier<App::BAREBONES) {
+                SessionHandler::start();
+                PackagistHandler::start();
+                Request::start();
+                self::libraries();
+                self::configure();
+            } else {
+                self::bareconfig();
+            }
+
             BackupManager::create();
-            if(self::$_bootstrap!==true) {
+
+            if(self::$_modifier<App::NO_ROUTING) {
                 Router::start();
             }
         }
