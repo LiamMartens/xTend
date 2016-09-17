@@ -3,8 +3,8 @@
     * Registers other expressions
     * apart from internal expressions
     */
-    namespace Application;
-    use Application\Core\Wow;
+    namespace Cargo;
+    use Cargo\Core\Wow;
 
 
     //general echo
@@ -144,7 +144,7 @@
         //
         Wow::register(
             Wow::rx("\<css\s+embed\s*\>(.+?)\<\/css\>","is"),
-            '<style type="text/css"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></style>'
+            '<style type="text/css"><?php echo Core\FileHandler::public(Core\App::location().\'/\'.\'$1\')->read(); ?></style>'
         );
 
 
@@ -186,11 +186,11 @@
         //
         Wow::register(
             Wow::rx("\<js\s+embed=\"(.+?)\"\s*\/\>","i"),
-            '<script type="text/javascript"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></script>'
+            '<script type="text/javascript"><?php echo Core\FileHandler::public(Core\App::location().\'/\'.\'$1\')->read(); ?></script>'
         );
         Wow::register(
             Wow::rx("\<js\s+embed\s*\>(.+?)\<\/js\>","is"),
-            '<script type="text/javascript"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></script>'
+            '<script type="text/javascript"><?php echo Core\FileHandler::public(Core\App::location().\'/\'.\'$1\')->read(); ?></script>'
         );
 
 
@@ -417,7 +417,7 @@
         //
         Wow::register(
             Wow::rx("@css_embed:(.+)", "i"),
-            '<style type="text/css"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></style>'
+            '<style type="text/css"><?php echo Core\FileHandler::public(Core\App::location().\'/\'.\'$1\')->read(); ?></style>'
         );
 
 
@@ -444,7 +444,7 @@
         //
         Wow::register(
             Wow::rx("@js_embed:(.+)", "i"),
-            '<script type="text/javascript"><?php echo file_get_contents(\'$1\'); ?></script>'
+            '<script type="text/javascript"><?php echo file_get_contents(Core\App::location().\'/\'.\'$1\'); ?></script>'
         );
 
 
