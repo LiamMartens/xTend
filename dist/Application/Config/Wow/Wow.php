@@ -136,7 +136,7 @@
         //
         Wow::register(
             Wow::rx("\<css\s+embed=\"(.+?)\"\s*\/\>","i"),
-            '<style type="text/css"><?php echo Core\FileHandler::public(\'$1\')->read(); ?></style>'
+            '<style type="text/css"><?php echo Core\FileHandler::public(Core\App::location().\'/\'.\'$1\')->read(); ?></style>'
         );
         //
         //    . file notation can be used but is not necessary
