@@ -14,6 +14,7 @@
             'set:public [Name]' => 'Moves the public directory',
             'set:application [Name]' => 'Sets the current workbench application',
             'new [AppName] [Domain or any] [Path or any]' => 'Creates a new application in the current project by certain domain or path restrictions',
+            'add [AppName] [Domain or any] [Path or any]' => 'Adds an existing application to the project',
             'remove [AppName]' => 'Removes an application',
             'rename [AppName]' => 'Renames your application',
             'new:controller [ControllerName]' => 'Creates a new default controller',

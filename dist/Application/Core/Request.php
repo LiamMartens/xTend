@@ -1,6 +1,6 @@
 <?php
-    namespace Cargo\Core;
-    use Cargo\Blueprints\StaticDataExtension;
+    namespace Application\Core;
+    use Application\Blueprints\StaticDataExtension;
 
 
     /**

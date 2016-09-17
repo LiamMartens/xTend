@@ -5,6 +5,8 @@
     use Application\Objects\xORM\Select;
     use Application\Objects\xORM\Raw;
     use Application\Objects\xORM\ResultObject;
+    use Application\Core\StatusCodeHandler;
+    use Application\Core\LogHandler;
 
     class xORM {
         const DRIVER_MYSQL = 'mysql';
@@ -48,7 +50,7 @@
                         return false;
                 }
             } catch(Exception $ex) {
-                throw $ex;
+                LogHandler::write(StatusCodeHandler::find(0x0005), $ex->getMessage());
                 return false;
             }
             return true;
