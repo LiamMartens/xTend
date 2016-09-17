@@ -1,4 +1,5 @@
 #Welcome to xTend  
+### I have yet to fully update the 2.x documentation
 
-##1.x  
-[Documentation](/1.x/)  
+##2.x  
+[Documentation](/2.x/)  
