@@ -1,6 +1,7 @@
 <?php
-    namespace Application\Core;
-    use Application\Blueprints\StaticDataExtension;
+    namespace Cargo\Core;
+    use Cargo\Blueprints\StaticDataExtension;
+
 
     /**
     * The Request object handles the current
@@ -20,6 +21,7 @@
         public static $data=[];
         /** @var Route contains the route that has been executed */
         private static $_route;
+
 
         /**
         * Initializes the Request object
@@ -44,6 +46,7 @@
             }
         }
         
+
         /**
         * Gets or sets the route object
         *
@@ -57,6 +60,7 @@
             }
             return self::$_route;
         }
+
 
         /**
         * Gets or sets the method
@@ -72,34 +76,44 @@
             return self::$_method;
         }
 
+
         /**
-        * Gets the path 
+        * Gets the path
         *
         * @return string
         */
         public static function path() {
             if(self::$_path===false) {
-                self::$_path=trim($_SERVER['REQUEST_URI'], '/');
+                $location=trim(App::location(), '/');
+                if(($location!='')&&(strrpos($location, '/')!=strlen($location)-1)) { $location.='/'; }
+                $location=str_replace('/', '\/', $location);
+                $rx='(?:(?:^('.$location.')index\.php$)|(?:^('.$location.')index\.php\/))';
+                self::$_path=preg_replace('/'.$rx.'/', '$1$2', trim($_SERVER['REQUEST_URI'], '/'));
             }
             return self::$_path;
         }
 
+
         public static function url() {
             return self::scheme().'://'.self::host();
         }
+
 
         public static function scheme() {
             if($_SERVER['HTTPS']=='on') { return 'https'; }
             return 'http';
         }
 
+
         public static function host() {
             return $_SERVER['HTTP_HOST'];
         }
 
+
         public static function port() {
             return intval($_SERVER['SERVER_PORT']);
         }
+
 
         public static function query() {
             if(!isset($_SERVER['QUERY_STRING'])) {
@@ -108,6 +122,7 @@
             return $_SERVER['QUERY_STRING'];
         }
     
+
         /**
         * Sets the content type
         *
