@@ -11,8 +11,19 @@
     class xORM {
         const DRIVER_MYSQL = 'mysql';
         const DRIVER_SQLITE = 'sqlite';
+        /** @var string Selected database type */
+        private static $_type = false;
         /** @var PDO PDO instance of database connection */
         private static $_instance = false;
+
+        /**
+        * Returns the currently configured database type
+        *
+        * @return string
+        */
+        public static function type() {
+            return self::$_type;
+        }
 
         /**
         * Adds ` brackets where necessary
@@ -41,10 +52,12 @@
                     case xORM::DRIVER_MYSQL:
                         $dsn.="host=".$location.";dbname=".$options['db'];
                         self::$_instance = new PDO($dsn, $options['user'], $options['password']);
+                        self::$_type = xORM::DRIVER_MYSQL;
                         break;
                     case xORM::DRIVER_SQLITE:
                         $dsn.=$location;
                         self::$_instance = new PDO($dsn);
+                        self::$_type = xORM::DRIVER_SQLITE;
                         break;
                     default:
                         return false;
