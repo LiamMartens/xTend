@@ -2,12 +2,13 @@
     namespace Application;
     use Application\Core\xORM;
 
-    /*
-    xORM::configure(xORM::DRIVER_MYSQL, '127.0.0.1', [
-        'user' => 'root',
-        'password' => 'pass',
-        'db' => 'database'
-    ]);
+/*
+    https://idiorm.readthedocs.io
+    https://paris.readthedocs.io
 
-    xORM::configure(xORM::DRIVER_SQLITE, './db.sqlite');
-    */
+    xORM::configure('sqlite:./example.db');
+
+    xORM::configure('mysql:host=localhost;dbname=my_database');
+    xORM::configure('username', 'database_user');
+    xORM::configure('password', 'top_secret');
+*/

@@ -581,7 +581,6 @@
             FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
 
             // Include ORM
-            FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/xORM.php');
             FileManager::include(self::$_directorySystem.'/Core/xORM.php');
             
             if(self::$_modifier<App::BAREBONES) {
