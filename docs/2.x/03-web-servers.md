@@ -12,6 +12,7 @@ RewriteRule ^(.*)/$ /$1 [L,R=301]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [L,QSA]
 ```
+*Notice this also rewrites www to non-www*
 
 ## Lighttpd
 ```
