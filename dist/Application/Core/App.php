@@ -517,7 +517,7 @@
 
 
             // Set system and public directories
-            self::$_directorySystem = '/'.trim(substr(__DIR__, 0, strlen(__DIR__) - 5), '/');
+            self::$_directorySystem=rtrim(substr(__DIR__, 0, strlen(__DIR__) - 5), '/');
             self::$_directoryPublic = $public;
 
 
