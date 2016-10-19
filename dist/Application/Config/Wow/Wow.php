@@ -3,8 +3,8 @@
     * Registers other expressions
     * apart from internal expressions
     */
-    namespace Cargo;
-    use Cargo\Core\Wow;
+    namespace Application;
+    use Application\Core\Wow;
 
 
     //general echo
