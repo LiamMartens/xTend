@@ -358,8 +358,10 @@
                             //got the section name, now take the section content out of the view content
                             $rx = sprintf(self::$_rx_section_extract, $section_name, $section_name);
                             $rx_matches=[]; preg_match($rx, $view_c, $rx_matches);
-                            if(isset($rx_matches[1]))
+                            if(isset($rx_matches[1])&&($rx_matches[1]!=''))
                                 $compiled_string.=self::compile($rx_matches[1], $modules_dir);
+                            elseif(isset($rx_matches[2]))
+                                $compiled_string.=self::compile($rx_matches[2], $modules_dir);
                         } else { $compiled_string.=$part; }
                     }
                 } else { $compiled_string=self::compile($file->read(), $modules_dir); }
