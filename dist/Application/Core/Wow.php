@@ -114,8 +114,10 @@
         private static function _version(&$content) {
             //must be at the beginning of a line
             $rx_matches=[]; preg_match(self::$_rx_version, $content, $rx_matches);
-            if(isset($rx_matches[1]))
+            if(isset($rx_matches[1])&&($rx_matches[1]!=''))
                 return floatval($rx_matches[1]);
+            elseif(isset($rx_matches[2]))
+                return floatval($rx_matches[2]);
             return false;
         }
 
@@ -128,8 +130,10 @@
         */
         private static function _layout(&$content) {
             $rx_matches=[]; preg_match(self::$_rx_layout, $content, $rx_matches);
-            if(isset($rx_matches[1]))
+            if(isset($rx_matches[1])&&($rx_matches[1]!=''))
                 return $rx_matches[1];
+            elseif(isset($rx_matches[2]))
+                return $rx_matches[2];
             return false;
         }
 
@@ -147,8 +151,10 @@
             //change+version -> only compile when the version changes and the content changes, this prevents
             //data loss in the compiled outputs as you do need to manually change the version number
             $rx_matches=[]; preg_match(self::$_rx_flag, $content, $rx_matches);
-            if(isset($rx_matches[1]))
+            if(isset($rx_matches[1])&&($rx_matches[1]!=''))
                 return $rx_matches[1];
+            elseif(isset($rx_matches[2]))
+                return $rx_matches[2];
             return false;
         }
 
@@ -172,8 +178,16 @@
             if(floatval($last_compile)<$time_last_mod) return true;
             //check for all the modules
             $modules=[]; preg_match_all(self::$_rx_module, $view_content, $modules);
+            // check for HTML flavor
             if(isset($modules[1])) {
                 foreach ($modules[1] as $mod_name) {
+                    $file_path=App::modules()->file($mod_name.'.wow.php', 2);
+                    if($file_path->exists()) {
+                        //module exists -> check the change time
+                        if(filemtime($file_path)>floatval($last_compile)) return true; } } }
+            // check for at sign flavor
+            if(isset($modules[2])) {
+                foreach ($modules[2] as $mod_name) {
                     $file_path=App::modules()->file($mod_name.'.wow.php', 2);
                     if($file_path->exists()) {
                         //module exists -> check the change time
@@ -256,6 +270,8 @@
                 } else {
                     //get module contents
                     $mod_name=$module_match[1];
+                    if($mod_name=='')
+                        $mod_name=$module_match[2];
                     $mod_path=($modules_dir===false) ?
                                     (App::modules()->file($mod_name.'.wow.php', 2)) :
                                     ($modules_dir->file($mod_name.'.wow.php', 2));
