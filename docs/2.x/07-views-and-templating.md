@@ -30,20 +30,20 @@ These expressions define the version of the view, views are compiled with a vers
 *Notice you can also create a wow view using the workbench's `new:view` command*
 
 ## Using a layout
-Besides making your views more powerful you can also create layouts for your views to extend. To do so create a `Wow` file in your application's `Layouts` directory and start writing your layout. In a layout you can use all registered `Wow` expressions but you can also use a layout specific one called `section`.
+Besides making your views more powerful you can also create layouts for your views to extend. To do so create a `Wow` file in your application's `Layouts` directory and start writing your layout. In a layout you can use all registered `Wow` expressions but you can also use a layout specific one called `part`.
 
 ```
 <html>
 <head>
-    <section name="head" />
+    <part name="head" />
 </head>
 <body>
-    <section name="body" />
+    <part name="body" />
 </body>
 </html>
 ```
 
-*Notice the section keyword will change to `@section:NameOfSection` instead of `<section name="NameOfSection" />` when using the `AT_SIGN` flavor*
+*Notice the part keyword will change to `@part:NameOfSection` instead of `<part name="NameOfSection" />` when using the `AT_SIGN` flavor*
 
 ### Assigning the layout to the view
 To tell `wow` to compile your view with a layout you have to use the layout flag as follows
@@ -51,9 +51,13 @@ To tell `wow` to compile your view with a layout you have to use the layout flag
 <version value="1" />
 <compile value="change+version" />
 <layout value="nameOfLayout" />
+
+<part name="head">
+    <!-- part content -->
+</part>
 ```
 
-*Notice as per usual when you use the `AT_SIGN` flavor, `<layout value="nameOfLayout" />` becomes `@layout:nameOfLayout`*
+*Notice as per usual when you use the `AT_SIGN` flavor, `<layout value="nameOfLayout" />` becomes `@layout:nameOfLayout`. Do keep in mind the `<part>` keywrod becomes `@startpart` and `@endpart`*
 
 ## Also, modules!
 Aside from layout support, xTend's `WOW` engine also has modules. These are supposed to be used as components which can easily be plugged into your view. Just create your `WOW` module in your application's `Modules` directory and use the `module` statements.

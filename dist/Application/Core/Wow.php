@@ -68,27 +68,27 @@
                 self::$_rx_version = self::rx("\<version\s+value=\"([0-9\.]+)\"\s*\/?\>", "i");
                 self::$_rx_layout = self::rx("\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
                 self::$_rx_flag = self::rx("\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>", "i");
-                self::$_rx_section = self::rx("(\<section\s+name=\"[\w\-\_]+\"\s*\/?\>)", "i");
-                self::$_rx_section_name = self::rx("\<section\s+name=\"([\w\-\_]+)\"\s*\/?\>", "i");
-                self::$_rx_section_extract = self::rx("\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>", "si");
+                self::$_rx_section = self::rx("(\<part\s+name=\"[\w\-\_]+\"\s*\/?\>)", "i");
+                self::$_rx_section_name = self::rx("\<part\s+name=\"([\w\-\_]+)\"\s*\/?\>", "i");
+                self::$_rx_section_extract = self::rx("\<part\s+name=\"%s\"\s*\>(.*?)\<\/part\>", "si");
                 self::$_rx_module = self::rx("\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>", "i");
                 self::$_rx_module_extract = self::rx("(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>)", "i");
             } elseif(self::$_flavor==Wow::AT_SIGN) {
                 self::$_rx_version = self::rx("@version:([0-9\.]+)", "i");
                 self::$_rx_layout = self::rx("@layout:([\w\-\_\.]+)", "i");
                 self::$_rx_flag = self::rx("@compile:(change\+version|always|version|never|change)", "i");
-                self::$_rx_section = self::rx("(@section:[\w\-\_]+)", "i");
-                self::$_rx_section_name = self::rx("@section:([\w\-\_]+)", "i");
-                self::$_rx_section_extract = self::rx("@startsection:%s(.*?)@endsection", "si");
+                self::$_rx_section = self::rx("(@part:[\w\-\_]+)", "i");
+                self::$_rx_section_name = self::rx("@part:([\w\-\_]+)", "i");
+                self::$_rx_section_extract = self::rx("@startpart:%s(.*?)@endpart", "si");
                 self::$_rx_module = self::rx("@module:([\w\-\_\.]+)", "i");
                 self::$_rx_module_extract = self::rx("(@module:[\w\-\_\.]+)", "i");
             } else {
                 self::$_rx_version = self::rx("(?:\<version\s+value=\"([0-9\.]+)\"\s*\/?\>)|(?:@version:([0-9\.]+))", "i");
                 self::$_rx_layout = self::rx("(?:\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@layout:([\w\-\_\.]+))", "i");
                 self::$_rx_flag = self::rx("(?:\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>)|(?:@compile:(change\+version|always|version|never|change))", "i");
-                self::$_rx_section = self::rx("(?:(\<section\s+name=\"[\w\-\_]+\"\s*\/?\>))|(?:@section:[\w\-\_]+)", "i");
-                self::$_rx_section_name = self::rx("(?:\<section\s+name=\"([\w\-\_]+)\"\s*\/?\>)|(?:@section:([\w\-\_]+))", "i");
-                self::$_rx_section_extract = self::rx("(?:\<section\s+name=\"%s\"\s*\>(.*?)\<\/section\>)|(?:@startsection:%s(.*?)@endsection)", "si");
+                self::$_rx_section = self::rx("(?:(\<part\s+name=\"[\w\-\_]+\"\s*\/?\>))|(?:@part:[\w\-\_]+)", "i");
+                self::$_rx_section_name = self::rx("(?:\<part\s+name=\"([\w\-\_]+)\"\s*\/?\>)|(?:@part:([\w\-\_]+))", "i");
+                self::$_rx_section_extract = self::rx("(?:\<part\s+name=\"%s\"\s*\>(.*?)\<\/part\>)|(?:@startpart:%s(.*?)@endpart)", "si");
                 self::$_rx_module = self::rx("(?:\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@module:([\w\-\_\.]+))", "i");
                 self::$_rx_module_extract = self::rx("(?:(\<module\s+name=\"[\w\-\_\.]+\"\s*\/?\>))|(?:(@module:[\w\-\_\.]+))", "i");
             }
