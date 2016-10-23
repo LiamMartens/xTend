@@ -100,7 +100,14 @@
 
 
         public static function scheme() {
-            if($_SERVER['HTTPS']=='on') { return 'https'; }
+            if(
+                (isset($_SERVER['HTTPS'])&&
+                (($_SERVER['HTTPS']==='on')||($_SERVER['HTTPS']===true)||($_SERVER['HTTPS']===1)))||
+                (isset($_SERVER['HTTP_USESSL'])&&
+                (($_SERVER['HTTP_USESSL']==='on')||($_SERVER['HTTP_USESSL']===true)||($_SERVER['HTTP_USESSL']===1)))
+            ) {
+                return 'https';
+            }
             return 'http';
         }
 
