@@ -246,8 +246,9 @@
         */
         public function include() {
             if($this->exists()) {
-                FileManager::include($this->_path);
+                return FileManager::include($this->_path);
             }
+            return false;
         }
 
         /**

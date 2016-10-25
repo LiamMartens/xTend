@@ -14,8 +14,11 @@
         */
         public static function include($path) {
             if(!defined($path)) {
-                require($path);
+                $d=require($path);
                 define($path, true);
+                if(!empty($d)) {
+                    return $d;
+                }
                 return true;
             }
             return false;
