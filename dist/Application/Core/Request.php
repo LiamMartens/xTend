@@ -29,7 +29,7 @@
         public static function start() {
             // Parse GET variables
             if(count($_GET)==0) {
-                self::$get=parse_str(self::query());
+                parse_str(self::query(), self::$get);
             } else { self::$get = $_GET; }
             // Parse POST variables
             if(count($_POST)==0) {
@@ -123,8 +123,12 @@
 
 
         public static function query() {
-            if(!isset($_SERVER['QUERY_STRING'])) {
-                $_SERVER['QUERY_STRING']='';
+            if((!isset($_SERVER['QUERY_STRING']))||(empty($_SERVER['QUERY_STRING']))) {
+                $path=self::path();
+                $index=strpos($path, '?');
+                if($index!==false) {
+                    $_SERVER['QUERY_STRING']=substr($path, $index+1);
+                } else { $_SERVER['QUERY_STRING']=''; }
             }
             return $_SERVER['QUERY_STRING'];
         }
