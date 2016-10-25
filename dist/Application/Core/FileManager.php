@@ -15,11 +15,13 @@
         public static function include($path) {
             if(!defined($path)) {
                 $d=require($path);
-                define($path, true);
                 if(!empty($d)) {
+                    define($path, $d);
                     return $d;
                 }
                 return true;
+            } elseif(!empty(constant($path))) {
+                return constant($path);
             }
             return false;
         }
