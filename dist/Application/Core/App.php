@@ -581,7 +581,7 @@
             FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
 
             // Include ORM
-            FileManager::include(self::$_directorySystem.'/Core/xORM.php');
+            FileManager::include(self::$_directorySystem.'/Core/Idiorm.php');
             
             if(self::$_modifier<App::BAREBONES) {
                 // Include Router and Route object

@@ -36,7 +36,7 @@
      * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
      * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      *
-    */
+     */
     namespace Application\Core;
     use \ArrayAccess;
     use \PDO;
@@ -45,7 +45,7 @@
     use \Countable;
     use \Serializable;
 
-    class xORM implements ArrayAccess {
+    class ORM implements ArrayAccess {
 
         // ----------------------- //
         // --- CLASS CONSTANTS --- //
@@ -108,7 +108,7 @@
         // Key name of the connections in self::$_db used by this instance
         protected $_connection_name;
 
-        // The name of the table the current xORM instance is associated with
+        // The name of the table the current ORM instance is associated with
         protected $_table_name;
 
         // Alias for the table to be used in SELECT queries
@@ -234,11 +234,11 @@
          * Despite its slightly odd name, this is actually the factory
          * method used to acquire instances of the class. It is named
          * this way for the sake of a readable interface, ie
-         * xORM::for_table('table_name')->find_one()-> etc. As such,
+         * ORM::for_table('table_name')->find_one()-> etc. As such,
          * this will normally be the first method called in a chain.
          * @param string $table_name
          * @param string $connection_name Which connection to use
-         * @return xORM
+         * @return ORM
          */
         public static function for_table($table_name, $connection_name = self::DEFAULT_CONNECTION) {
             self::_setup_db($connection_name);
@@ -278,7 +278,7 @@
 
         /**
          * Set the PDO object used by Idiorm to communicate with the database.
-         * This is public in case the xORM should use a ready-instantiated
+         * This is public in case the ORM should use a ready-instantiated
          * PDO object as its database connection. Accepts an optional string key
          * to identify the connection if multiple connections are used.
          * @param PDO $db
@@ -303,7 +303,7 @@
         /**
          * Detect and initialise the character used to quote identifiers
          * (table names, column names etc). If this has been specified
-         * manually using xORM::configure('identifier_quote_character', 'some-char'),
+         * manually using ORM::configure('identifier_quote_character', 'some-char'),
          * this will do nothing.
          * @param string $connection_name Which connection to use
          */
@@ -317,7 +317,7 @@
         /**
          * Detect and initialise the limit clause style ("SELECT TOP 5" /
          * "... LIMIT 5"). If this has been specified manually using 
-         * xORM::configure('limit_clause_style', 'top'), this will do nothing.
+         * ORM::configure('limit_clause_style', 'top'), this will do nothing.
          * @param string $connection_name Which connection to use
          */
         public static function _setup_limit_clause_style($connection_name) {
@@ -361,14 +361,14 @@
                 case 'sqlsrv':
                 case 'dblib':
                 case 'mssql':
-                    return xORM::LIMIT_STYLE_TOP_N;
+                    return ORM::LIMIT_STYLE_TOP_N;
                 default:
-                    return xORM::LIMIT_STYLE_LIMIT;
+                    return ORM::LIMIT_STYLE_LIMIT;
             }
         }
 
         /**
-         * Returns the PDO instance used by the the xORM to communicate with
+         * Returns the PDO instance used by the the ORM to communicate with
          * the database. This can be called if any low-level DB access is
          * required outside the class. If multiple connections are used,
          * accepts an optional key name for the connection.
@@ -397,7 +397,7 @@
         }
 
         /**
-         * Returns the PDOStatement instance last used by any connection wrapped by the xORM.
+         * Returns the PDOStatement instance last used by any connection wrapped by the ORM.
          * Useful for access to PDOStatement::rowCount() or error information
          * @return PDOStatement
          */
@@ -547,7 +547,7 @@
 
         /**
          * "Private" constructor; shouldn't be called directly.
-         * Use the xORM::for_table factory method instead.
+         * Use the ORM::for_table factory method instead.
          */
         protected function __construct($table_name, $data = array(), $connection_name = self::DEFAULT_CONNECTION) {
             $this->_table_name = $table_name;
@@ -587,7 +587,7 @@
         }
 
         /**
-         * Create an xORM instance from the given row (an associative
+         * Create an ORM instance from the given row (an associative
          * array of data fetched from the database)
          */
         protected function _create_instance_from_row($row) {
@@ -598,9 +598,9 @@
         }
 
         /**
-         * Tell the xORM that you are expecting a single result
+         * Tell the ORM that you are expecting a single result
          * back from your query, and execute it. Will return
-         * a single instance of the xORM class, or false if no
+         * a single instance of the ORM class, or false if no
          * rows were returned.
          * As a shortcut, you may supply an ID as a parameter
          * to this method. This will perform a primary key
@@ -621,9 +621,9 @@
         }
 
         /**
-         * Tell the xORM that you are expecting multiple results
+         * Tell the ORM that you are expecting multiple results
          * from your query, and execute it. Will return an array
-         * of instances of the xORM class, or an empty array if
+         * of instances of the ORM class, or an empty array if
          * no rows were returned.
          * @return array|\IdiormResultSet
          */
@@ -635,9 +635,9 @@
         }
 
         /**
-         * Tell the xORM that you are expecting multiple results
+         * Tell the ORM that you are expecting multiple results
          * from your query, and execute it. Will return an array
-         * of instances of the xORM class, or an empty array if
+         * of instances of the ORM class, or an empty array if
          * no rows were returned.
          * @return array
          */
@@ -647,9 +647,9 @@
         }
 
         /**
-         * Tell the xORM that you are expecting multiple results
+         * Tell the ORM that you are expecting multiple results
          * from your query, and execute it. Will return a result set object
-         * containing instances of the xORM class.
+         * containing instances of the ORM class.
          * @return \IdiormResultSet
          */
         public function find_result_set() {
@@ -657,7 +657,7 @@
         }
 
         /**
-         * Tell the xORM that you are expecting multiple results
+         * Tell the ORM that you are expecting multiple results
          * from your query, and execute it. Will return an array,
          * or an empty array if no rows were returned.
          * @return array
@@ -667,7 +667,7 @@
         }
 
         /**
-         * Tell the xORM that you wish to execute a COUNT query.
+         * Tell the ORM that you wish to execute a COUNT query.
          * Will return an integer representing the number of
          * rows returned.
          */
@@ -676,7 +676,7 @@
         }
 
         /**
-         * Tell the xORM that you wish to execute a MAX query.
+         * Tell the ORM that you wish to execute a MAX query.
          * Will return the max value of the choosen column.
          */
         public function max($column)  {
@@ -684,7 +684,7 @@
         }
 
         /**
-         * Tell the xORM that you wish to execute a MIN query.
+         * Tell the ORM that you wish to execute a MIN query.
          * Will return the min value of the choosen column.
          */
         public function min($column)  {
@@ -692,7 +692,7 @@
         }
 
         /**
-         * Tell the xORM that you wish to execute a AVG query.
+         * Tell the ORM that you wish to execute a AVG query.
          * Will return the average value of the choosen column.
          */
         public function avg($column)  {
@@ -700,7 +700,7 @@
         }
 
         /**
-         * Tell the xORM that you wish to execute a SUM query.
+         * Tell the ORM that you wish to execute a SUM query.
          * Will return the sum of the choosen column.
          */
         public function sum($column)  {
@@ -751,7 +751,7 @@
         }
 
         /**
-         * Force the xORM to flag all the fields in the $data array
+         * Force the ORM to flag all the fields in the $data array
          * as "dirty" and therefore update them when save() is called.
          */
         public function force_all_dirty() {
@@ -843,7 +843,7 @@
          * @example select_many('column', 'column2', 'column3');
          * @example select_many(array('column', 'column2', 'column3'), 'column4', 'column5');
          * 
-         * @return \xORM
+         * @return \ORM
          */
         public function select_many() {
             $columns = func_get_args();
@@ -871,7 +871,7 @@
          * @example select_many_expr('column', 'column2', 'column3')
          * @example select_many_expr(array('column', 'column2', 'column3'), 'column4', 'column5')
          * 
-         * @return \xORM
+         * @return \ORM
          */
         public function select_many_expr() {
             $columns = func_get_args();
@@ -1593,7 +1593,7 @@
             $result_columns = join(', ', $this->_result_columns);
 
             if (!is_null($this->_limit) &&
-                self::$_config[$this->_connection_name]['limit_clause_style'] === xORM::LIMIT_STYLE_TOP_N) {
+                self::$_config[$this->_connection_name]['limit_clause_style'] === ORM::LIMIT_STYLE_TOP_N) {
                 $fragment .= "TOP {$this->_limit} ";
             }
 
@@ -1681,7 +1681,7 @@
         protected function _build_limit() {
             $fragment = '';
             if (!is_null($this->_limit) &&
-                self::$_config[$this->_connection_name]['limit_clause_style'] == xORM::LIMIT_STYLE_LIMIT) {
+                self::$_config[$this->_connection_name]['limit_clause_style'] == ORM::LIMIT_STYLE_LIMIT) {
                 if (self::get_db($this->_connection_name)->getAttribute(PDO::ATTR_DRIVER_NAME) == 'firebird') {
                     $fragment = 'ROWS';
                 } else {
@@ -1853,7 +1853,7 @@
         }
 
         /**
-         * Return the raw data wrapped by this xORM
+         * Return the raw data wrapped by this ORM
          * instance as an associative array. Column
          * names may optionally be supplied as arguments,
          * if so, only those keys will be returned.
@@ -1945,7 +1945,7 @@
         }
 
         /**
-         * Set a property on the xORM object.
+         * Set a property on the ORM object.
          * @param string|array $key
          * @param string|null $value
          * @param bool $raw Whether this value should be treated as raw or not
@@ -2175,12 +2175,12 @@
          * In this case we are attempting to convert camel case formatted 
          * methods into underscore formatted methods.
          *
-         * This allows us to call xORM methods using camel case and remain 
+         * This allows us to call ORM methods using camel case and remain 
          * backwards compatible.
          * 
          * @param  string   $name
          * @param  array    $arguments
-         * @return xORM
+         * @return ORM
          */
         public function __call($name, $arguments)
         {
@@ -2189,7 +2189,7 @@
             if (method_exists($this, $method)) {
                 return call_user_func_array(array($this, $method), $arguments);
             } else {
-                throw new xORMMethodMissingException("Method $name() does not exist in class " . get_class($this));
+                throw new IdiormMethodMissingException("Method $name() does not exist in class " . get_class($this));
             }
         }
 
@@ -2198,18 +2198,18 @@
          * In this case we are attempting to convert camel case formatted 
          * methods into underscore formatted methods.
          *
-         * This allows us to call xORM methods using camel case and remain 
+         * This allows us to call ORM methods using camel case and remain 
          * backwards compatible.
          * 
          * @param  string   $name
          * @param  array    $arguments
-         * @return xORM
+         * @return ORM
          */
         public static function __callStatic($name, $arguments)
         {
             $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
 
-            return call_user_func_array(array('xORM', $method), $arguments);
+            return call_user_func_array(array('ORM', $method), $arguments);
         }
     }
 
@@ -2433,7 +2433,7 @@
          * Call a method on all models in a result set. This allows for method
          * chaining such as setting a property on all models in a result set or
          * any other batch operation across models.
-         * @example xORM::for_table('Widget')->find_many()->set('field', 'value')->save();
+         * @example ORM::for_table('Widget')->find_many()->set('field', 'value')->save();
          * @param string $method
          * @param array $params
          * @return \IdiormResultSet
@@ -2443,7 +2443,7 @@
                 if (method_exists($model, $method)) {
                     call_user_func_array(array($model, $method), $params);
                 } else {
-                    throw new xORMMethodMissingException("Method $method() does not exist in class " . get_class($this));
+                    throw new IdiormMethodMissingException("Method $method() does not exist in class " . get_class($this));
                 }
             }
             return $this;
@@ -2455,58 +2455,14 @@
      */
     class IdiormStringException extends Exception {}
 
-    class xORMMethodMissingException extends Exception {}
+    class IdiormMethodMissingException extends Exception {}
 
-   /**
-    *
-    * Paris
-    *
-    * http://github.com/j4mie/paris/
-    *
-    * A simple Active Record implementation built on top of Idiorm
-    * ( http://github.com/j4mie/idiorm/ ).
-    *
-    * You should include Idiorm before you include this file:
-    * require_once 'your/path/to/idiorm.php';
-    *
-    * BSD Licensed.
-    *
-    * Copyright (c) 2010, Jamie Matthews
-    * All rights reserved.
-    *
-    * Redistribution and use in source and binary forms, with or without
-    * modification, are permitted provided that the following conditions are met:
-    *
-    * * Redistributions of source code must retain the above copyright notice, this
-    * list of conditions and the following disclaimer.
-    *
-    * * Redistributions in binary form must reproduce the above copyright notice,
-    * this list of conditions and the following disclaimer in the documentation
-    * and/or other materials provided with the distribution.
-    *
-    * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-    * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-    * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-    * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-    * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-    * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-    * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-    * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-    * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    *
-    */
 
-    /**
-     * Subclass of Idiorm's xORM class that supports
-     * returning instances of a specified class rather
-     * than raw instances of the xORM class.
-     *
-     * You shouldn't need to interact with this class
-     * directly. It is used internally by the Model base
-     * class.
-    */
-    class xORMWrapper extends xORM {
+
+
+
+
+    class ORMWrapper extends ORM {
 
         /**
          * The wrapped find_one and find_many classes will
@@ -2531,12 +2487,12 @@
          * Add a custom filter to the method chain specified on the
          * model class. This allows custom queries to be added
          * to models. The filter should take an instance of the
-         * xORM wrapper as its first argument and return an instance
-         * of the xORM wrapper. Any arguments passed to this method
+         * ORM wrapper as its first argument and return an instance
+         * of the ORM wrapper. Any arguments passed to this method
          * after the name of the filter will be passed to the called
-         * filter function as arguments after the xORM class.
+         * filter function as arguments after the ORM class.
          *
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         public function filter() {
             $args = func_get_args();
@@ -2552,11 +2508,11 @@
          * class bound to the supplied table name.
          *
          * A repeat of content in parent::for_table, so that
-         * created class is xORMWrapper, not xORM
+         * created class is ORMWrapper, not ORM
          *
          * @param  string $table_name
          * @param  string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         public static function for_table($table_name, $connection_name = parent::DEFAULT_CONNECTION) {
             self::_setup_db($connection_name);
@@ -2568,7 +2524,7 @@
          * associated with this wrapper and populate
          * it with the supplied Idiorm instance.
          *
-         * @param  xORM $orm
+         * @param  ORM $orm
          * @return bool|Model
          */
         protected function _create_model_instance($orm) {
@@ -2583,7 +2539,7 @@
         /**
          * Wrap Idiorm's find_one method to return
          * an instance of the class associated with
-         * this wrapper instead of the raw xORM class.
+         * this wrapper instead of the raw ORM class.
          *
          * @param  null|integer $id
          * @return Model
@@ -2595,7 +2551,7 @@
         /**
          * Wrap Idiorm's find_many method to return
          * an array of instances of the class associated
-         * with this wrapper instead of the raw xORM class.
+         * with this wrapper instead of the raw ORM class.
          *
          * @return Array
          */
@@ -2610,13 +2566,11 @@
         /**
          * Wrap Idiorm's create method to return an
          * empty instance of the class associated with
-         * this wrapper instead of the raw xORM class.
+         * this wrapper instead of the raw ORM class.
          *
-         *  return xORMWrapper|bool
+         *  return ORMWrapper|bool
          */
         public function create($data=null) {
             return $this->_create_model_instance(parent::create($data));
         }
     }
-
-    class ParisMethodMissingException extends Exception {}

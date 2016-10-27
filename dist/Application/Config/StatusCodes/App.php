@@ -11,4 +11,3 @@
     StatusCodeHandler::register(0x0002, 'controllerhandler:invalid-controller-definition', 'Error while trying to pass data to an initialized controller. Data methods not implemented.');
     StatusCodeHandler::register(0x0003, 'viewhandler:invalid-view-definition', 'Error while trying to pass data to an initialized view. Data methods not implemented.');
     StatusCodeHandler::register(0x0004, 'viewhandler:invalid-view-definition', 'Error while trying to execute a view object. Execute method not implemented.');
-    StatusCodeHandler::register(0x0005, 'xorm:could-not-connect', 'xORM could not connect to database');

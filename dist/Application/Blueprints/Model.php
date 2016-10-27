@@ -1,7 +1,56 @@
 <?php
+
+   /**
+    *
+    * Paris
+    *
+    * http://github.com/j4mie/paris/
+    *
+    * A simple Active Record implementation built on top of Idiorm
+    * ( http://github.com/j4mie/idiorm/ ).
+    *
+    * You should include Idiorm before you include this file:
+    * require_once 'your/path/to/idiorm.php';
+    *
+    * BSD Licensed.
+    *
+    * Copyright (c) 2010, Jamie Matthews
+    * All rights reserved.
+    *
+    * Redistribution and use in source and binary forms, with or without
+    * modification, are permitted provided that the following conditions are met:
+    *
+    * * Redistributions of source code must retain the above copyright notice, this
+    * list of conditions and the following disclaimer.
+    *
+    * * Redistributions in binary form must reproduce the above copyright notice,
+    * this list of conditions and the following disclaimer in the documentation
+    * and/or other materials provided with the distribution.
+    *
+    * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+    * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    *
+    */
+
+    /**
+     * Subclass of Idiorm's ORM class that supports
+     * returning instances of a specified class rather
+     * than raw instances of the ORM class.
+     *
+     * You shouldn't need to interact with this class
+     * directly. It is used internally by the Model base
+     * class.
+     */
     namespace Application\Blueprints;
-    use Application\Core\ParisMethodMissingException;
-    use Application\Core\xORMWrapper;
+    use Application\Core\ORMWrapper;
 
     /**
      * Model base class. Your model objects should extend
@@ -32,10 +81,10 @@
         public static $auto_prefix_models = null;
 
         /**
-         * The xORM instance used by this model 
+         * The ORM instance used by this model 
          * instance to communicate with the database.
          *
-         * @var xORM $orm
+         * @var ORM $orm
          */
         public $orm;
 
@@ -143,14 +192,14 @@
          * Factory method used to acquire instances of the given class.
          * The class name should be supplied as a string, and the class
          * should already have been loaded by PHP (or a suitable autoloader
-         * should exist). This method actually returns a wrapped xORM object
-         * which allows a database query to be built. The wrapped xORM object is
+         * should exist). This method actually returns a wrapped ORM object
+         * which allows a database query to be built. The wrapped ORM object is
          * responsible for returning instances of the correct class when
          * its find_one or find_many methods are called.
          *
          * @param  string      $class_name
          * @param  null|string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         public static function factory($class_name, $connection_name = null) {
             $class_name = self::$auto_prefix_models . $class_name;
@@ -160,10 +209,10 @@
                $connection_name = self::_get_static_property(
                    $class_name,
                    '_connection_name',
-                   xORMWrapper::DEFAULT_CONNECTION
+                   ORMWrapper::DEFAULT_CONNECTION
                );
             }
-            $wrapper = xORMWrapper::for_table($table_name, $connection_name);
+            $wrapper = ORMWrapper::for_table($table_name, $connection_name);
             $wrapper->set_class_name($class_name);
             $wrapper->use_id_column(self::_get_id_column_name($class_name));
             return $wrapper;
@@ -179,7 +228,7 @@
          * @param  null|string $foreign_key_name
          * @param  null|string $foreign_key_name_in_current_models_table
          * @param  null|string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         protected function _has_one_or_many($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_current_models_table=null, $connection_name=null) {
             $base_table_name = self::_get_table_name(get_class($this));
@@ -210,7 +259,7 @@
          * @param  null|string $foreign_key_name
          * @param  null|string $foreign_key_name_in_current_models_table
          * @param  null|string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         protected function has_one($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_current_models_table=null, $connection_name=null) {
             return $this->_has_one_or_many($associated_class_name, $foreign_key_name, $foreign_key_name_in_current_models_table, $connection_name);
@@ -224,7 +273,7 @@
          * @param  null|string $foreign_key_name
          * @param  null|string $foreign_key_name_in_current_models_table
          * @param  null|string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         protected function has_many($associated_class_name, $foreign_key_name=null, $foreign_key_name_in_current_models_table=null, $connection_name=null) {
             return $this->_has_one_or_many($associated_class_name, $foreign_key_name, $foreign_key_name_in_current_models_table, $connection_name);
@@ -271,7 +320,7 @@
          * @param  null|string $key_in_base_table
          * @param  null|string $key_in_associated_table
          * @param  null|string $connection_name
-         * @return xORMWrapper
+         * @return ORMWrapper
          */
         protected function has_many_through($associated_class_name, $join_class_name=null, $key_to_base_table=null, $key_to_associated_table=null,  $key_in_base_table=null, $key_in_associated_table=null, $connection_name=null) {
             $base_class_name = get_class($this);
@@ -321,9 +370,9 @@
         }
 
         /**
-         * Set the wrapped xORM instance associated with this Model instance.
+         * Set the wrapped ORM instance associated with this Model instance.
          *
-         * @param  xORM $orm
+         * @param  ORM $orm
          * @return void
          */
         public function set_orm($orm) {
@@ -465,7 +514,7 @@
         }
 
         /**
-         * Calls static methods directly on the xORMWrapper
+         * Calls static methods directly on the ORMWrapper
          *
          * @param  string $method
          * @param  Array  $parameters
@@ -489,7 +538,7 @@
          * @param  string $name
          * @param  array  $arguments
          * @throws ParisMethodMissingException
-         * @return bool|xORMWrapper
+         * @return bool|ORMWrapper
          */
         public function __call($name, $arguments) {
             $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
@@ -500,3 +549,5 @@
             }
         }
     }
+
+    class ParisMethodMissingException extends Exception {}
