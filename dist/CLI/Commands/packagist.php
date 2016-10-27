@@ -32,7 +32,7 @@
         //to install or update all packages
         $packages = Core\PackagistHandler::packages();
         foreach($packages as $package => $version) {
-            Core\PackagistHanlder::install($package, $version, false);
+            Core\PackagistHandler::install($package, $version, false);
         }
     });
 
