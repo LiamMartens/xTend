@@ -550,4 +550,4 @@
         }
     }
 
-    class ParisMethodMissingException extends Exception {}
+    class ParisMethodMissingException extends \Exception {}
