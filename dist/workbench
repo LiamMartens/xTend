@@ -21,7 +21,7 @@
     // includes application
     Workbench::application();
     // start app, configure and run
-    Core\App::start(__DIR__, true);
+    Core\App::start(__DIR__, Core\App::NO_ROUTING);
     Core\FileHandler::system('Config.App.App.php')->include();
     Core\App::run();
     // run workbench
