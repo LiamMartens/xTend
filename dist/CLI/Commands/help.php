@@ -34,6 +34,8 @@
             'packagist:remove [Vendor/Package]' => 'Removes a packagist package',
             'packagist:autoremove [Vendor/Package]' => 'Removes the dependencies of a certain package',
             'packagist:autoremove [Vendor/Package] [Version]' => 'Removes the dependencies of a certain package of a certain version',
+            'packagist:autoremove [Vendor/Package] recursive' => 'Removes the dependencies, and the dependencies of the dependencies',
+            'packagist:autoremove [Vendor/Package] [Version] recursive' => 'Removes the dependencies of a certain package and the dependencies of the dependencies',
             'help' => 'Shows information about the workbench\'s commands'
         ];
         

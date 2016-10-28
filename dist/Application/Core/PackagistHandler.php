@@ -6,6 +6,7 @@
     * and removing packages
     */
     class PackagistHandler {
+        const URL = "https://packagist.org/packages";
         /** @var array Contains all installed packages */
         private static $_packages=false;
         /** @var array Contains the autoload spec */
@@ -15,7 +16,7 @@
         * @return array
         */
         public static function packages() {
-            if(self::$_packages===false) {
+            if(self::$_packages==false) {
                 self::$_packages = json_decode(FileHandler::system('packagist.json')->read(), true);
             }
             return self::$_packages;
@@ -25,7 +26,7 @@
         * @return array
         */
         public static function autoload() {
-            if(self::$_autoload===false) {
+            if(self::$_autoload==false) {
                 self::$_autoload = json_decode(App::libs()->file('Packagist.autoload.json')->read(), true);
             }
             return self::$_autoload;
@@ -35,6 +36,8 @@
         * Initializes packagist handler
         */
         public static function start() {
+            self::packages();
+            self::autoload();
             App::libs()->file('Packagist.autoload.php')->include();
         }
 
@@ -44,6 +47,17 @@
         private static function save() {
             return (FileHandler::system('packagist.json')->write(json_encode(self::$_packages))&&
                     App::libs()->file('Packagist.autoload.json')->write(json_encode(self::$_autoload)));
+        }
+
+        private static function match($package_info, $version_spec = false) {
+            foreach($package_info["package"]["versions"] as $version => $information) {
+                if(($version_spec!==false)&&((new VersionCheck($version_spec, $version))->match()==true)) {
+                    return $information;
+                } elseif((substr($version, 0, 4)!=='dev-')&&($version_spec===false)) {
+                    return $information;
+                }
+            }
+            return false;
         }
 
         /**
@@ -56,27 +70,17 @@
         * @return boolean
         */
         public static function install($package_name, $version_param = false, $die_on_duplicate = true) {
-            $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
+            $package_info = json_decode(file_get_contents(self::URL."/$package_name.json"), true);
             if(!isset($package_info['status'])) {
-                $to_install = false;
                 //has package already been added to the app's packagist file
                 $exists = isset(self::$_packages[$package_name]) ? self::$_packages[$package_name] : false;
                 //check for matching version either new or existing ugradable
-                foreach($package_info["package"]["versions"] as $version => $information) {
-                    if(($version_param!==false)&&((new VersionCheck($version_param, $version))->match()==true)) {
-                        $to_install = $information;
-                        self::$_packages[$package_name]=$version_param;
-                        self::save();
-                        break;
-                    } elseif(($exists===false)&&(substr($version, 0, 4)!=="dev-")&&($version_param===false)) {
-                        $to_install = $information;
-                        self::$_packages[$package_name]='^'.trim($to_install["version"], 'v');
-                        self::save();
-                        break;
-                    } elseif(($exists!==true)&&((new VersionCheck($exists, $version))->match()==true)&&($version_param===false)) {
-                        $to_install = $information;
-                        break;
-                    }
+                $to_install = self::match($package_info, $version_param);
+                if($to_install!==false) {
+                    self::$_packages[$package_name]='^'.trim($to_install["version"], 'v');
+                    self::save();
+                } elseif(($to_install===false)&&($exists!==true)&&($exists!==false)) {
+                    $to_install = self::match($package_info, $exists);
                 }
                 if($to_install!==false) {
                     echo "Downloading $package_name ".$to_install["version"]."\n";
@@ -193,14 +197,14 @@
         *
         * @return boolean
         */
-        public static function remove($package_name) {
+        public static function remove($package_name, $no_output=false) {
             if(isset(self::$_packages[$package_name])) {
                 $version_installed = self::$_packages[$package_name];
                 //remove from packagist
                 unset(self::$_packages[$package_name]);
                 self::save();
                 //get package info
-                $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
+                $package_info = json_decode(file_get_contents(self::URL."/$package_name.json"), true);
                 $git_name = $package_info["package"]["repository"];
                 $git_name = substr($git_name, strrpos($git_name, '/', strrpos($git_name, '/') - strlen($git_name) - 1) + 1);
                 //get all directories
@@ -218,25 +222,15 @@
                 //remove remaining directory
                 $package_directory->remove();
                 //show packages
-                $to_install = false;
-                foreach($package_info["package"]["versions"] as $pack_v => $information) {
-                    if((new VersionCheck($version_installed, $pack_v))->match()==true) {
-                        $to_install = $information;
-                        break;
-                    } elseif(substr($version, 0, 4)!=="dev-") {
-                        $to_install = $information;
-                        break;
-                    }
-                }
-
+                $to_install = self::match($package_info, $version_installed);
                 $notice = "";
                 foreach($to_install["require"] as $p => $v) {
                     if(strpos($p, '/')!==false) {
                         $notice .= "$p : $v\n";
                     }
                 }
-                if($notice!="") {
-                    echo "Don't forget, following packags were required by $package_name but might not be needed anymore\n(You can run 'autoremove $package_name $version_installed' or 'autoremove $package_name' to remove them automatically\n";
+                if(($notice!="")&&($no_output===false)) {
+                    echo "Don't forget, following packags were required by $package_name but might not be needed anymore\n(You can run 'autoremove $package_name $version_installed' or 'autoremove $package_name' to remove them automatically".PHP_EOL;
                     echo $notice;
                 }
                 return true;
@@ -250,27 +244,47 @@
         * @param string $package_name
         * @param string|boolean $package_version
         */
-        public static function autoremove($package_name, $package_version = false) {
-            $package_info = json_decode(file_get_contents("https://packagist.org/packages/$package_name.json"), true);
+        public static function autoremove($package_name, $package_version = false, $recursive = false) {
+            // remove package if not yet done
+            self::remove($package_name, true);
+
+            $package_info = json_decode(file_get_contents(self::URL."/$package_name.json"), true);
             //get to_install
-            $to_install = false;
-            foreach($package_info["package"]["versions"] as $version => $information) {
-                if(($package_version!==false)&&((new VersionCheck($package_version, $version))->match()==true)) {
-                    $to_install = $information;
-                    break;
-                } elseif((substr($version, 0, 4)!=="dev-")&&($package_version===false)) {
-                    $to_install = $information;
-                    break;
-                }
-            }
+            $to_install = self::match($package_info, $package_version);
             //run through require and remove whats possible
             if($to_install!==false) {
-                $to_install["require"] = array_reverse($to_install["require"]);
-                foreach($to_install["require"] as $p => $v) {
-                    if(strpos($p, '/')!==false) {
-                        self::remove($p);
+                $dependencies = array_reverse($to_install["require"]);
+                $dep_packages = array_keys($dependencies);
+                // get other package dependencies
+                $packages = self::packages();
+                foreach($packages as $p => $v) {
+                    // don't check current package
+                    // or current package deps
+                    if(($p!=$package_name)&&(array_search($p, $dep_packages)===false)) {
+                        $dep_info = json_decode(file_get_contents(self::URL."/$p.json"), true);
+                        $match = self::match($dep_info, $v);
+                        // remove the current dependencies from deps deps
+                        $match["require"] = array_diff(array_keys($match["require"]), $dep_packages);
+                        $dep_packages = array_diff($dep_packages, $match["require"]);
                     }
                 }
+                $packages_left = array_diff($dep_packages, array_keys($to_install["require"]));
+                foreach($dep_packages as $p) {
+                    if(strpos($p, '/')!==false) {
+                        self::remove($p, true);
+                        if($recursive) {
+                            self::autoremove($p, $dependencies[$p], true);
+                        }
+                    }
+                }
+                if(count($packages_left)>0) {
+                    echo "Following packages we're not removed as they are still required by other packages".PHP_EOL;
+                    foreach($packages_left as $p) {
+                        echo $p.PHP_EOL;
+                    }
+                }
+                return true;
             }
+            return false;
         }
     }

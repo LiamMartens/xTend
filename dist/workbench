@@ -25,4 +25,7 @@
     Core\FileHandler::system('Config.App.App.php')->include();
     Core\App::run();
     // run workbench
-    Workbench::run($argv);
+    $value=Workbench::run($argv);
+    if(is_string($value)) {
+        echo $value.PHP_EOL;
+    }

@@ -6,7 +6,7 @@
     */
     class Command {
         /** @var string Contains the regex for the command */
-        private $_rx;
+        public $_rx;
         /** @var callable Contains the command function */
         private $_call;
 
