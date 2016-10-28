@@ -127,6 +127,15 @@
         * @return boolean
         */
         public function match() {
+            $multiple=explode('|', $this->_expression);
+            if((strpos($this->_expression, '||')===false)&&(count($multiple)>1)) {
+                foreach($multiple as $exp) {
+                    if((new VersionCheck($exp, $this->_version))->match()) {
+                        return true;
+                    }
+                }
+                return false;
+            }
             return ($this->exact()||
                     $this->range()||
                     $this->hyphen()||

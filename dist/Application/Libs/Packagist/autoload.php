@@ -9,7 +9,20 @@
     use Application\Core\FileHandler;
     use Application\Core\PackagistHandler;
     use Application\Core\FileManager;
-    //load non psr loaders
+
+    //load file map
+    $autoload=PackagistHandler::autoload();
+    foreach($autoload as $package => $loader) {
+        $package_name = strtolower(substr($package, 0, strrpos($package, '-')));
+        $package_directory = __DIR__."/$package_name/$package/";
+        if(isset($loader['files'])) {
+            foreach($loader['files'] as $file) {
+                FileManager::include($package_directory.$file);
+            }
+        }
+    }
+
+    // autoloading
     spl_autoload_register(function($class) {
         $autoload=PackagistHandler::autoload();
         foreach($autoload as $package => $loader) {

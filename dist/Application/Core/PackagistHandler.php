@@ -7,14 +7,17 @@
     */
     class PackagistHandler {
         /** @var array Contains all installed packages */
-        private static $_packages;
+        private static $_packages=false;
         /** @var array Contains the autoload spec */
-        private static $_autoload;
+        private static $_autoload=false;
 
         /**
         * @return array
         */
         public static function packages() {
+            if(self::$_packages===false) {
+                self::$_packages = json_decode(FileHandler::system('packagist.json')->read(), true);
+            }
             return self::$_packages;
         }
 
@@ -22,6 +25,9 @@
         * @return array
         */
         public static function autoload() {
+            if(self::$_autoload===false) {
+                self::$_autoload = json_decode(App::libs()->file('Packagist.autoload.json')->read(), true);
+            }
             return self::$_autoload;
         }
 
@@ -29,8 +35,6 @@
         * Initializes packagist handler
         */
         public static function start() {
-            self::$_packages = json_decode(FileHandler::system('packagist.json')->read(), true);
-            self::$_autoload = json_decode(App::libs()->file('Packagist.autoload.json')->read(), true);
             App::libs()->file('Packagist.autoload.php')->include();
         }
 
@@ -150,6 +154,13 @@
                                     foreach($classes as $class) {
                                         $classmap[$class]=$file;
                                     }
+                                }
+                            } else if($spec=='files') {
+                                if(!isset($classmap['files'])) {
+                                    $classmap['files']=[];
+                                }
+                                foreach($mapping as $file) {
+                                    $classmap['files'][]=$file;
                                 }
                             } else {
                                 // psr -> go through mapping

@@ -198,7 +198,9 @@
             $file_parts_count = count($file_parts)-$ext_count;
             $path.='/'.implode('/', array_slice($file_parts, 0, $file_parts_count));
             //add extension part
-            $path.='.'.implode('.', array_slice($file_parts, $file_parts_count));
+            if($ext_count>0) {
+                $path.='.'.implode('.', array_slice($file_parts, $file_parts_count));
+            }
             return new File($path);
         }
 
