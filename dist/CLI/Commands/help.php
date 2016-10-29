@@ -36,6 +36,8 @@
             'packagist:autoremove [Vendor/Package] [Version]' => 'Removes the dependencies of a certain package of a certain version',
             'packagist:autoremove [Vendor/Package] recursive' => 'Removes the dependencies, and the dependencies of the dependencies',
             'packagist:autoremove [Vendor/Package] [Version] recursive' => 'Removes the dependencies of a certain package and the dependencies of the dependencies',
+            'phinx' => 'Show the integrated phinx command line help',
+            'phinx [Command] ...' => 'Execute phinx command\'s right form the workbench',
             'help' => 'Shows information about the workbench\'s commands'
         ];
         

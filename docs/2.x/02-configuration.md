@@ -27,3 +27,6 @@ Lastly you can change the public directory. If you don't intend on using the wor
 ```
 php workbench set:public public_html
 ```
+
+## Set database credentials
+By default xTend comes with the `Idiorm` and `Phinx`. These use the same configuration file in `Application/Config/ORM/db.yml`. Do keep in mind you need the enable the configuration for Idiorm in the `Application/Config/ORM/configure.php` file (by default the code is commented out for if you don't need database support).
