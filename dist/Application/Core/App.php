@@ -580,6 +580,9 @@
             // Include PackagistHandler
             FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
 
+            // Include Spyc Yaml parser
+            FileManager::include(self::$_directorySystem.'/Core/Spyc.php');
+
             // Include ORM
             FileManager::include(self::$_directorySystem.'/Core/Idiorm.php');
             
