@@ -37,5 +37,12 @@
             elseif(is_numeric($value)) { $value=intval($value); }
             $configuration[$key] = $value;
             $conf->write(json_encode($configuration));
+            // if environment changes , update db.yml
+            if($key=='environment') {
+                $db_file = Core\App::config()->file('ORM.db.yml');
+                $db = Spyc::YAMLLoad((string)$db_file);
+                $db['environments']['default_database'] = $value;
+                $db_file->write(Spyc::YAMLDump($db, 4, false, true));
+            }
         } else { die("Configuration key not found"); }
     });
