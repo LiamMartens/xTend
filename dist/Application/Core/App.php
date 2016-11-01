@@ -562,21 +562,21 @@
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/DataExtension.php');
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/View.php');
                 FileManager::include(self::$_directorySystem.'/Core/ViewHandler.php');
-                // Include HTML stuff
+                // Include HTML stuffVe
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryObjects.'/HTMLHandler.php');
                 FileManager::include(self::$_directorySystem.'/Core/HTMLHandler.php');
                 // Include the Request
                 FileManager::include(self::$_directorySystem.'/Core/Request.php');
                 // Include FormTokenHandler
                 FileManager::include(self::$_directorySystem.'/Core/FormTokenHandler.php');
-                // Include VersionCheck
-                FileManager::include(self::$_directorySystem.'/Core/VersionCheck.php');
                 // Include other blueprints
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Controller.php');
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/RespondController.php');
                 FileManager::include(self::$_directorySystem.'/'.self::$_directoryBlueprints.'/Model.php');
             }
 
+            // Include VersionCheck
+            FileManager::include(self::$_directorySystem.'/Core/VersionCheck.php');
             // Include PackagistHandler
             FileManager::include(self::$_directorySystem.'/Core/PackagistHandler.php');
 
@@ -842,7 +842,6 @@
             self::libraries();
             if(self::$_modifier<App::BAREBONES) {
                 SessionHandler::start();
-                PackagistHandler::start();
                 Request::start();
                 self::libraries();
                 self::configure();
@@ -850,6 +849,7 @@
                 self::bareconfig();
             }
 
+            PackagistHandler::start();
             BackupManager::create();
 
             if(self::$_modifier<App::NO_ROUTING) {
