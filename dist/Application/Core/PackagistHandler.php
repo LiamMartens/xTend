@@ -80,10 +80,7 @@
                 $exists = isset(self::$_packages[$package_name]) ? self::$_packages[$package_name] : false;
                 //check for matching version either new or existing ugradable
                 $to_install = self::match($package_info, $version_param);
-                if($to_install!==false) {
-                    self::$_packages[$package_name]='^'.trim($to_install["version"], 'v');
-                    self::save();
-                } elseif(($to_install===false)&&($exists!==true)&&($exists!==false)) {
+                if(($to_install===false)&&($exists!==true)&&($exists!==false)) {
                     $to_install = self::match($package_info, $exists);
                 }
                 if($to_install!==false) {
@@ -159,10 +156,23 @@
                                 // loop through the files and fetch the fully qualified classnames
                                 // through regex
                                 foreach($mapping as $file) {
+                                    // can also be directory
+                                    $d=$package_sub->directory($file);
                                     $f=$package_sub->file($file, substr_count($file, '.'));
-                                    $classes=$f->classes();
-                                    foreach($classes as $class) {
-                                        $classmap[$class]=$file;
+                                    if($d->exists()) {
+                                        // look up files inside directory
+                                        $d_files = $d->files(true);
+                                        foreach($d_files as $d_f) {
+                                            $classes = $d_f->classes();
+                                            foreach($classes as $class) {
+                                                $classmap[$class]=$d_f;
+                                            }
+                                        }
+                                    } else {
+                                        $classes=$f->classes();
+                                        foreach($classes as $class) {
+                                            $classmap[$class]=$file;
+                                        }
                                     }
                                 }
                             } else if($spec=='files') {
@@ -189,6 +199,8 @@
                             }
                         }
                         self::$_autoload["$name-$id"] = $classmap; }
+
+                    self::$_packages[$package_name]='^'.trim($to_install["version"], 'v');
                     self::save();
                     return true;
                 }
