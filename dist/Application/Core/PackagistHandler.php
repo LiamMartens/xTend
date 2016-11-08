@@ -165,7 +165,8 @@
                                         foreach($d_files as $d_f) {
                                             $classes = $d_f->classes();
                                             foreach($classes as $class) {
-                                                $classmap[$class]=$d_f;
+                                                $source = substr("$d_f", strlen("$d")+1);
+                                                $classmap[$class]="$file/$source";
                                             }
                                         }
                                     } else {

@@ -69,7 +69,7 @@
                         $namespace_build=true;
                         $skip_used=false;
                     }
-                    if(($token[0]===T_CLASS)||($token[0]===T_INTERFACE)) {
+                    if(($token[0]===T_CLASS)||($token[0]===T_INTERFACE)||($token[0]===T_TRAIT)) {
                         $current_class='';
                         $class_build=true;
                         $skip_used=false;
