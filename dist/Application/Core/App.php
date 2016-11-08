@@ -839,18 +839,17 @@
             // run
             self::integrity();
             
+            PackagistHandler::start();
             self::libraries();
+
             if(self::$_modifier<App::BAREBONES) {
+                BackupManager::create();
                 SessionHandler::start();
                 Request::start();
-                self::libraries();
                 self::configure();
             } else {
                 self::bareconfig();
             }
-
-            PackagistHandler::start();
-            BackupManager::create();
 
             if(self::$_modifier<App::NO_ROUTING) {
                 Router::start();
