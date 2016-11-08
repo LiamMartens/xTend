@@ -50,6 +50,10 @@
         }
 
         private static function match($package_info, $version_spec = false) {
+            if(!isset($package_info["package"])) {
+                die("Package information not found on packagist.org\n");
+            }
+
             foreach($package_info["package"]["versions"] as $version => $information) {
                 if(($version_spec!==false)&&((new VersionCheck($version_spec, $version))->match()==true)) {
                     return $information;
