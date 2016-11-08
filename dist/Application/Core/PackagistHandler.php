@@ -85,13 +85,15 @@
                 if($to_install!==false) {
                     echo "Downloading $package_name ".$to_install["version"]."\n";
                     //download requires
-                    foreach($to_install["require"] as $rpackage => $version) {
-                        if($rpackage=="php") {
-                            $php_vmatch = []; preg_match('/([\>\=]+)([0-9\.]+)/', $version, $php_vmatch);
-                            if(version_compare(phpversion(), $php_vmatch[2], $php_vmatch[1])==false) {
-                                die("PHP version $version required"); }
-                        } elseif(strpos($rpackage, '/')!==false) {
-                            self::install($rpackage, $version, false);
+                    if(isset($to_install["require"])) {
+                        foreach($to_install["require"] as $rpackage => $version) {
+                            if($rpackage=="php") {
+                                $php_vmatch = []; preg_match('/([\>\=]+)\s*([0-9\.]+)/', $version, $php_vmatch);
+                                if(version_compare(phpversion(), $php_vmatch[2], $php_vmatch[1])==false) {
+                                    die("PHP version $version required"); }
+                            } elseif(strpos($rpackage, '/')!==false) {
+                                self::install($rpackage, $version, false);
+                            }
                         }
                     }
                     //get directory names and create if not existing yet
