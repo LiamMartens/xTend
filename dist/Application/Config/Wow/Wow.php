@@ -9,7 +9,7 @@
 
     //general echo
     Wow::register(
-        Wow::rx("{{(.+?)}}", "i"),
+        Wow::rx("{{{\s*(.+?)\s*}}}", "i"),
         "<?php echo $1; ?>"
     );
 

@@ -73,11 +73,11 @@ Or
 By default there's a bunch of expressions you can use in your views. As already saw the `WOW` engine comes in 2 flavors and we will go over every expression in each flavor.
 
 ### Statment injection
-use the `{{  }}` expression, blade-like, to echo out a PHP statement or variable.
+use the `{{{  }}}` expression, blade-like, to echo out a PHP statement or variable. (3 brackets were used to not interfere with engines such as mustache which uses a 2 bracket style)
 ```
-{{ $variable }}
+{{{ $variable }}}
 ```
-*Notice `{{}}` is available in both flavors*
+*Notice `{{{ }}}` is available in both flavors*
 
 ### echo
 Use the `echo` expression to echo out a PHP statement or variable
