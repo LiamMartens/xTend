@@ -141,7 +141,13 @@
                     //clear previous data
                     Request::clear();
                     //ignore starting and trailing slashes
-                    $ex_request = explode('/', trim($request, '/'));
+                    $q_index=strpos($request, '?');
+                    if($q_index===false) {
+                        $ex_request = explode('/', trim($request, '/'));
+                    } else {
+                        $ex_request = explode('/', trim(substr($request, 0, $q_index) ,'/'));
+                        $ex_request[count($ex_request) - 1] .= substr($request, $q_index);
+                    }
                     $ex_handle = explode('/', $handle);
                     //if the amount of parts dont comply just, end
                     if(count($ex_request)!=count($ex_handle)) continue;
