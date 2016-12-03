@@ -26,12 +26,15 @@
         * @param mixed $value
         * @param integer|boolean $time
         * @param string $domain
+        *
+        * @return boolean
         */
         public static function set($key, $value, $time=false, $domain='/') {
+            if(headers_sent()) return false;
             if($time===false) $time=time()+3600*24; //one day
             try {
-                setcookie(sha1($key), Crypto::encrypt($value, self::$_enckey), $time, $domain);
-            } catch(\Exception $e) { self::remove($key, $domain); }
+                return setcookie(sha1($key), Crypto::encrypt($value, self::$_enckey), $time, $domain);
+            } catch(\Exception $e) { return self::remove($key, $domain); }
         }
 
         /**
@@ -57,11 +60,15 @@
         *
         * @param mixed $key
         * @param string $domain
+        *
+        * @return boolean
         */
         public static function remove($key, $domain='/') {
-            if(isset($_COOKIE[sha1($key)])) {
+            if(isset($_COOKIE[sha1($key)]) && !headers_sent()) {
                 self::set($key,null,time()-1,$domain);
                 unset($_COOKIE[sha1($key)]);
+                return true;
             }
+            return false;
         }
     }
