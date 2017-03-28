@@ -25,7 +25,7 @@
         //
         //
         /** @var string Contains the current xTend version */
-        private static $_xTendVersion = '2.0.2';
+        private static $_xTendVersion = '2.0.3';
         /** @var string Contains the path where xTend is hosted, can be absolute or relative */
         private static $_location = '/'; // private $_location = 'http://localhost/' is also possible
         /** @var string Contains the timezone locale */

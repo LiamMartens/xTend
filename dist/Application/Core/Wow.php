@@ -86,7 +86,7 @@
                 self::$_rx_version = self::rx("(?:\<version\s+value=\"([0-9\.]+)\"\s*\/?\>)|(?:@version:([0-9\.]+))", "i");
                 self::$_rx_layout = self::rx("(?:\<layout\s+value=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@layout:([\w\-\_\.]+))", "i");
                 self::$_rx_flag = self::rx("(?:\<compile\s+value=\"(change\+version|always|version|never|change)\"\s*\/?\>)|(?:@compile:(change\+version|always|version|never|change))", "i");
-                self::$_rx_section = self::rx("(?:(\<part\s+name=\"[\w\-\_]+\"\s*\/?\>))|(?:@part:[\w\-\_]+)", "i");
+                self::$_rx_section = self::rx("(?:(\<part\s+name=\"[\w\-\_]+\"\s*\/?\>)|(@part:[\w\-\_]+))", "i");
                 self::$_rx_section_name = self::rx("(?:\<part\s+name=\"([\w\-\_]+)\"\s*\/?\>)|(?:@part:([\w\-\_]+))", "i");
                 self::$_rx_section_extract = self::rx("(?:\<part\s+name=\"%s\"\s*\>(.*?)\<\/part\>)|(?:@startpart:%s(.*?)@endpart)", "si");
                 self::$_rx_module = self::rx("(?:\<module\s+name=\"([\w\-\_\.]+)\"\s*\/?\>)|(?:@module:([\w\-\_\.]+))", "i");
@@ -371,6 +371,7 @@
                         $section_match=[]; $is_section = preg_match(self::$_rx_section_name, $part, $section_match);
                         if($is_section==1) {
                             $section_name=$section_match[1];
+                            if($section_name=='') { $section_name=$section_match[2]; }
                             //got the section name, now take the section content out of the view content
                             $rx = sprintf(self::$_rx_section_extract, $section_name, $section_name);
                             $rx_matches=[]; preg_match($rx, $view_c, $rx_matches);
