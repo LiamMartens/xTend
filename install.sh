@@ -1,7 +1,8 @@
 #!/bin/bash
 # check for PHP 7 command
+PHPC='php'
 if ! hash php 2> /dev/null && hash php7 2> /dev/null; then
-    alias php=php7
+    PHPC='php7'
 else
     echo "No suitable PHP command detected"
 fi
@@ -33,37 +34,37 @@ if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
     echo -n "Do you want to initialize xTend now? (Y/n): ";
     read INPUT;
     if [[ $INPUT == 'Y' ]] || [[ $INPUT == 'y' ]]; then
-        php workbench init;
+        $PHPC workbench init;
         echo -n "Enter the location you want to configure for xTend (/ by default, leave empty to keep default setting): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config location $INPUT;
-            echo "xTend configured with `php workbench config location`";
+            $PHPC workbench config location $INPUT;
+            echo "xTend configured with `$PHPC workbench config location`";
         fi
         echo -n "Do you want to set the environment? (production by default, but staging and development also possible. Leave empty to keep default setting): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config environment $INPUT;
+            $PHPC workbench config environment $INPUT;
         fi
         echo -n "Do you want to change the backup interval? (1 week by default, false to disable, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config backupInterval $INPUT;
+            $PHPC workbench config backupInterval $INPUT;
         fi
         echo -n "Do you want to change the backup limit? (10 by default, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config backupLimit $INPUT;
+            $PHPC workbench config backupLimit $INPUT;
         fi
         echo -n "Do you want to change the log limit? (30 by default, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench config logLimit $INPUT;
+            $PHPC workbench config logLimit $INPUT;
         fi
         echo -n "Do you want to change the public directory? (www by default, empty to keep default): ";
         read INPUT;
         if [[ $INPUT != '' ]]; then
-            php workbench set:public $INPUT;
+            $PHPC workbench set:public $INPUT;
         fi
         echo "xTend is now ready";
     fi
