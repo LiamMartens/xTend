@@ -1,4 +1,12 @@
 #!/bin/bash
+# check for PHP 7 command
+if ! type "php" > /dev/null && type "php7" > /dev/null; then
+    alias php=php7
+else
+    echo "No suitable PHP command detected"
+fi
+
+
 CURRENT_DIR=`pwd`;
 INSTALL_DIR=`pwd`;
 if [ $# -eq 1 ]; then
